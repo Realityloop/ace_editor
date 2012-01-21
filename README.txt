@@ -16,8 +16,8 @@ HTML editing.
 Installation
 ------------
 1. Download the latest version of the Ace Editor at https://github.com/ajaxorg/ace/downloads
-2. Extract and place the contents of the zip file under sites/all/libraries so that the ace.js
+2. Extract and place the contents of the zip file under sites/all/libraries so that ace.js
    is located at sites/all/libraries/ace/src/ace.js
 3. Copy the module's directory to your modules directory and activate the module in Drupal.
 4. Select what text formats to use with the editor at 'admin/config/content/ace-editor'.
-5. Enjoy!
+5. Enjoy this freakishly fresh editor!

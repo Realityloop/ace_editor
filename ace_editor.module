@@ -9,7 +9,7 @@ function ace_editor_menu() {
 	$items = array();
 	
 	$items['admin/config/content/ace-editor'] = array(
-		'title' => t('Ace Editor Settings'),
+		'title' => t('Ace Editor'),
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('ace_editor_settings_form'),
 		'access arguments' => array('access administration pages'),

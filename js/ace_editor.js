@@ -170,7 +170,7 @@
 		});
 		
 		/**
-		*
+		* The content of the editor has changed, update the span showing line numbers.
 		*/
 		function editorContentChange($ace_editor_container) {
 			var editor = $ace_editor_container.data('ace-editor');
