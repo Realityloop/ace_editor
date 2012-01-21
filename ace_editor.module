@@ -1,0 +1,48 @@
+<?php
+
+/**
+ *
+ */
+function ace_editor_menu() {
+	$items = array();
+	
+	/*$items['kunder'] = array(
+		'title' => 'Kunder',
+		'page callback' => 'skillrapport_customers_page',
+		'access arguments' => array('view customers'),
+		'type' => MENU_CALLBACK,
+		'file' => 'skillrapport.pages.inc',
+	);
+	*/
+
+	return $items;
+}
+
+/**
+ *
+ */
+function ace_editor_form_alter(&$form, &$form_state, $form_id) {
+	dsm($form);
+	if (isset($form['#node_edit_form']) && $form['#node_edit_form']
+	) {
+		
+	}
+}
+
+/**
+ *
+ */
+function ace_editor_library() {
+
+	$libraries['ace-editor'] = array(
+		'title' => 'Ace Editor',
+		'js' => array(
+			'sites/all/libraries/ace/src/mode-coffee.js' => array(),
+			//'sites/all/libraries/ace/src/ace.js' => array(),
+			//'sites/all/libraries/ace/src/theme-twilight' => array(),
+			//'sites/all/libraries/ace/src/mode-html.js' => array(),
+		),
+	);
+
+	return $libraries;
+}
