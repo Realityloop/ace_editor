@@ -15,16 +15,19 @@
 			var $formItem = $textFormatWrapper.find('div.form-item[class*="-value"]:first');
 			// The select list for chosing the text format that will be used.
 			var $filterSelector = $textFormatWrapper.find('select.filter-list');
-			console.log($.inArray($filterSelector.val(), Drupal.settings.ace_editor.text_formats));
+
 			// If the text format's name is ace_editor then we'll add the editor.
 			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.text_formats) != -1) {
 				
-				var aceEditor, $pre;
+				var aceEditor, $ace_editor;
 				
 				// Check to see if the pre element exists, if not, create it.
-				if (!$formItem.find('pre').length) {
+				if (!$formItem.find('div.ace-editor').length) {
 					// Create the tag and add default styling to it.
-					$pre = $('<pre id="' + $textArea.attr('id') + '-aced"></pre>');
+					
+					$ace_editor = $('<div class="ace-editor"></div>');
+					//$ace_editor_container.append(get_editor_controls());
+					var $pre = $('<pre id="' + $textArea.attr('id') + '-aced"></pre>');
 					$pre.css({
 						'position': 'relative',
 						'height': '600px',
@@ -33,7 +36,8 @@
 						'font-size': '10pt'
 					});
 					
-					$formItem.append($pre);
+					$ace_editor.append($pre);
+					$formItem.append($ace_editor);
 					
 					// Ace it! TODO: Add settings page to let the user configure this.
 					aceEditor = ace.edit($pre.attr('id'));
@@ -43,39 +47,47 @@
 					aceEditor.setShowPrintMargin(false);
 					
 					// Store the editor instance to the pre element for later use.
-					$pre.data('ace-editor', aceEditor);
+					$ace_editor.data('ace-editor', aceEditor);
 					
 				} else {
 					
 					// Find the pre elements.
-					$pre = $formItem.find('pre');
+					$ace_editor = $formItem.find('div.ace-editor');
 					
 					// The pre tag exists, and so does the editor instance.
-					aceEditor = $pre.data('ace-editor');
+					aceEditor = $ace_editor.data('ace-editor');
 				}
 				
 				// Add the content of the field to the editors current session.
 				aceEditor.getSession().setValue($textArea.val());
 				
 				// Show the editor's pre and hide the textarea.
-				$pre.show();
+				$ace_editor.show();
 				$formItem.find('div.form-textarea-wrapper').hide();
 				
 			} else {
 				
 				// Fins the pre element.
-				var $pre = $formItem.find('pre');
+				var $ace_editor = $formItem.find('div.ace-editor');
 				
 				// Fetch the Ace Editor instance from the pre.
-				var aceEditor = $pre.data('ace-editor');
+				var aceEditor = $ace_editor.data('ace-editor');
 				
 				// Set the text of the textarea to reflect the changes in the Ace Editor.
 				$textArea.val(aceEditor.getSession().getValue());
 
 				// Hide the Ace Editor and show the textarea.
-				$pre.hide();
+				$ace_editor.hide();
 				$formItem.find('div.form-textarea-wrapper').show();
 			}
+		}
+		
+		/**
+		 *	Returns the editor controls.
+		 */
+		function get_editor_controls() {
+			$controls = $('<div class="ace-editor-controls"></div>');
+			$controls.append(<div></div>);
 		}
 		
 		/**
