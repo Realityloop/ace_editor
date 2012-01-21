@@ -2,6 +2,8 @@
 
 /**
  * Implementation of hook_menu().
+ *
+ * Add a settings page to configure the editor.
  */
 function ace_editor_menu() {
 	$items = array();
@@ -18,7 +20,9 @@ function ace_editor_menu() {
 }
 
 /**
+ * Implements hook_form().
  *
+ * Settings form to configure the editor.
  */
 function ace_editor_settings_form($form, &$form_state) {
 	$form = array();
@@ -48,7 +52,9 @@ function ace_editor_settings_form($form, &$form_state) {
 
 
 /**
+ * Implements hook_form_alter().
  *
+ * If the form is either a custom block form or a node edit form, add the JS nessesary.
  */
 function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 	if (isset($form['#node_edit_form']) && $form['#node_edit_form']
@@ -60,7 +66,7 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- *
+ * Add JS to the page containing the affected forms.
  */
 function ace_editor_form_attach_js($form) {
 	drupal_add_library('ace_editor', 'ace-editor', FALSE);
@@ -78,7 +84,9 @@ function ace_editor_form_attach_js($form) {
 
 
 /**
+ * Implements hook_library().
  *
+ * Add the ace.js library for use with drupal.
  */
 function ace_editor_library() {
 

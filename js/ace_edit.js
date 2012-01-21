@@ -4,7 +4,8 @@
     attach: function(context, settings) {
 		
 		/**
-		 * 
+		 * If the user selected a text format configured to be used with the editor,
+		 * show it, else show the default textarea.
 		 */
 		function setAceState($textArea) {
 			
@@ -78,7 +79,7 @@
 		}
 		
 		/**
-		 * 
+		 * Bind the change event to all text format select lists.
 		 */
 		$('div.text-format-wrapper fieldset.filter-wrapper select.filter-list').live('change', function(e) {
 			var $textArea = $(this).parents('div.text-format-wrapper:first').find('div.form-type-textarea[class*="-value"] textarea');
@@ -104,14 +105,17 @@
 		});
 	
 		/**
-		 * 
+		 *  
 		 */
+		// The change event of the text format select lists seens to be dispatched on document ready...
+		/*
 		$('div.form-type-textarea[class*="-value"] textarea').each(function(i) {
 			// Is in a text format wrapper.
 			if ($(this).parents('div.text-format-wrapper').length) {
 				//setAceState($(this));
 			}
 		});
+		*/
 		
     }
   };
