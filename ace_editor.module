@@ -32,7 +32,8 @@ function ace_editor_settings_form($form, &$form_state) {
 	$default_values = variable_get('ace_editor_filter_formats', array());
 	$form['ace_editor_filter_formats'] = array(
 		'#type' => 'select',
-		'#title' => t('Use the Ace editor together with these text formats'),
+		'#title' => t('Text formats'),
+		'#description' => t('Select the text formats that will be using the editor.'),
 		'#multiple' => TRUE,
 		'#options' => $filter_formats_options,
 		'#default_value' => array_values($default_values),
@@ -41,7 +42,6 @@ function ace_editor_settings_form($form, &$form_state) {
 			'style' => 'min-width: 400px; margin-top: 10px;'
 		)
 	);
-	
 	
 	return system_settings_form($form);
 }

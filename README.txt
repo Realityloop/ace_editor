@@ -9,7 +9,7 @@ Ace is a standalone code editor written in JavaScript, it's a web based code edi
 that matches and extends the features, usability and performance of existing native
 editors such as TextMate, Vim or Eclipse.
 
-This module integrates the editor into Drupal node/block edit forms for fast and easy
+This module integrates the editor into the node/block edit forms for fast and easy
 HTML editing.
 
 
@@ -19,3 +19,5 @@ Installation
 2. Extract and place the contents of the zip file under sites/all/libraries so that the ace.js
    is located at sites/all/libraries/ace/src/ace.js
 3. Copy the module's directory to your modules directory and activate the module in Drupal.
+4. Select what text formats to use with the editor at 'admin/config/content/ace-editor'.
+5. Enjoy!
