@@ -22,10 +22,9 @@ function ace_editor_menu() {
  *
  */
 function ace_editor_form_alter(&$form, &$form_state, $form_id) {
-	dsm($form);
-	if (isset($form['#node_edit_form']) && $form['#node_edit_form']
-	) {
-		
+	if (isset($form['#node_edit_form']) && $form['#node_edit_form']) {
+		drupal_add_library('ace_editor', 'ace-editor', FALSE);
+		drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_edit.js');
 	}
 }
 
@@ -36,11 +35,11 @@ function ace_editor_library() {
 
 	$libraries['ace-editor'] = array(
 		'title' => 'Ace Editor',
+		'version' => '1.0',
 		'js' => array(
-			'sites/all/libraries/ace/src/mode-coffee.js' => array(),
-			//'sites/all/libraries/ace/src/ace.js' => array(),
-			//'sites/all/libraries/ace/src/theme-twilight' => array(),
-			//'sites/all/libraries/ace/src/mode-html.js' => array(),
+			'sites/all/libraries/ace/src/ace.js' => array(),
+			'sites/all/libraries/ace/src/mode-html.js' => array(),
+			'sites/all/libraries/ace/src/theme-twilight.js' => array(),
 		),
 	);
 
