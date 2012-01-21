@@ -69,15 +69,16 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
  * Add JS to the page containing the affected forms.
  */
 function ace_editor_form_attach_js($form) {
-	drupal_add_library('ace_editor', 'ace-editor', FALSE);
-	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_edit.js');
-	
 	$settings = array(
 		'ace_editor' => array(
 			'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
 		),
 	);
+	
+	drupal_add_library('ace_editor', 'ace-editor', FALSE);
 	drupal_add_js($settings, 'setting');
+	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
+	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
 	
 	return $form;
 }
@@ -86,7 +87,7 @@ function ace_editor_form_attach_js($form) {
 /**
  * Implements hook_library().
  *
- * Add the ace.js library for use with drupal.
+ * Add the ace JS library for use with drupal.
  */
 function ace_editor_library() {
 
