@@ -14,9 +14,9 @@
 			var $formItem = $textFormatWrapper.find('div.form-item[class*="-value"]:first');
 			// The select list for chosing the text format that will be used.
 			var $filterSelector = $textFormatWrapper.find('select.filter-list');
-			
+			console.log($.inArray($filterSelector.val(), Drupal.settings.ace_editor.text_formats));
 			// If the text format's name is ace_editor then we'll add the editor.
-			if ($filterSelector.val() == 'ace_editor') {
+			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.text_formats) != -1) {
 				
 				var aceEditor, $pre;
 				

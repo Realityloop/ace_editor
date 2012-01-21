@@ -1,19 +1,18 @@
 <?php
 
 /**
- *
+ * Implementation of hook_menu().
  */
 function ace_editor_menu() {
 	$items = array();
 	
-	/*$items['kunder'] = array(
-		'title' => 'Kunder',
-		'page callback' => 'skillrapport_customers_page',
-		'access arguments' => array('view customers'),
-		'type' => MENU_CALLBACK,
-		'file' => 'skillrapport.pages.inc',
+	$items['admin/config/content/ace-editor'] = array(
+		'title' => t('Ace Editor Settings'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('ace_editor_settings_form'),
+		'access arguments' => array('access administration pages'),
+		'type' => MENU_NORMAL_ITEM,
 	);
-	*/
 
 	return $items;
 }
@@ -21,12 +20,61 @@ function ace_editor_menu() {
 /**
  *
  */
+function ace_editor_settings_form($form, &$form_state) {
+	$form = array();
+	
+	$filter_formats = filter_formats();
+	$filter_formats_options = array();
+	foreach($filter_formats as $key => $format_obj) {
+		$filter_formats_options[$key] = $format_obj->name;
+	}
+	
+	$default_values = variable_get('ace_editor_filter_formats', array());
+	$form['ace_editor_filter_formats'] = array(
+		'#type' => 'select',
+		'#title' => t('Use the Ace editor together with these text formats'),
+		'#multiple' => TRUE,
+		'#options' => $filter_formats_options,
+		'#default_value' => array_values($default_values),
+		'#size' => count($filter_formats_options),
+		'#attributes' => array(
+			'style' => 'min-width: 400px; margin-top: 10px;'
+		)
+	);
+	
+	
+	return system_settings_form($form);
+}
+
+
+/**
+ *
+ */
 function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 	if (isset($form['#node_edit_form']) && $form['#node_edit_form']) {
-		drupal_add_library('ace_editor', 'ace-editor', FALSE);
-		drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_edit.js');
+		
+		// Add JavaScript to the form.
+		$form['#after_build'] = array('ace_editor_form_attach_js');
 	}
 }
+
+/**
+ *
+ */
+function ace_editor_form_attach_js($form) {
+	drupal_add_library('ace_editor', 'ace-editor', FALSE);
+	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_edit.js');
+	
+	$settings = array(
+		'ace_editor' => array(
+			'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
+		),
+	);
+	drupal_add_js($settings, 'setting');
+	
+	return $form;
+}
+
 
 /**
  *
