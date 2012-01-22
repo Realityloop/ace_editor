@@ -5,12 +5,12 @@ by Max Nylin, max@articstudios.se
 
 Description
 -----------
-Ace is a standalone code editor written in JavaScript, it's a web based code editor
-that matches and extends the features, usability and performance of existing native
-editors such as TextMate, Vim or Eclipse.
+Ace is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript
+in a very natural way. It provides syntax hilighting, proper indentation, keyboard shortcuts,
+find and replace (incuding regular expressions), and more.
 
-This module integrates the editor into the node/block edit forms for fast and easy
-HTML editing.
+This module integrates the Ace editor into Drupal's node/block edit forms, for edititing raw
+HTML/PHP/JavaScript in an intuitive way.
 
 
 Installation

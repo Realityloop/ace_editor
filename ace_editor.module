@@ -19,6 +19,7 @@ function ace_editor_menu() {
 	return $items;
 }
 
+
 /**
  * Implements hook_form().
  *
@@ -57,6 +58,8 @@ function ace_editor_settings_form($form, &$form_state) {
  * If the form is either a custom block form or a node edit form, add the JS nessesary.
  */
 function ace_editor_form_alter(&$form, &$form_state, $form_id) {
+	
+	
 	if (isset($form['#node_edit_form']) && $form['#node_edit_form']
 		|| substr($form['#form_id'], 0, 6) == 'block_') {
 		
@@ -102,4 +105,11 @@ function ace_editor_library() {
 	);
 
 	return $libraries;
+}
+
+/**
+*
+*/
+function ace_editor_library_installed() {
+	
 }

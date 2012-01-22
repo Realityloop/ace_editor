@@ -160,6 +160,7 @@
 				case "show_gutter":
 					ace_editor_instance.renderer.setShowGutter(checked);
 					localStorage['ace_editor_show_gutter'] = checked;
+					$(this).parents('div.ace-editor-controls:first').find('input.show_hidden').css('margin-left', checked ? '70px' : '20px');
 					break;
 				case "show_print_margin":
 					ace_editor_instance.setShowPrintMargin(checked);
@@ -175,6 +176,15 @@
 		function editorContentChange($ace_editor_container) {
 			var editor = $ace_editor_container.data('ace-editor');
 			$ace_editor_container.find('div.ace-editor-controls span.num-lines').text(editor.getSession().getValue().split("\n").length + " lines");
+		}
+		
+		/**
+		* Set defaults to the controls.
+		*/
+		if (localStorage['ace_editor_show_hidden'] == undefined) {
+			localStorage['ace_editor_show_hidden'] = 1;
+			localStorage['ace_editor_show_gutter'] = 1;
+			localStorage['ace_editor_show_print_margin'] = 0;
 		}
 		
 		
