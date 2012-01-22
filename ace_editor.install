@@ -13,13 +13,10 @@
 		$html_editor_format->weight = 100;
 		filter_format_save($html_editor_format);
 		
-		// Clear cache after adding the new text format.
-		cache_clear_all($html_editor_format->format . ':', 'cache_filter', TRUE);
-		
 		// Set the newly created text format to use the editor.
 		variable_set('ace_editor_filter_formats', array('ace_editor'));
 		
-		// Set the defaults.
+		// Set the defaults to other variables.
 		variable_set('ace_editor_theme', 'dark');
 		variable_set('ace_editor_print_margin', false);
 		variable_set('ace_editor_font_size', '10pt');
