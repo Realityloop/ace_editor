@@ -3,16 +3,16 @@ pre.ace_editor {
 	position: relative;
 	height: 600px;
 	border: 1px solid #ccc;
-	border-top: 0;
+	border-bottom: 0;
 	margin: 0 0 0 0;
-	font-size: 10pt;
+	/*font-size: 10pt;*/
 }
 
 div.ace-editor-controls {
 	height: 40px;
 	width: 100%;
 	border: 1px solid #ccc;
-	border-bottom: 0;
+	border-top: 0;
 	background-color: #E8E8E8;
 }
 
@@ -27,6 +27,11 @@ div.control label, div.control input, div.control select {
 
 input.show_hidden {
 	margin: 0 0 0 50px;
+}
+
+select.font_size {
+	width: 60px;
+	border: 1px solid #9f9f9f;
 }
 
 div.control label {
