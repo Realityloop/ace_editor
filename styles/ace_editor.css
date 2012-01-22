@@ -1,7 +1,7 @@
 
 pre.ace_editor {
 	position: relative;
-	height: 600px;
+	/*height: 600px;*/
 	border: 1px solid #ccc;
 	border-bottom: 0;
 	margin: 0 0 0 0;
@@ -26,7 +26,7 @@ div.control label, div.control input, div.control select {
 }
 
 input.show_hidden {
-	margin: 0 0 0 50px;
+	margin: 0 0 0 20px;
 }
 
 select.font_size {

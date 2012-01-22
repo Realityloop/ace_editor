@@ -7,101 +7,137 @@
 		* If the user selected a text format configured to be used with the editor,
 		* show it, else show the default textarea.
 		*/
-		function setAceState($textArea) {
-			
-			// Top Level, for traversing.
-			var $textFormatWrapper = $textArea.parents('div.text-format-wrapper:first');
-			// The container that will hold the <pre>.
-			var $formItem = $textFormatWrapper.find('div.form-item[class*="-value"]:first');
+		function setAceState($textFormatWrapper) {
+
 			// The select list for chosing the text format that will be used.
 			var $filterSelector = $textFormatWrapper.find('select.filter-list');
-
-			// If the text format's name is ace_editor then we'll add the editor.
+			
+			// TODO: Add documentation.
 			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.text_formats) != -1) {
 				
-				var ace_editor_instanceInstance, $ace_editor_container;
+				var editorSettings = Drupal.settings.ace_editor;
 				
-				// Check to see if the pre element exists, if not, create it.
-				if (!$formItem.find('div.ace-editor-container').length) {
-					// Create the tag and add default styling to it.
+				// Check to see if the editor has been added yet.
+				if (!$textFormatWrapper.find('div.ace-editor-container').length) {
 					
-					$ace_editor_container = $('<div class="ace-editor-container"></div>');
-					var $pre = $('<pre id="' + $textArea.attr('id') + '-aced"></pre>');
+					var editors = new Array();
 					
-					// Put the different parts together.
-					$ace_editor_container.append($pre);
-					var $controls = get_editor_controls();
-					$ace_editor_container.append($controls);
-					$formItem.append($ace_editor_container);
+					// Iterate through all textarea containers that and attach the editor.
+					$('div.form-item.form-type-textarea', $textFormatWrapper).each(function(i) {
+
+						// Create the editors container.
+						var $ace_editor_container = $('<div class="ace-editor-container"></div>');
 					
-					// Ace it!
-					var editorSettings = Drupal.settings.ace_editor;
-					ace_editor_instance = ace.edit($pre.attr('id'));
-					if (Drupal.settings.ace_editor.theme == 'dark') {
-						ace_editor_instance.setTheme("ace/theme/twilight");
-					} else {
-						ace_editor_instance.setTheme("ace/theme/textmate");
-					}
-					var HTMLMode = require("ace/mode/html").Mode;
-					ace_editor_instance.getSession().setMode(new HTMLMode());
-					ace_editor_instance.setShowPrintMargin(editorSettings['print_margin']);
-					ace_editor_instance.renderer.setHScrollBarAlwaysVisible(false);
-					$pre.css('font-size', editorSettings['font_size']);
+						// Put the different parts together.
+						var $pre = $('<pre id="' + $(this).find('textarea').attr('id') + '-aced"></pre>');
+						$ace_editor_container.append($pre);
+						// Only append controlls to the main form item.
+						var $controls;
+						if ($(this).attr('class').indexOf("-value") != -1) {
+							$pre.css({'height': '600px'});
+							
+							$controls = get_editor_controls();
+							$ace_editor_container.append($controls);
+							$(this).append($ace_editor_container);
+						} else { // It's a summary form item.
+							$pre.css({'height': '200px', 'border-bottom': '1px solid #CCC'});
+							
+							// Have to show the summary for the theme to be applied correctly, but do not show if it contains anything.
+							if ($(this).find('textarea').val() == "") {
+								$(this).parents('div.text-format-wrapper').find('a.link-edit-summary').trigger('click');
+							}
+							
+							$(this).find('div.form-textarea-wrapper').after($ace_editor_container);
+						}
 					
-					// Store the editor instance to the pre element for later use.
-					$ace_editor_container.data('ace-editor', ace_editor_instance);
+						var editor_instance = ace.edit($pre.attr('id'));
+						if (editorSettings.theme == 'dark') {
+							editor_instance.setTheme("ace/theme/twilight");
+						} else {
+							editor_instance.setTheme("ace/theme/textmate");
+						}
+						var HTMLMode = require("ace/mode/html").Mode;
+						editor_instance.getSession().setMode(new HTMLMode());
+						editor_instance.setShowPrintMargin(editorSettings['print_margin']);
+						editor_instance.renderer.setHScrollBarAlwaysVisible(false);
+						$pre.css('font-size', editorSettings['font_size']);
+						
+						var editorObject = {
+							editor: editor_instance,
+							element: $pre
+						};
+						editors.push(editorObject);
+						
+						editor_instance.getSession().on('change', function(editor) {
+							editorContentChange(editorObject);
+						});
+					});
+					
+					// Store the newly created editor instances for later use
+					$textFormatWrapper.data('ace-editors', editors);
 					
 					// Set control states.
-					$controls.find('input.show_hidden').attr('checked', (localStorage['ace_editor_show_hidden'] == 1) ? true : false);
-					$controls.find('input.show_line_numbers').attr('checked', (localStorage['ace_editor_show_line_numbers'] == 1) ? true : false);
-					$controls.find('input.show_print_margin').attr('checked', (localStorage['ace_editor_show_print_margin'] == 1) ? true : false);
-					
-					// Initial line count, apperantly it needs some time before the line can be fetched correctly.
-					this.setTimeout(function() {
-						editorContentChange($ace_editor_container);
-					}, 10);
-					
-					// Trigger controls.
-					$ace_editor_container.find('div.ace-editor-controls input, div.ace-editor-controls select').trigger('change');
-					
+					$textFormatWrapper.find('div.ace-editor-controls').each(function(i) {
+						var $controls = $(this);
+						
+						$controls.find('input.show_hidden').attr('checked', (localStorage['ace_editor_show_hidden'] == 1) ? true : false);
+						$controls.find('input.show_line_numbers').attr('checked', (localStorage['ace_editor_show_line_numbers'] == 1) ? true : false);
+						
+						// Trigger controls.
+						$controls.find('div.control input').trigger('change');
+					});
+				}
+				
+				
+				var editorObjects, editorsJustAdded = false;
+				if (editors) {
+					editorObjects = editors;
+					editorsJustAdded = true;
 				} else {
-					
-					// Find the pre elements.
-					$ace_editor_container = $formItem.find('div.ace-editor-container');
-					
-					// The pre tag exists, and so does the editor instance.
-					ace_editor_instance = $ace_editor_container.data('ace-editor');
+					editorObjects = $textFormatWrapper.data('ace-editors');
 				}
 				
-				// Add the content of the field to the editors current session.
-				ace_editor_instance.getSession().setValue($textArea.val());
+				// Only switch if editors are hidden.
+				if (!$(editorObjects[0]["element"]).is(':visible') || editorsJustAdded) {
 				
-				// Add a change listener to the editor.
-				ace_editor_instance.getSession().on('change', function(editor) {
-					editorContentChange($ace_editor_container);
-				});
-				
-				// Show the editor's pre and hide the textarea.
-				$ace_editor_container.show();
-				$formItem.find('div.form-textarea-wrapper').hide();
-				
-			} else {
-				
-				// Fins the pre element.
-				var $ace_editor_container = $formItem.find('div.ace-editor-container');
-				
-				if ($ace_editor_container.length) {
+					// Show the editor containers and hide the textarea containers.
+					$(editorObjects).each(function(i) {
+						var $formItem = $(this["element"]).parents('div.form-item:first');
+						var $textAreaWrapper = $formItem.find('div.form-textarea-wrapper');
+						var $editorContainer = $formItem.find('div.ace-editor-container');
 					
-					// Fetch the Ace Editor instance from the pre.
-					var ace_editor_instance = $ace_editor_container.data('ace-editor');
-				
-					// Set the text of the textarea to reflect the changes in the Ace Editor.
-					$textArea.val(ace_editor_instance.getSession().getValue());
-
-					// Hide the Ace Editor and show the textarea.
-					$ace_editor_container.hide();
-					$formItem.find('div.form-textarea-wrapper').show();
+						// Add the content of the field to the editors current session.
+						this["editor"].getSession().setValue($textAreaWrapper.find('textarea').val());
+					
+						$textAreaWrapper.hide();
+						$editorContainer.show();
+					});
 				}
+					
+			} else { // Show the textarea.
+				
+				var editorObjects = $textFormatWrapper.data('ace-editors');
+				if (editorObjects) {
+					
+					// Only switch of editors are shown.
+					if ($(editorObjects[0]["element"]).is(':visible')) {
+						$(editorObjects).each(function(i) {
+							var editorObj = editorObjects[i];
+						
+							var $formItem = $(editorObj["element"]).parents('div.form-item:first');
+							var $textAreaWrapper = $formItem.find('div.form-textarea-wrapper');
+							var $editorContainer = $formItem.find('div.ace-editor-container');
+						
+							// Transfer content from editor to textarea.
+							$textAreaWrapper.find('textarea').val(editorObj['editor'].getSession().getValue())
+						
+							// Hide the editor containers and show the textarea containers.
+							$textAreaWrapper.show();
+							$editorContainer.hide();
+						});
+					}
+				}
+				
 			}
 		}
 		
@@ -117,7 +153,7 @@
 			$controls.append('<div class="control"><input type="checkbox" name="show_line_numbers" class="show_line_numbers" checked>' + 
 							  '<label>Line numbers</label></div>');
 										
-			$controls.append('<div class="info"><span class="num-lines"></span><a class="key-bindings" target="_blank" href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts">Show key bindings</a></div>');
+			$controls.append('<div class="info"><span class="num-lines">1 lines</span><a class="key-bindings" target="_blank" href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts">Show key bindings</a></div>');
 			
 			return $controls;
 		}
@@ -126,57 +162,77 @@
 		* Bind the change event to all text format select lists.
 		*/
 		$('div.text-format-wrapper fieldset.filter-wrapper select.filter-list').live('change', function(e) {
-			var $textArea = $(this).parents('div.text-format-wrapper:first').find('div.form-type-textarea[class*="-value"] textarea');
-			setAceState($textArea);
+			var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
+			setAceState($textFormatWrapper);
 		});
 	
 		/**
 		* Transfer over the html of the editor to the correct field.
 		*/
 		$('#edit-submit').click(function() {
-			$('div.form-item.form-type-textarea').each(function (i) {
-				var $ace_editor_container = $(this).find('div.ace-editor-container');
-				if ($ace_editor_container.length) {
-					var filterListValue = $(this).siblings('fieldset.filter-wrapper:first').find('select.filter-list').val();
-					if (filterListValue == 'ace_editor') {
-						var $textArea = $(this).find('textarea');
-						var ace_editor_instance = $ace_editor_container.data('ace-editor');
-						var html = ace_editor_instance.getSession().getValue();
-						$textArea.val(html);
-					}
+			
+			$('div.text-format-wrapper').each(function() {
+				
+				// The select list for chosing the text format that will be used.
+				var $filterSelector = $(this).find('select.filter-list');
+
+				// If currently in editor mode. Transfer the values of all editors to their related textareas.
+				if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.text_formats) != -1) {
+					
+					var editorObjects = $(this).data('ace-editors');
+					$(editorObjects).each(function(i) {
+						
+						var $formItem = $(this["element"]).parents('div.form-item:first');
+						var $textAreaWrapper = $formItem.find('div.form-textarea-wrapper');
+						var $editorContainer = $formItem.find('div.ace-editor-container');
+						
+						// Transfer content from editor to textarea.
+						$textAreaWrapper.find('textarea').val(this['editor'].getSession().getValue())
+					});
 				}
 			});
 		});
 		
 		
-		$('div.control input, div.control select').live('change', function(e) {
-			var ace_editor_instance = $(this).parents('div.ace-editor-container:first').data('ace-editor');
-			
+		$('div.text-format-wrapper div.control input').live('change', function(e) {
+
+			var $control = $(this);
+			var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
+			var editorObjects = $textFormatWrapper.data('ace-editors');
+						
 			var checked;
-			if ($(this).attr('type') == 'checkbox') {
+			if ($control.attr('type') == 'checkbox') {
 				checked = $(this).is(':checked') ? 1 : 0;
 			}
 			
-			switch ($(this).attr('name')) {
+			// Apply settings to all editors.
+			$(editorObjects).each(function(i) {
+				switch ($control.attr('name')) {
+					case "show_hidden":
+						this['editor'].setShowInvisibles(checked);
+						break;
+					case "show_line_numbers":
+						this['editor'].renderer.setShowGutter(checked);
+						break;
+				}
+			});
+			
+			// Save settings.
+			switch ($control.attr('name')) {
 				case "show_hidden":
-					ace_editor_instance.setShowInvisibles(checked);
 					localStorage['ace_editor_show_hidden'] = checked;
 					break;
 				case "show_line_numbers":
-					ace_editor_instance.renderer.setShowGutter(checked);
 					localStorage['ace_editor_show_line_numbers'] = checked;
-					$(this).parents('div.ace-editor-controls:first').find('input.show_hidden').css('margin-left', checked ? '70px' : '20px');
 					break;
 			}
-			
 		});
 		
 		/**
 		* The content of the editor has changed, update the span showing line numbers.
 		*/
-		function editorContentChange($ace_editor_container) {
-			var editor = $ace_editor_container.data('ace-editor');
-			$ace_editor_container.find('div.ace-editor-controls span.num-lines').text(editor.getSession().getValue().split("\n").length + " lines");
+		function editorContentChange(editorObject) {
+			$(editorObject['element']).parents('div.ace-editor-container:first').find('div.ace-editor-controls span.num-lines').text(editorObject['editor'].getSession().getValue().split("\n").length + " lines");
 		}
 		
 		/**
