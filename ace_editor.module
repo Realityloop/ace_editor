@@ -3,7 +3,7 @@
 /**
  * Implementation of hook_menu().
  *
- * Add a settings page to configure the editor.
+ * Add a settings page to configure the module.
  */
 function ace_editor_menu() {
 	$items = array();
@@ -23,10 +23,29 @@ function ace_editor_menu() {
 /**
  * Implements hook_form().
  *
- * Settings form to configure the editor.
+ * Settings form to configure the module.
  */
 function ace_editor_settings_form($form, &$form_state) {
 	$form = array();
+	
+	$filter_formats = filter_formats();
+	$filter_formats_options = array();
+	foreach($filter_formats as $key => $format_obj) {
+		$filter_formats_options[$key] = $format_obj->name;
+	}
+	
+	$form['ace_editor_filter_formats'] = array(
+		'#type' => 'select',
+		'#title' => t('Text formats'),
+		'#description' => t('Select the text formats that will be using the editor.'),
+		'#multiple' => TRUE,
+		'#options' => $filter_formats_options,
+		'#default_value' => variable_get('ace_editor_filter_formats', array()),
+		'#size' => count($filter_formats_options),
+		'#attributes' => array(
+			'style' => 'min-width: 400px; margin-top: 10px;'
+		),
+	);
 	
 	$current_theme = variable_get('ace_editor_theme', 'dark');
 	$form['ace_editor_theme'] = array(
@@ -42,24 +61,25 @@ function ace_editor_settings_form($form, &$form_state) {
 		),
 	);
 	
-	$filter_formats = filter_formats();
-	$filter_formats_options = array();
-	foreach($filter_formats as $key => $format_obj) {
-		$filter_formats_options[$key] = $format_obj->name;
-	}
-	
-	$default_values = variable_get('ace_editor_filter_formats', array());
-	$form['ace_editor_filter_formats'] = array(
+	$form['ace_editor_font_size'] = array(
 		'#type' => 'select',
-		'#title' => t('Text formats'),
-		'#description' => t('Select the text formats that will be using the editor.'),
-		'#multiple' => TRUE,
-		'#options' => $filter_formats_options,
-		'#default_value' => array_values($default_values),
-		'#size' => count($filter_formats_options),
-		'#attributes' => array(
-			'style' => 'min-width: 400px; margin-top: 10px;'
+		'#title' => t('Font size'),
+		'#options' => array(
+			'9pt' => '9pt',
+			'10pt' => '10pt',
+			'11pt' => '11pt',
+			'12pt' => '12pt',
 		),
+		'#default_value' => variable_get('ace_editor_font_size', '10pt'),
+		'#attributes' => array(
+			'style' => 'min-width: 100px;'
+		),
+	);
+	
+	$form['ace_editor_print_margin'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Show print margin'),
+		'#default_value' => variable_get('ace_editor_print_margin'),
 	);
 	
 	return system_settings_form($form);
@@ -95,11 +115,12 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
  * Add JS to the page containing the affected forms.
  */
 function ace_editor_form_attach_js($form) {
-	//$variable_get('ace_editor_theme', array('dark'));
 	$settings = array(
 		'ace_editor' => array(
 			'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
 			'theme' => variable_get('ace_editor_theme', 'dark'),
+			'print_margin' => variable_get('ace_editor_print_margin', false),
+			'font_size' => variable_get('ace_editor_font_size', '10pt'),
 		),
 	);
 

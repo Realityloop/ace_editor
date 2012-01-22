@@ -34,20 +34,19 @@
 					$ace_editor_container.append($controls);
 					$formItem.append($ace_editor_container);
 					
-					// Ace it! TODO: Add settings page to let the user configure this.
+					// Ace it!
+					var editorSettings = Drupal.settings.ace_editor;
 					ace_editor_instance = ace.edit($pre.attr('id'));
-					var defaultFontSize;
 					if (Drupal.settings.ace_editor.theme == 'dark') {
 						ace_editor_instance.setTheme("ace/theme/twilight");
-						defaultFontSize = '10pt';
 					} else {
 						ace_editor_instance.setTheme("ace/theme/textmate");
-						defaultFontSize = '9pt';
 					}
 					var HTMLMode = require("ace/mode/html").Mode;
 					ace_editor_instance.getSession().setMode(new HTMLMode());
-					ace_editor_instance.setShowPrintMargin(false);
+					ace_editor_instance.setShowPrintMargin(editorSettings['print_margin']);
 					ace_editor_instance.renderer.setHScrollBarAlwaysVisible(false);
+					$pre.css('font-size', editorSettings['font_size']);
 					
 					// Store the editor instance to the pre element for later use.
 					$ace_editor_container.data('ace-editor', ace_editor_instance);
@@ -56,13 +55,6 @@
 					$controls.find('input.show_hidden').attr('checked', (localStorage['ace_editor_show_hidden'] == 1) ? true : false);
 					$controls.find('input.show_line_numbers').attr('checked', (localStorage['ace_editor_show_line_numbers'] == 1) ? true : false);
 					$controls.find('input.show_print_margin').attr('checked', (localStorage['ace_editor_show_print_margin'] == 1) ? true : false);
-
-					var fontSize = localStorage['ace_editor_font_size'];
-					if (fontSize) {
-						$controls.find('select.font_size').val(fontSize);
-					} else {
-						$controls.find('select.font_size').val(defaultFontSize);
-					}
 					
 					// Initial line count, apperantly it needs some time before the line can be fetched correctly.
 					this.setTimeout(function() {
@@ -98,15 +90,18 @@
 				// Fins the pre element.
 				var $ace_editor_container = $formItem.find('div.ace-editor-container');
 				
-				// Fetch the Ace Editor instance from the pre.
-				var ace_editor_instance = $ace_editor_container.data('ace-editor');
+				if ($ace_editor_container.length) {
+					
+					// Fetch the Ace Editor instance from the pre.
+					var ace_editor_instance = $ace_editor_container.data('ace-editor');
 				
-				// Set the text of the textarea to reflect the changes in the Ace Editor.
-				$textArea.val(ace_editor_instance.getSession().getValue());
+					// Set the text of the textarea to reflect the changes in the Ace Editor.
+					$textArea.val(ace_editor_instance.getSession().getValue());
 
-				// Hide the Ace Editor and show the textarea.
-				$ace_editor_container.hide();
-				$formItem.find('div.form-textarea-wrapper').show();
+					// Hide the Ace Editor and show the textarea.
+					$ace_editor_container.hide();
+					$formItem.find('div.form-textarea-wrapper').show();
+				}
 			}
 		}
 		
@@ -121,17 +116,7 @@
 							
 			$controls.append('<div class="control"><input type="checkbox" name="show_line_numbers" class="show_line_numbers" checked>' + 
 							  '<label>Line numbers</label></div>');
-							
-			$controls.append('<div class="control"><input type="checkbox" name="show_print_margin" class="show_print_margin" checked>' + 
-							  '<label>Print margin</label></div>');
-							
-			$controls.append('<div class="control"><select name="font_size" class="font_size">' + 
-							 '<option value="9pt">9pt</option>' +
-							 '<option value="10pt">10pt</option>' +
-							 '<option value="11pt">11pt</option>' +
-							 '<option value="12pt">12pt</option>' + 
-							 '</select></div>');
-			
+										
 			$controls.append('<div class="info"><span class="num-lines"></span><a class="key-bindings" target="_blank" href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts">Show key bindings</a></div>');
 			
 			return $controls;
@@ -150,12 +135,12 @@
 		*/
 		$('#edit-submit').click(function() {
 			$('div.form-item.form-type-textarea').each(function (i) {
-				var $pre = $(this).find('pre.ace_editor');
-				if ($pre.length) {
+				var $ace_editor_container = $(this).find('div.ace-editor-container');
+				if ($ace_editor_container.length) {
 					var filterListValue = $(this).siblings('fieldset.filter-wrapper:first').find('select.filter-list').val();
 					if (filterListValue == 'ace_editor') {
 						var $textArea = $(this).find('textarea');
-						var ace_editor_instance = $pre.data('ace-editor');
+						var ace_editor_instance = $ace_editor_container.data('ace-editor');
 						var html = ace_editor_instance.getSession().getValue();
 						$textArea.val(html);
 					}
@@ -182,15 +167,6 @@
 					localStorage['ace_editor_show_line_numbers'] = checked;
 					$(this).parents('div.ace-editor-controls:first').find('input.show_hidden').css('margin-left', checked ? '70px' : '20px');
 					break;
-				case "show_print_margin":
-					ace_editor_instance.setShowPrintMargin(checked);
-					localStorage['ace_editor_show_print_margin'] = checked;
-					break;
-				case "font_size":
-					var fontSize = $(this).val();
-					$(this).parents('div.ace-editor-container:first').find('pre').css('font-size', fontSize);
-					localStorage['ace_editor_font_size'] = fontSize;
-					break;
 			}
 			
 		});
@@ -209,7 +185,6 @@
 		if (localStorage['ace_editor_show_hidden'] == undefined) {
 			localStorage['ace_editor_show_hidden'] = 1;
 			localStorage['ace_editor_show_line_numbers'] = 1;
-			localStorage['ace_editor_show_print_margin'] = 0;
 		}
 		
 		

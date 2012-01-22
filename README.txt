@@ -1,4 +1,4 @@
-Ace HTML Editor
+Ace HTML Editor Module
 ------------------------
 by Max Nylin, max@articstudios.se
 
