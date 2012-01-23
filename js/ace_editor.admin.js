@@ -1,6 +1,6 @@
 (function($) {
 
-  Drupal.behaviors.ace_editor = {
+  Drupal.behaviors.ace_editor_admin = {
 	attach: function(context, settings) {
 		
 		/**

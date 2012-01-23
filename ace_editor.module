@@ -14,75 +14,10 @@ function ace_editor_menu() {
 		'page arguments' => array('ace_editor_settings_form'),
 		'access arguments' => array('access administration pages'),
 		'type' => MENU_NORMAL_ITEM,
+		'file' => 'ace_editor.admin.inc',
 	);
 
 	return $items;
-}
-
-
-/**
- * Implements hook_form().
- *
- * Settings form to configure the module.
- */
-function ace_editor_settings_form($form, &$form_state) {
-	$form = array();
-	
-	$filter_formats = filter_formats();
-	$filter_formats_options = array();
-	foreach($filter_formats as $key => $format_obj) {
-		$filter_formats_options[$key] = $format_obj->name;
-	}
-	
-	$form['ace_editor_filter_formats'] = array(
-		'#type' => 'select',
-		'#title' => t('Text formats'),
-		'#description' => t('Select the text formats that will be using the editor.'),
-		'#multiple' => TRUE,
-		'#options' => $filter_formats_options,
-		'#default_value' => variable_get('ace_editor_filter_formats', array()),
-		'#size' => count($filter_formats_options),
-		'#attributes' => array(
-			'style' => 'min-width: 400px; margin-top: 10px;'
-		),
-	);
-	
-	$current_theme = variable_get('ace_editor_theme', 'dark');
-	$form['ace_editor_theme'] = array(
-		'#title' => 'Editor theme',
-		'#type' => 'select',
-		'#options' => array(
-			'dark' => 'Dark',
-			'light' => 'Light',
-		),
-		'#default_value' => array($current_theme),
-		'#attributes' => array(
-			'style' => 'min-width: 400px;'
-		),
-	);
-	
-	$form['ace_editor_font_size'] = array(
-		'#type' => 'select',
-		'#title' => t('Font size'),
-		'#options' => array(
-			'9pt' => '9pt',
-			'10pt' => '10pt',
-			'11pt' => '11pt',
-			'12pt' => '12pt',
-		),
-		'#default_value' => variable_get('ace_editor_font_size', '10pt'),
-		'#attributes' => array(
-			'style' => 'min-width: 100px;'
-		),
-	);
-	
-	$form['ace_editor_print_margin'] = array(
-		'#type' => 'checkbox',
-		'#title' => t('Show print margin'),
-		'#default_value' => variable_get('ace_editor_print_margin'),
-	);
-	
-	return system_settings_form($form);
 }
 
 
@@ -92,13 +27,13 @@ function ace_editor_settings_form($form, &$form_state) {
  * If the form is either a custom block form or a node edit form, add the JS nessesary.
  */
 function ace_editor_form_alter(&$form, &$form_state, $form_id) {
-	
+
 	if (isset($form['#node_edit_form']) && $form['#node_edit_form']
 		|| substr($form['#form_id'], 0, 6) == 'block_') {
-			
+
 			// Add JavaScript to the form if the ace editor library is installed.
 			if (ace_editor_library_installed()) {
-				$form['#after_build'] = array('ace_editor_form_attach_js');
+				$form['#after_build'] = array('ace_editor_node_block_edit_form_attach_js');
 			} else {
 				global $base_path;
 				drupal_set_message(
@@ -114,7 +49,7 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Add JS to the page containing the affected forms.
  */
-function ace_editor_form_attach_js($form) {
+function ace_editor_node_block_edit_form_attach_js($form) {
 	$settings = array(
 		'ace_editor' => array(
 			'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
@@ -126,12 +61,185 @@ function ace_editor_form_attach_js($form) {
 
 	drupal_add_library('ace_editor', 'ace-editor', FALSE);
 	drupal_add_js($settings, 'setting');
-	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
-	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
-	
+	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.admin.js');
+	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.admin.css');
+
 	return $form;
 }
 
+/**
+ * Implements hook_field_formatter_info().
+ *
+ *
+ */
+function ace_editor_field_formatter_info() {
+	return array(
+		'ace_editor_code_readonly_formatter' => array(
+			'label' => t('Code syntax highlighting'),
+			'field types' => array('text_long', 'text_with_summary'),
+			'settings'	=> array(
+				'theme' => 'dark',
+				'syntax' => 'html',
+				'field_height' => '200px',
+				'field_width' => '100%',
+				'font_size' => '10pt',
+				'line_numbers' => true,
+				'print_margin' => false,
+				'invisibles' => false,
+			),
+		),
+	);
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ *
+ *
+ */
+function ace_editor_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+	
+	//This gets the view_mode where our settings are stored
+	$display = $instance['display'][$view_mode];
+	
+	//This gets the actual settings
+	$settings = $display['settings'];
+	
+	$element = array();
+
+	$element['theme'] = array(
+		'#type' => 'select',
+		'#title' => t('Theme'),
+		'#options' => array(
+			'twilight' => 'Dark',
+			'textmate' => 'Light',
+		),
+		'#default_value' => $settings['theme'],
+		'#attributes' => array(
+			'style' => 'width: 150px;'
+		),
+	);
+	
+	$element['syntax'] = array(
+		'#type' => 'select',
+		'#title' => t('Syntax'),
+		'#description' => t('The syntax that will be highlighted.'),
+		'#options' => array(
+			'html' => 'HTML',
+			'php' => 'PHP',
+		),
+		'#default_value' => $settings['syntax'],
+		'#attributes' => array(
+			'style' => 'width: 150px;'
+		),
+	);
+	
+	$element['field_height'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Height'),
+		'#description' => t('The height of the editor in either pixels or percents.'),
+		'#default_value' => $settings['field_height'],
+		'#attributes' => array(
+			'style' => 'width: 100px;'
+		),
+	);
+	
+	$element['field_width'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Width'),
+		'#description' => t('The width of the editor in either pixels or percents.'),
+		'#default_value' => $settings['field_width'],
+		'#attributes' => array(
+			'style' => 'width: 100px;'
+		),
+	);
+	
+	$element['font_size'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Font size'),
+		'#description' => t('The the font size of the editor.'),
+		'#default_value' => $settings['font_size'],
+		'#attributes' => array(
+			'style' => 'width: 100px;'
+		),
+	);
+	
+	$element['line_numbers'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Show line numbers'),
+		'#default_value' => $settings['line_numbers'],
+	);
+	
+	$element['print_margin'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Show print margin'),
+		'#default_value' => $settings['print_margin'],
+	);
+	
+	$element['invisibles'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Show invisibles'),
+		'#default_value' => $settings['invisibles'],
+	);
+	
+	return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ *
+ *
+ */
+function ace_editor_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = t('Output with code syntax highlighting for @syntax in the @theme theme.', array(
+    '@syntax'     => $settings['syntax'],
+    '@theme'  => $settings['theme'],
+  ));
+
+  return $summary;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function ace_editor_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+	$settings = $display['settings'];
+	$element = array();
+	
+	$jsSettings = array(
+		'ace_editor' => array(
+			'field_format_settings' => array(
+				'theme' => $settings['theme'],
+				'syntax' => $settings['syntax'],
+				'font_size' => $settings['font_size'],
+				'line_numbers' => $settings['line_numbers'],
+				'print_margin' => $settings['print_margin'],
+				'invisibles' => $settings['invisibles'],
+			),
+			'field_format_instances' => array()
+		)
+	);
+	foreach ($items as $delta => $item) {
+		$elementID = $field['field_name'] . '-' . $field['id'] . '-pre';
+		$preElement = '<pre id="' . $elementID . '" ' .
+			'style="height: ' . $settings['field_height'] . '; width: ' . $settings['field_width'] . '">'/* . $item['value']*/ . '</pre>';
+			
+		$element[0]['#markup'] = $preElement;
+		$jsSettings['ace_editor']['field_format_instances'][] = array(
+			'id' => $elementID,
+			'content' => $item['value'],
+		);
+	}
+	
+	drupal_add_js($jsSettings, 'setting');
+	drupal_add_library('ace_editor', 'ace-editor', FALSE);
+	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.field_format.js');
+	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.field_format.css');
+	
+	return $element;
+}
 
 /**
  * Implements hook_library().
@@ -146,7 +254,9 @@ function ace_editor_library() {
 		'js' => array(
 			'sites/all/libraries/ace/src/ace.js' => array(),
 			'sites/all/libraries/ace/src/mode-html.js' => array(),
+			'sites/all/libraries/ace/src/mode-php.js' => array(),
 			'sites/all/libraries/ace/src/theme-twilight.js' => array(),
+			'sites/all/libraries/ace/src/theme-textmate.js' => array(),
 		),
 	);
 
