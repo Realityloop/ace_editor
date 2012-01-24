@@ -338,8 +338,8 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
  */
 function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $cache_id) {
 	
-	if (preg_match_all("/\[editor\](.*?)\s*\[\/editor\]/s", $text, $match)) {
-		
+	if (preg_match_all("/\[editor.*?\](.*?)\s*\[\/editor\]/s", $text, $match)) {
+
 		$settings = $filter->settings;
 		$jsSettings = array(
 			'ace_editor' => array(
@@ -360,6 +360,21 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 			}
 			
 			$replace[] = '<pre id="' . $elementID . '"></pre>';
+			
+			// For theme name lookup on settings override below.
+			$themeDict = array(
+				'dark' => 'twilight',
+				'light' => 'textmate',
+			);
+			
+			// Override settings with attributes on the tag.
+			foreach(tag_attributes('editor', $value) as $key => $value) {
+				if ($key == 'theme' && isset($themeDict[$value])) {
+					$value = $themeDict[$value];
+				}
+			
+				$settings[$key] = $value;
+			}
 
 			$jsSettings['ace_editor']['editor_instances'][] = array(
 				'id' => $elementID,
@@ -376,9 +391,46 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 		return str_replace($search, $replace, $text);
 	}
 	
-	//return $text;
+	return $text;
 }
 
+function tag_attributes($element_name, $xml) {
+
+		// Grab the string of attributes inside the editor tag.
+	$found = preg_match('#\[' . $element_name . 
+						'\s+([^>]+(?:"|\'))\s?/?\]#',
+						$xml, $matches);
+
+	if ($found == 1) {
+		$attribute_array = array();
+		$attribute_string = $matches[1];
+		// Match attribute-name attribute-value pairs.
+		$found = preg_match_all(
+						'#([^\s=]+)\s*=\s*(\'[^<\']*\'|"[^<"]*")#',
+						$attribute_string, $matches, PREG_SET_ORDER);
+						
+		if ($found != 0) {
+
+			// Create an associative array that matches attribute
+						// names to attribute values.
+			foreach ($matches as $attribute) {
+			
+				$value = substr($attribute[2], 1, -1);
+				if ($value == "0" || $value == "1") {
+					$value = intval($value);
+				}
+
+				$attribute_array[$attribute[1]] = $value;
+			}
+			
+			return $attribute_array;
+		}
+	}
+
+	// Attributes either weren't found, or couldn't be extracted
+	// by the regular expression.
+	return false;
+}
 
 /**
  * Implements hook_library().
