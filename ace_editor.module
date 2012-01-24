@@ -93,10 +93,12 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 function ace_editor_node_block_edit_form_attach_js($form) {
 	$settings = array(
 		'ace_editor' => array(
-			'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
-			'theme' => variable_get('ace_editor_theme', 'dark'),
-			'printmargin' => variable_get('ace_editor_printmargin', false),
-			'fontsize' => variable_get('ace_editor_fontsize', '10pt'),
+			'admin' => array(
+				'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
+				'theme' => variable_get('ace_editor_theme', 'dark'),
+				'printmargin' => variable_get('ace_editor_printmargin', false),
+				'fontsize' => variable_get('ace_editor_fontsize', '10pt'),
+			),
 		),
 	);
 
@@ -136,75 +138,7 @@ function ace_editor_field_formatter_settings_form($field, $instance, $view_mode,
 	//This gets the actual settings
 	$settings = $display['settings'];
 	
-	$element = array(
-		'theme' => array(
-			'#type' => 'select',
-			'#title' => t('Theme'),
-			'#options' => array(
-				'twilight' => 'Dark',
-				'textmate' => 'Light',
-			),
-			'#default_value' => $settings['theme'],
-			'#attributes' => array(
-				'style' => 'width: 150px;'
-			),
-		),
-		'syntax' => array(
-			'#type' => 'select',
-			'#title' => t('Syntax'),
-			'#description' => t('The syntax that will be highlighted.'),
-			'#options' => array(
-				'html' => 'HTML',
-				'php' => 'PHP',
-			),
-			'#default_value' => $settings['syntax'],
-			'#attributes' => array(
-				'style' => 'width: 150px;'
-			),
-		),
-		'height' => array(
-			'#type' => 'textfield',
-			'#title' => t('Height'),
-			'#description' => t('The height of the editor in either pixels or percents.'),
-			'#default_value' => $settings['height'],
-			'#attributes' => array(
-				'style' => 'width: 100px;'
-			),
-		),
-		'width' => array(
-			'#type' => 'textfield',
-			'#title' => t('Width'),
-			'#description' => t('The width of the editor in either pixels or percents.'),
-			'#default_value' => $settings['width'],
-			'#attributes' => array(
-				'style' => 'width: 100px;'
-			),
-		),
-		'fontsize' => array(
-			'#type' => 'textfield',
-			'#title' => t('Font size'),
-			'#description' => t('The the font size of the editor.'),
-			'#default_value' => $settings['fontsize'],
-			'#attributes' => array(
-				'style' => 'width: 100px;'
-			),
-		),
-		'linenumbers' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show line numbers'),
-			'#default_value' => $settings['linenumbers'],
-		),
-		'printmargin' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show print margin'),
-			'#default_value' => $settings['printmargin'],
-		),
-		'invisibles' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show invisibles'),
-			'#default_value' => $settings['invisibles'],
-		),
-	);
+	$element = getSettingFormElements($settings);
 	
 	return $element;
 }
@@ -266,7 +200,7 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 function ace_editor_filter_info() {
 	$filters['ace_editor'] = array(
 		'title' => t('Syntax highlighting'), 
-		'description' => t('Use <ace>SOME CODE</ace> in your content to convert the code to an Ace Editor using selected syntax highlighting.'), 
+		'description' => t('Use &lt;ace&gt;SOME CODE&lt;/ace&gt; in your content to convert the code to an Ace Editor using selected syntax highlighting.'), 
 		'process callback' => 'ace_editor_filter_process', 
 		'settings callback' => 'ace_editor_filter_settings', 
 		'default settings' => ace_editor_default_settings(), 
@@ -286,75 +220,7 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
 	if (empty($settings)) {
 		$settings = $defaults;
 	}
-	$element = array(
-		'theme' => array(
-			'#type' => 'select',
-			'#title' => t('Theme'),
-			'#options' => array(
-				'twilight' => 'Dark',
-				'textmate' => 'Light',
-			),
-			'#default_value' => $settings['theme'],
-			'#attributes' => array(
-				'style' => 'width: 150px;'
-			),
-		),
-		'syntax' => array(
-			'#type' => 'select',
-			'#title' => t('Syntax'),
-			'#description' => t('The syntax that will be highlighted.'),
-			'#options' => array(
-				'html' => 'HTML',
-				'php' => 'PHP',
-			),
-			'#default_value' => $settings['syntax'],
-			'#attributes' => array(
-				'style' => 'width: 150px;'
-			),
-		),
-		'height' => array(
-			'#type' => 'textfield',
-			'#title' => t('Height'),
-			'#description' => t('The height of the editor in either pixels or percents.'),
-			'#default_value' => $settings['height'],
-			'#attributes' => array(
-				'style' => 'width: 100px;'
-			),
-		),
-		'width' => array(
-			'#type' => 'textfield',
-			'#title' => t('Width'),
-			'#description' => t('The width of the editor in either pixels or percents.'),
-			'#default_value' => $settings['width'],
-			'#attributes' => array(
-				'style' => 'width: 100px;'
-			),
-		),
-		'fontsize' => array(
-			'#type' => 'textfield',
-			'#title' => t('Font size'),
-			'#description' => t('The the font size of the editor.'),
-			'#default_value' => $settings['fontsize'],
-			'#attributes' => array(
-				'style' => 'width: 100px;'
-			),
-		),
-		'linenumbers' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show line numbers'),
-			'#default_value' => $settings['linenumbers'],
-		),
-		'printmargin' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show print margin'),
-			'#default_value' => $settings['printmargin'],
-		),
-		'invisibles' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show invisibles'),
-			'#default_value' => $settings['invisibles'],
-		),
-	);
+	$element = getSettingFormElements($settings);
 	
 	return $element;
 }
@@ -462,6 +328,81 @@ function tag_attributes($element_name, $xml) {
 	// Attributes either weren't found, or couldn't be extracted
 	// by the regular expression.
 	return false;
+}
+
+/**
+ *
+ */
+function getSettingFormElements($settings) {
+	return array(
+		'theme' => array(
+			'#type' => 'select',
+			'#title' => t('Theme'),
+			'#options' => array(
+				'twilight' => 'Dark',
+				'textmate' => 'Light',
+			),
+			'#default_value' => $settings['theme'],
+			'#attributes' => array(
+				'style' => 'width: 150px;'
+			),
+		),
+		'syntax' => array(
+			'#type' => 'select',
+			'#title' => t('Syntax'),
+			'#description' => t('The syntax that will be highlighted.'),
+			'#options' => array(
+				'html' => 'HTML',
+				'php' => 'PHP',
+			),
+			'#default_value' => $settings['syntax'],
+			'#attributes' => array(
+				'style' => 'width: 150px;'
+			),
+		),
+		'height' => array(
+			'#type' => 'textfield',
+			'#title' => t('Height'),
+			'#description' => t('The height of the editor in either pixels or percents.'),
+			'#default_value' => $settings['height'],
+			'#attributes' => array(
+				'style' => 'width: 100px;'
+			),
+		),
+		'width' => array(
+			'#type' => 'textfield',
+			'#title' => t('Width'),
+			'#description' => t('The width of the editor in either pixels or percents.'),
+			'#default_value' => $settings['width'],
+			'#attributes' => array(
+				'style' => 'width: 100px;'
+			),
+		),
+		'fontsize' => array(
+			'#type' => 'textfield',
+			'#title' => t('Font size'),
+			'#description' => t('The the font size of the editor.'),
+			'#default_value' => $settings['fontsize'],
+			'#attributes' => array(
+				'style' => 'width: 100px;'
+			),
+		),
+		'linenumbers' => array(
+			'#type' => 'checkbox',
+			'#title' => t('Show line numbers'),
+			'#default_value' => $settings['linenumbers'],
+		),
+		'printmargin' => array(
+			'#type' => 'checkbox',
+			'#title' => t('Show print margin'),
+			'#default_value' => $settings['printmargin'],
+		),
+		'invisibles' => array(
+			'#type' => 'checkbox',
+			'#title' => t('Show invisibles'),
+			'#default_value' => $settings['invisibles'],
+		),
+	);
 }
 
 /**
