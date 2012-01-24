@@ -51,9 +51,9 @@ Embedd code snippets in the body of your nodes or blocks
 --------------------------------------------------------
 
 Add the "Syntax highlighting" filter to any of your text formats. The module will now convert all content
-inside an [editor]-tag to display the code using the Ace editor with the selected options.
+inside an <ace> tag to display the code using the Ace editor with the selected options.
 
-You can override the default options/settings of the text filter by simply adding the settings as attributes to the [editor]-tag.
+You can override the default options/settings of the text filter by simply adding the settings as attributes to the <ace> tag.
 
 Here are the possible values:
 
@@ -83,6 +83,6 @@ Here are the possible values:
 
 Examples:
 	
-	[editor theme="light" height="200px" fontsize="12pt" printmargin="1"]
-	[editor theme="dark" syntax="php" height="200px" width="50%"]
-	[editor height="100px" width="100%" invisibles="1"]
+	<ace theme="light" height="200px" fontsize="12pt" printmargin="1">
+	<ace theme="dark" syntax="php" height="200px" width="50%">
+	<ace height="100px" width="100%" invisibles="1">
