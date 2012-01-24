@@ -22,6 +22,47 @@ function ace_editor_menu() {
 
 
 /**
+ *
+ */
+function ace_editor_add($content, $settings) {
+
+	$settings = ace_editor_default_settings();
+	// Override the default settings with the ones defined by user.
+	foreach ($settings as $key => $value) {
+		$settings[$key] = $value;
+	}
+
+	$add_index = '1';
+	if ($_SESSION['ace_editor_add_index']) {
+		dsm($_SESSION['ace_editor_add_index']);
+		$add_index = $_SESSION['ace_editor_add_index'];
+		$_SESSION['ace_editor_add_index'] = $add_index + 1;
+	} else {
+		dsm('added session cookie');
+		$_SESSION['ace_editor_add_index'] = $add_index;
+	}
+	
+	$preID = 'ace-editor-add-' . $add_index;
+	$pre = '<pre id="' . $preID . '">' . $content . '</pre>';
+	
+	$jsSettings = array();
+	$jsSettings['ace_editor']['editor_instances'][] = array(
+		'id' => $preID,
+		'content' => $content,
+		'settings' => $settings,
+	);
+
+	
+	drupal_add_library('ace_editor', 'ace-editor', FALSE);
+	drupal_add_js($jsSettings, 'setting');
+	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
+	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
+	
+	return $pre;
+}
+
+
+/**
  * Implements hook_form_alter().
  *
  * If the form is either a custom block form or a node edit form, add the JS nessesary.
@@ -77,16 +118,7 @@ function ace_editor_field_formatter_info() {
 		'ace_editor_code_readonly_formatter' => array(
 			'label' => t('Code syntax highlighting'),
 			'field types' => array('text_long', 'text_with_summary'),
-			'settings'	=> array(
-				'theme' => 'twilight',
-				'syntax' => 'html',
-				'field_height' => '200px',
-				'field_width' => '100%',
-				'font_size' => '10pt',
-				'line_numbers' => true,
-				'print_margin' => false,
-				'invisibles' => false,
-			),
+			'settings'	=> ace_editor_default_settings(),
 		),
 	);
 }
@@ -237,16 +269,7 @@ function ace_editor_filter_info() {
 		'description' => t('Use [editor]SOME CODE[/editor] in your content to convert the code to an Ace Editor using selected syntax highlighting.'), 
 		'process callback' => 'ace_editor_filter_process', 
 		'settings callback' => 'ace_editor_filter_settings', 
-		'default settings' => array(
-			'theme' => 'twilight',
-			'syntax' => 'html',
-			'field_height' => '200px',
-			'field_width' => '100%',
-			'font_size' => '10pt',
-			'line_numbers' => true,
-			'print_margin' => false,
-			'invisibles' => false,
-		), 
+		'default settings' => ace_editor_default_settings(), 
 		//'tips callback' => '_filter_html_tips',
 	);
 
@@ -404,6 +427,7 @@ function tag_attributes($element_name, $xml) {
 	if ($found == 1) {
 		$attribute_array = array();
 		$attribute_string = $matches[1];
+		
 		// Match attribute-name attribute-value pairs.
 		$found = preg_match_all(
 						'#([^\s=]+)\s*=\s*(\'[^<\']*\'|"[^<"]*")#',
@@ -459,4 +483,20 @@ function ace_editor_library() {
 */
 function ace_editor_library_installed() {
 	return file_exists('sites/all/libraries/ace/src/ace.js');
+}
+
+/**
+ *
+ */
+function ace_editor_default_settings() {
+	return array(
+		'theme' => 'twilight',
+		'syntax' => 'html',
+		'field_height' => '200px',
+		'field_width' => '100%',
+		'font_size' => '10pt',
+		'line_numbers' => true,
+		'print_margin' => false,
+		'invisibles' => false,
+	);
 }

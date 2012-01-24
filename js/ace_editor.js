@@ -26,16 +26,15 @@
 					'width': settings['field_width']
 				});
 			
-				// Set the height of the editor if field_height is set to auto.
-				/*
-				if (settings['field_height'] == 'auto') {
+				// Set the height of the editor if field_height is set to auto.	
+				/*if (settings['field_height'] == 'auto') {
 					editor_instance.getSession().on('change', function(e) {
-						var cursorHeight = $pre.find('div.ace_cursor:first').height();
+						//var cursorHeight = $pre.find('div.ace_gutter-cell:first').css('height');
 						//alert(cursorHeight);
-						$pre.css('height', (editor_instance.getSession().getValue().split('\n').length + 2) * cursorHeight);
+						//$pre.css('height', (editor_instance.getSession().getValue().split('\n').length + 2) * cursorHeight);
+						
 					});
-				}
-				*/
+				}*/
 			
 				editor_instance.getSession().setValue(html);
 			});
