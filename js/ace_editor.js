@@ -19,11 +19,12 @@
 				editor_instance.renderer.setShowGutter(settings['line_numbers']);
 				editor_instance.setShowPrintMargin(settings['print_margin']);
 				editor_instance.setShowInvisibles(settings['invisibles']);
+				editor_instance.renderer.setHScrollBarAlwaysVisible(false);
 				editor_instance.setReadOnly(true);
 				$pre.css({
-					'font-size': settings['font_size'],
-					'height': settings['field_height'],
-					'width': settings['field_width']
+					'font-size': settings['fontsize'],
+					'height': settings['height'],
+					'width': settings['width']
 				});
 			
 				// Set the height of the editor if field_height is set to auto.	

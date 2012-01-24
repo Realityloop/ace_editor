@@ -95,8 +95,8 @@ function ace_editor_node_block_edit_form_attach_js($form) {
 		'ace_editor' => array(
 			'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
 			'theme' => variable_get('ace_editor_theme', 'dark'),
-			'print_margin' => variable_get('ace_editor_print_margin', false),
-			'font_size' => variable_get('ace_editor_font_size', '10pt'),
+			'printmargin' => variable_get('ace_editor_printmargin', false),
+			'fontsize' => variable_get('ace_editor_fontsize', '10pt'),
 		),
 	);
 
@@ -162,42 +162,42 @@ function ace_editor_field_formatter_settings_form($field, $instance, $view_mode,
 				'style' => 'width: 150px;'
 			),
 		),
-		'field_height' => array(
+		'height' => array(
 			'#type' => 'textfield',
 			'#title' => t('Height'),
 			'#description' => t('The height of the editor in either pixels or percents.'),
-			'#default_value' => $settings['field_height'],
+			'#default_value' => $settings['height'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'
 			),
 		),
-		'field_width' => array(
+		'width' => array(
 			'#type' => 'textfield',
 			'#title' => t('Width'),
 			'#description' => t('The width of the editor in either pixels or percents.'),
-			'#default_value' => $settings['field_width'],
+			'#default_value' => $settings['width'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'
 			),
 		),
-		'font_size' => array(
+		'fontsize' => array(
 			'#type' => 'textfield',
 			'#title' => t('Font size'),
 			'#description' => t('The the font size of the editor.'),
-			'#default_value' => $settings['font_size'],
+			'#default_value' => $settings['fontsize'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'
 			),
 		),
-		'line_numbers' => array(
+		'linenumbers' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show line numbers'),
-			'#default_value' => $settings['line_numbers'],
+			'#default_value' => $settings['linenumbers'],
 		),
-		'print_margin' => array(
+		'printmargin' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show print margin'),
-			'#default_value' => $settings['print_margin'],
+			'#default_value' => $settings['printmargin'],
 		),
 		'invisibles' => array(
 			'#type' => 'checkbox',
@@ -242,7 +242,7 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 	foreach ($items as $delta => $item) {
 		$elementID = $field['field_name'] . '-' . $field['id'] . '-pre';
 		$preElement = '<pre id="' . $elementID . '" ' .
-			'style="height: ' . $settings['field_height'] . '; width: ' . $settings['field_width'] . '">'/* . $item['value']*/ . '</pre>';
+			'style="height: ' . $settings['height'] . '; width: ' . $settings['width'] . '">'/* . $item['value']*/ . '</pre>';
 			
 		$element[0]['#markup'] = $preElement;
 		$jsSettings['ace_editor']['editor_instances'][] = array(
@@ -283,6 +283,9 @@ function ace_editor_filter_info() {
 function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defaults, $filters) {
 
 	$settings = $filter->settings;
+	if (empty($settings)) {
+		$settings = $defaults;
+	}
 	$element = array(
 		'theme' => array(
 			'#type' => 'select',
@@ -309,42 +312,42 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
 				'style' => 'width: 150px;'
 			),
 		),
-		'field_height' => array(
+		'height' => array(
 			'#type' => 'textfield',
 			'#title' => t('Height'),
 			'#description' => t('The height of the editor in either pixels or percents.'),
-			'#default_value' => $settings['field_height'],
+			'#default_value' => $settings['height'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'
 			),
 		),
-		'field_width' => array(
+		'width' => array(
 			'#type' => 'textfield',
 			'#title' => t('Width'),
 			'#description' => t('The width of the editor in either pixels or percents.'),
-			'#default_value' => $settings['field_width'],
+			'#default_value' => $settings['width'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'
 			),
 		),
-		'font_size' => array(
+		'fontsize' => array(
 			'#type' => 'textfield',
 			'#title' => t('Font size'),
 			'#description' => t('The the font size of the editor.'),
-			'#default_value' => $settings['font_size'],
+			'#default_value' => $settings['fontsize'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'
 			),
 		),
-		'line_numbers' => array(
+		'linenumbers' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show line numbers'),
-			'#default_value' => $settings['line_numbers'],
+			'#default_value' => $settings['linenumbers'],
 		),
-		'print_margin' => array(
+		'printmargin' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show print margin'),
-			'#default_value' => $settings['print_margin'],
+			'#default_value' => $settings['printmargin'],
 		),
 		'invisibles' => array(
 			'#type' => 'checkbox',
@@ -497,11 +500,11 @@ function ace_editor_default_settings() {
 	return array(
 		'theme' => 'twilight',
 		'syntax' => 'html',
-		'field_height' => '200px',
-		'field_width' => '100%',
-		'font_size' => '10pt',
-		'line_numbers' => true,
-		'print_margin' => false,
+		'height' => '200px',
+		'width' => '100%',
+		'fontsize' => '10pt',
+		'linenumbers' => true,
+		'printmargin' => false,
 		'invisibles' => false,
 	);
 }

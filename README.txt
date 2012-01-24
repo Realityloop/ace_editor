@@ -63,19 +63,19 @@ Here are the possible values:
   syntax
     html or php
 
-  field_height
+  height
 	300px, 75% etc.
 	
-  field_width
+  width
     100%, 600px etc.
 
-  font_size
+  fontsize
     All compatible CSS values for font-size
 
-  line_numbers
+  linenumbers
     1 or 0 (on/off)
 
-  print_margin
+  printmargin
     1 or 0 (on/off)
 
   invisibles

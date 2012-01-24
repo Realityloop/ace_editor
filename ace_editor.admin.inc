@@ -45,7 +45,7 @@
 			),
 		);
 
-		$form['ace_editor_font_size'] = array(
+		$form['ace_editor_fontsize'] = array(
 			'#type' => 'select',
 			'#title' => t('Font size'),
 			'#options' => array(
@@ -54,16 +54,16 @@
 				'11pt' => '11pt',
 				'12pt' => '12pt',
 			),
-			'#default_value' => variable_get('ace_editor_font_size', '10pt'),
+			'#default_value' => variable_get('ace_editor_fontsize', '10pt'),
 			'#attributes' => array(
 				'style' => 'min-width: 100px;'
 			),
 		);
 
-		$form['ace_editor_print_margin'] = array(
+		$form['ace_editor_printmargin'] = array(
 			'#type' => 'checkbox',
 			'#title' => t('Show print margin'),
-			'#default_value' => variable_get('ace_editor_print_margin'),
+			'#default_value' => variable_get('ace_editor_printmargin'),
 		);
 
 		return system_settings_form($form);

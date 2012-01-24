@@ -58,9 +58,9 @@
 						}
 						var HTMLMode = require("ace/mode/html").Mode;
 						editor_instance.getSession().setMode(new HTMLMode());
-						editor_instance.setShowPrintMargin(editorSettings['print_margin']);
+						editor_instance.setShowPrintMargin(editorSettings['printmargin']);
 						editor_instance.renderer.setHScrollBarAlwaysVisible(false);
-						$pre.css('font-size', editorSettings['font_size']);
+						$pre.css('font-size', editorSettings['fontsize']);
 						
 						var editorObject = {
 							editor: editor_instance,
