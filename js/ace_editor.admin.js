@@ -13,9 +13,9 @@
 			var $filterSelector = $textFormatWrapper.find('select.filter-list');
 			
 			// TODO: Add documentation.
-			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.text_formats) != -1) {
+			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.ace_editor_filter_formats) != -1) {
 				
-				var editorSettings = Drupal.settings.ace_editor;
+				var editorSettings = Drupal.settings.ace_editor.admin;
 				
 				// Check to see if the editor has been added yet.
 				if (!$textFormatWrapper.find('div.ace-editor-container').length) {
@@ -177,7 +177,7 @@
 				var $filterSelector = $(this).find('select.filter-list');
 
 				// If currently in editor mode. Transfer the values of all editors to their related textareas.
-				if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.text_formats) != -1) {
+				if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.text_formats) != -1) {
 					
 					var editorObjects = $(this).data('ace-editors');
 					$(editorObjects).each(function(i) {
