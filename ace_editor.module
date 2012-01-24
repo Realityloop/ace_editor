@@ -204,17 +204,7 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 	
 	$jsSettings = array(
 		'ace_editor' => array(
-			'field_format_settings' => array(
-				'theme' => $settings['theme'],
-				'syntax' => $settings['syntax'],
-				'field_height' => $settings['field_height'],
-				'field_width' => $settings['field_width'],
-				'font_size' => $settings['font_size'],
-				'line_numbers' => $settings['line_numbers'],
-				'print_margin' => $settings['print_margin'],
-				'invisibles' => $settings['invisibles'],
-			),
-			'field_format_instances' => array()
+			'editor_instances' => array()
 		)
 	);
 	foreach ($items as $delta => $item) {
@@ -223,16 +213,17 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 			'style="height: ' . $settings['field_height'] . '; width: ' . $settings['field_width'] . '">'/* . $item['value']*/ . '</pre>';
 			
 		$element[0]['#markup'] = $preElement;
-		$jsSettings['ace_editor']['field_format_instances'][] = array(
+		$jsSettings['ace_editor']['editor_instances'][] = array(
 			'id' => $elementID,
 			'content' => $item['value'],
+			'settings' => $settings,
 		);
 	}
 	
 	drupal_add_js($jsSettings, 'setting');
 	drupal_add_library('ace_editor', 'ace-editor', FALSE);
-	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.field_format.js');
-	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.field_format.css');
+	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
+	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
 	
 	return $element;
 }
@@ -243,7 +234,7 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 function ace_editor_filter_info() {
 	$filters['ace_editor'] = array(
 		'title' => t('Ace editor filter'), 
-		'description' => t('Use [editor]YOUR CODE[/editor] in your content to convert the specified parts into using an Ace Editor with selected syntax highlighting.'), 
+		'description' => t('Use [editor]SOME CODE[/editor] in your content to convert the code into using an Ace Editor with selected syntax highlighting.'), 
 		'process callback' => 'ace_editor_filter_process', 
 		'settings callback' => 'ace_editor_filter_settings', 
 		'default settings' => array(
@@ -347,24 +338,15 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
  */
 function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $cache_id) {
 	
-	$settings = $filter->settings;
-	$jsSettings = array(
-		'ace_editor' => array(
-			'format_filter_settings' => array(
-				'theme' => $settings['theme'],
-				'syntax' => $settings['syntax'],
-				'field_height' => $settings['field_height'],
-				'field_width' => $settings['field_width'],
-				'font_size' => $settings['font_size'],
-				'line_numbers' => $settings['line_numbers'],
-				'print_margin' => $settings['print_margin'],
-				'invisibles' => $settings['invisibles'],
-			),
-			'format_filter_instances' => array()
-		)
-	);
-	
 	if (preg_match_all("/\[editor\](.*?)\s*\[\/editor\]/s", $text, $match)) {
+		
+		$settings = $filter->settings;
+		$jsSettings = array(
+			'ace_editor' => array(
+				'editor_instances' => array()
+			)
+		);
+	
 		foreach ($match[0] as $key => $value) {
 			$elementID = 'inline-ace-editor-' . $key;
 			$search[] = $value;
@@ -379,16 +361,17 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 			
 			$replace[] = '<pre id="' . $elementID . '"></pre>';
 
-			$jsSettings['ace_editor']['format_filter_instances'][] = array(
+			$jsSettings['ace_editor']['editor_instances'][] = array(
 				'id' => $elementID,
 				'content' => $content,
+				'settings' => $settings,
 			);
 		}
 		
 		drupal_add_js($jsSettings, 'setting');
 		drupal_add_library('ace_editor', 'ace-editor', FALSE);
-		drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.format_filter.js');
-		drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.format_filter.css');
+		drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
+		drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
 		
 		return str_replace($search, $replace, $text);
 	}
