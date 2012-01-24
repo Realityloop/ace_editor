@@ -13,6 +13,10 @@
 		foreach($filter_formats as $key => $format_obj) {
 			$filter_formats_options[$key] = $format_obj->name;
 		}
+		
+		$form['explanation'] = array(
+			'#markup' => t('These settings affect the editor only when used to edit HTML/PHP in your nodes or blocks.<br><br>'),
+		);
 
 		$form['ace_editor_filter_formats'] = array(
 			'#type' => 'select',

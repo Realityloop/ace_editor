@@ -233,8 +233,8 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
  */
 function ace_editor_filter_info() {
 	$filters['ace_editor'] = array(
-		'title' => t('Ace editor filter'), 
-		'description' => t('Use [editor]SOME CODE[/editor] in your content to convert the code into using an Ace Editor with selected syntax highlighting.'), 
+		'title' => t('Syntax highlighting'), 
+		'description' => t('Use [editor]SOME CODE[/editor] in your content to convert the code to an Ace Editor using selected syntax highlighting.'), 
 		'process callback' => 'ace_editor_filter_process', 
 		'settings callback' => 'ace_editor_filter_settings', 
 		'default settings' => array(
