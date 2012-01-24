@@ -80,3 +80,9 @@ Here are the possible values:
 
   invisibles
     1 or 0 (on/off)
+
+Examples:
+	
+	[editor theme="light" height="200px" fontsize="12pt" printmargin="1"]
+	[editor theme="dark" syntax="php" height="200px" width="50%"]
+	[editor height="100px" width="100%" invisibles="1"]
