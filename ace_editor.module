@@ -266,7 +266,7 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 function ace_editor_filter_info() {
 	$filters['ace_editor'] = array(
 		'title' => t('Syntax highlighting'), 
-		'description' => t('Use [editor]SOME CODE[/editor] in your content to convert the code to an Ace Editor using selected syntax highlighting.'), 
+		'description' => t('Use <ace>SOME CODE</ace> in your content to convert the code to an Ace Editor using selected syntax highlighting.'), 
 		'process callback' => 'ace_editor_filter_process', 
 		'settings callback' => 'ace_editor_filter_settings', 
 		'default settings' => ace_editor_default_settings(), 
@@ -361,7 +361,8 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
  */
 function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $cache_id) {
 	
-	if (preg_match_all("/\[editor.*?\](.*?)\s*\[\/editor\]/s", $text, $match)) {
+	//if (preg_match_all("/\[editor.*?\](.*?)\s*\[\/editor\]/s", $text, $match)) {
+	if (preg_match_all("/<ace.*?>(.*?)\s*<\/ace>/s", $text, $match)) {
 
 		$settings = $filter->settings;
 		$jsSettings = array(
@@ -371,7 +372,7 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 		);
 	
 		foreach ($match[0] as $key => $value) {
-			$elementID = 'inline-ace-editor-' . $key;
+			$elementID = 'ace-editor-inline' . $key;
 			$search[] = $value;
 					
 			$content = $match[1][$key];
@@ -391,7 +392,7 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 			);
 			
 			// Override settings with attributes on the tag.
-			foreach(tag_attributes('editor', $value) as $key => $value) {
+			foreach(tag_attributes('ace', $value) as $key => $value) {
 				if ($key == 'theme' && isset($themeDict[$value])) {
 					$value = $themeDict[$value];
 				}
@@ -419,9 +420,13 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 
 function tag_attributes($element_name, $xml) {
 
-		// Grab the string of attributes inside the editor tag.
-	$found = preg_match('#\[' . $element_name . 
+	// Grab the string of attributes inside the editor tag.
+	/*$found = preg_match('#\[' . $element_name . 
 						'\s+([^>]+(?:"|\'))\s?/?\]#',
+						$xml, $matches);*/
+						
+	$found = preg_match('#<' . $element_name . 
+						'\s+([^>]+(?:"|\'))\s?/?>#',
 						$xml, $matches);
 
 	if ($found == 1) {
