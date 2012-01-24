@@ -53,7 +53,7 @@ Embedd code snippets in the body of your nodes or blocks
 Add the "Syntax highlighting" filter to any of your text formats. The module will now convert all content
 inside an [editor]-tag to display the code using the Ace editor with the selected options.
 
-You can override the settings of the text filter by simply adding the settings as attributes to the [editor]-tag.
+You can override the default options/settings of the text filter by simply adding the settings as attributes to the [editor]-tag.
 
 Here are the possible values:
 
