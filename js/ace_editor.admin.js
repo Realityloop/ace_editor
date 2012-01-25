@@ -13,7 +13,7 @@
 			var $filterSelector = $textFormatWrapper.find('select.filter-list');
 			
 			// TODO: Add documentation.
-			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.ace_editor_filter_formats) != -1) {
+			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.text_formats) != -1) {
 				
 				var editorSettings = Drupal.settings.ace_editor.admin;
 				
