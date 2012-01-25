@@ -22,29 +22,29 @@ function ace_editor_menu() {
 
 
 /**
- *
+ * An API function to embed read-only editors into template files.
  */
 function ace_editor_add($content, $settings) {
 
+	// Get the default settings and override them with settings defined by user.
 	$settings = ace_editor_default_settings();
-	// Override the default settings with the ones defined by user.
 	foreach ($settings as $key => $value) {
 		$settings[$key] = $value;
 	}
-
+	
+	// Get a unique index for the next pre-element added by this API function.
 	$add_index = '1';
 	if ($_SESSION['ace_editor_add_index']) {
-		dsm($_SESSION['ace_editor_add_index']);
 		$add_index = $_SESSION['ace_editor_add_index'];
 		$_SESSION['ace_editor_add_index'] = $add_index + 1;
 	} else {
-		dsm('added session cookie');
 		$_SESSION['ace_editor_add_index'] = $add_index;
 	}
 	
 	$preID = 'ace-editor-add-' . $add_index;
 	$pre = '<pre id="' . $preID . '">' . $content . '</pre>';
 	
+	// Put all instances and their settings to JS.
 	$jsSettings = array();
 	$jsSettings['ace_editor']['editor_instances'][] = array(
 		'id' => $preID,
@@ -52,7 +52,7 @@ function ace_editor_add($content, $settings) {
 		'settings' => $settings,
 	);
 
-	
+	// Add the javascript files needed.
 	drupal_add_library('ace_editor', 'ace-editor', FALSE);
 	drupal_add_js($jsSettings, 'setting');
 	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
@@ -113,8 +113,6 @@ function ace_editor_node_block_edit_form_attach_js($form) {
 
 /**
  * Implements hook_field_formatter_info().
- *
- *
  */
 function ace_editor_field_formatter_info() {
 	return array(
@@ -128,16 +126,11 @@ function ace_editor_field_formatter_info() {
 
 /**
  * Implements hook_field_formatter_settings_form().
- *
- *
  */
 function ace_editor_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
 	
-	//This gets the view_mode where our settings are stored
-	$display = $instance['display'][$view_mode];
-	
-	//This gets the actual settings
-	$settings = $display['settings'];
+	// get the settings.
+	$settings = $instance['display'][$view_mode]['settings'];
 	
 	$element = getSettingFormElements($settings);
 	
@@ -146,16 +139,15 @@ function ace_editor_field_formatter_settings_form($field, $instance, $view_mode,
 
 /**
  * Implements hook_field_formatter_settings_summary().
- *
- *
  */
 function ace_editor_field_formatter_settings_summary($field, $instance, $view_mode) {
-	$display = $instance['display'][$view_mode];
-	$settings = $display['settings'];
+
+	// Get the settings.
+	$settings = $instance['display'][$view_mode]['settings'];
 
 	$summary = t('Output with code syntax highlighting for @syntax in the @theme theme.', array(
-		'@syntax'			=> $settings['syntax'],
-		'@theme'	=> $settings['theme'],
+		'@syntax' => $settings['syntax'],
+		'@theme' => $settings['theme'],
 	));
 
 	return $summary;
@@ -165,7 +157,8 @@ function ace_editor_field_formatter_settings_summary($field, $instance, $view_mo
  * Implements hook_field_formatter_view().
  */
 function ace_editor_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-
+	
+	// Get the settings.
 	$settings = $display['settings'];
 	$element = array();
 	
@@ -174,19 +167,20 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 			'editor_instances' => array()
 		)
 	);
+	
+	// Add all values to their own editor intance.
 	foreach ($items as $delta => $item) {
-		$elementID = $field['field_name'] . '-' . $field['id'] . '-pre';
-		$preElement = '<pre id="' . $elementID . '" ' .
-			'style="height: ' . $settings['height'] . '; width: ' . $settings['width'] . '">'/* . $item['value']*/ . '</pre>';
-			
-		$element[0]['#markup'] = $preElement;
+		$elementID = $field['field_name'] . '-' . $delta. '-pre';
+		$preElement = '<pre id="' . $elementID . '" </pre>';
+		$element[]['#markup'] = $preElement;
+		
 		$jsSettings['ace_editor']['editor_instances'][] = array(
 			'id' => $elementID,
 			'content' => $item['value'],
 			'settings' => $settings,
 		);
 	}
-	
+
 	drupal_add_js($jsSettings, 'setting');
 	drupal_add_library('ace_editor', 'ace-editor', FALSE);
 	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
@@ -213,7 +207,7 @@ function ace_editor_filter_info() {
 
 
 /**
- * Implements 
+ * Returns the settings form for the text filter. 
  */
 function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defaults, $filters) {
 
@@ -231,7 +225,6 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
  */
 function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $cache_id) {
 	
-	//if (preg_match_all("/\[editor.*?\](.*?)\s*\[\/editor\]/s", $text, $match)) {
 	if (preg_match_all("/<ace.*?>(.*?)\s*<\/ace>/s", $text, $match)) {
 
 		$settings = $filter->settings;
@@ -288,13 +281,12 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 	return $text;
 }
 
+/**
+ * Get all attributes of an <ace> tag in key/value pairs.
+ */
 function tag_attributes($element_name, $xml) {
 
 	// Grab the string of attributes inside the editor tag.
-	/*$found = preg_match('#\[' . $element_name . 
-						'\s+([^>]+(?:"|\'))\s?/?\]#',
-						$xml, $matches);*/
-						
 	$found = preg_match('#<' . $element_name . 
 						'\s+([^>]+(?:"|\'))\s?/?>#',
 						$xml, $matches);
@@ -332,7 +324,7 @@ function tag_attributes($element_name, $xml) {
 }
 
 /**
- *
+ * Return the form elements often used in setting forms for late use with editor instances.
  */
 function getSettingFormElements($settings) {
 	return array(
@@ -407,6 +399,22 @@ function getSettingFormElements($settings) {
 }
 
 /**
+ * The default settings used with the editor.
+ */
+function ace_editor_default_settings() {
+	return array(
+		'theme' => 'twilight',
+		'syntax' => 'html',
+		'height' => '200px',
+		'width' => '100%',
+		'fontsize' => '10pt',
+		'linenumbers' => true,
+		'printmargin' => false,
+		'invisibles' => false,
+	);
+}
+
+/**
  * Implements hook_library().
  *
  * Add the ace JS library for use with drupal.
@@ -433,20 +441,4 @@ function ace_editor_library() {
 */
 function ace_editor_library_installed() {
 	return file_exists('sites/all/libraries/ace/src/ace.js');
-}
-
-/**
- *
- */
-function ace_editor_default_settings() {
-	return array(
-		'theme' => 'twilight',
-		'syntax' => 'html',
-		'height' => '200px',
-		'width' => '100%',
-		'fontsize' => '10pt',
-		'linenumbers' => true,
-		'printmargin' => false,
-		'invisibles' => false,
-	);
 }

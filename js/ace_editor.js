@@ -23,21 +23,22 @@
 				editor_instance.setReadOnly(true);
 				$pre.css({
 					'font-size': settings['fontsize'],
-					'height': settings['height'],
+					'height': (settings['height'] == 'auto' || settings['height'] == '') ? '0px' : settings['height'],
 					'width': settings['width']
 				});
-			
-				// Set the height of the editor if field_height is set to auto.	
-				/*if (settings['field_height'] == 'auto') {
-					editor_instance.getSession().on('change', function(e) {
-						//var cursorHeight = $pre.find('div.ace_gutter-cell:first').css('height');
-						//alert(cursorHeight);
-						//$pre.css('height', (editor_instance.getSession().getValue().split('\n').length + 2) * cursorHeight);
-						
-					});
-				}*/
-			
+				
 				editor_instance.getSession().setValue(html);
+								
+				// TODO: Set the height of the editor if field_height is set to auto.	
+				if (settings['height'] == 'auto') {
+					/*
+					console.log('Scrollbar: ' + editor_instance.renderer.scrollBar.getWidth());
+					console.log('Lineheight: ' + editor_instance.renderer.lineHeight);
+					console.log('Num lines: ' + editor_instance.getSession().getValue().split('\n').length);
+					
+					$pre.css('height', (editor_instance.renderer.lineHeight) * (editor_instance.getSession().getValue().split('\n').length + 2) + editor_instance.renderer.scrollBar.getWidth());
+					*/
+				}
 			});
 		}
 		

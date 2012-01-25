@@ -3,19 +3,26 @@
   Drupal.behaviors.ace_editor_admin = {
 	attach: function(context, settings) {
 		
+		// Contains the settings for the editors.
+		var editorSettings;
+		
 		/**
 		* If the user selected a text format configured to be used with the editor,
 		* show it, else show the default textarea.
 		*/
-		var editorSettings;
 		function acifyWrapper($textFormatWrapper) {
-
+			
 			// The select list for chosing the text format that will be used.
 			var $filterSelector = $textFormatWrapper.find('select.filter-list');
 			
-			// TODO: Add documentation.
+			// Checks if the currently selected filter is one that uses the editor.
 			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.text_formats) != -1) {
 				
+				/**
+				 * If the settings has not been set I will copy them into a new object.
+				 * if I don't the settings will be duplicated every time I add a textarea
+				 * on fields that supports multiple values.
+				 */
 				if (!editorSettings) {
 					editorSettings = $.extend({}, Drupal.settings.ace_editor.admin);
 				}
@@ -23,6 +30,8 @@
 				// Check to see if the editor has been added yet.
 				if (!$textFormatWrapper.find('div.ace-editor-container').length) {
 					
+					// Init the array that will hold all editor elements and instances inside
+					// of each text format wrapper.
 					var editors = new Array();
 					
 					// Iterate through all textarea containers that and attach the editor.
@@ -53,7 +62,8 @@
 							
 							$(this).find('div.form-textarea-wrapper').after($ace_editor_container);
 						}
-					
+						
+						// Initialize the editor and set the correct options.
 						var editor_instance = ace.edit($pre.attr('id'));
 						if (editorSettings.theme == 'dark') {
 							editor_instance.setTheme("ace/theme/twilight");
@@ -93,6 +103,7 @@
 					});
 				}
 				
+				// Get all of the editor objects for the text format wrapper.
 				var editorObjects, editorsJustAdded = false;
 				if (editors) {
 					editorObjects = editors;
@@ -146,23 +157,6 @@
 		}
 		
 		/**
-		*	Returns the editor controls.
-		*/
-		function get_editor_controls() {
-			$controls = $('<div class="ace-editor-controls"></div>');
-			
-			$controls.append('<div class="control"><input type="checkbox" name="show_hidden" class="show_hidden" checked>' + 
-							  '<label>Invisibles</label></div>');
-							
-			$controls.append('<div class="control"><input type="checkbox" name="show_line_numbers" class="show_line_numbers" checked>' + 
-							  '<label>Line numbers</label></div>');
-										
-			$controls.append('<div class="info"><span class="num-lines">1 lines</span><a class="key-bindings" target="_blank" href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts">Show key bindings</a></div>');
-			
-			return $controls;
-		}
-		
-		/**
 		* Bind the change event to all text format select lists.
 		*/
 		$('div.text-format-wrapper fieldset.filter-wrapper select.filter-list').live('change', function(e) {
@@ -171,74 +165,10 @@
 		});
 	
 		/**
-		* Transfer over the html of the editor to the correct field.
-		*/
-		/*
-		$('#edit-submit').click(function() {
-			
-			$('div.text-format-wrapper').each(function() {
-				
-				// The select list for chosing the text format that will be used.
-				var $filterSelector = $(this).find('select.filter-list');
-
-				// If currently in editor mode. Transfer the values of all editors to their related textareas.
-				if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.text_formats) != -1) {
-					
-					var editorObjects = $(this).data('ace-editors');
-					$(editorObjects).each(function(i) {
-						
-						var $formItem = $(this["element"]).parents('div.form-item:first');
-						var $textAreaWrapper = $formItem.find('div.form-textarea-wrapper');
-						var $editorContainer = $formItem.find('div.ace-editor-container');
-						
-						// Transfer content from editor to textarea.
-						$textAreaWrapper.find('textarea').val(this['editor'].getSession().getValue())
-					});
-				}
-			});
-		});
-		*/
-		
-		
-		/**
-		 *
-		 *//*
-		$('div.form-wrapper input.field-add-more-submit').bind('mousedown', function(e) {
-			$(this).find('div.text-format-wrapper').each(function() {
-				
-				// The select list for chosing the text format that will be used.
-				var $filterSelector = $(this).find('select.filter-list');
-
-				// If currently in editor mode. Transfer the values of all editors to their related textareas.
-				if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.text_formats) != -1) {
-					
-					var editorObjects = $(this).data('ace-editors');
-					$(editorObjects).each(function(i) {
-						
-						var $formItem = $(this["element"]).parents('div.form-item:first');
-						var $textAreaWrapper = $formItem.find('div.form-textarea-wrapper');
-						var $editorContainer = $formItem.find('div.ace-editor-container');
-						
-						// Transfer content from editor to textarea.
-						$textAreaWrapper.find('textarea').val(this['editor'].getSession().getValue())
-					});
-				}
-			});
-		});
-		*/
-		
-		
-		/**
-		 *
+		 * Update the editors to reflect the toggled option.
 		 */
-		function editorLostFocus($form_item, editorObject) {
-			var $textarea = $form_item.find('textarea');
-			$textarea.val(editorObject['editor'].getSession().getValue());
-			console.log('Saved');
-		}
-		
 		$('div.text-format-wrapper div.control input').live('change', function(e) {
-
+			
 			var $control = $(this);
 			var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
 			var editorObjects = $textFormatWrapper.data('ace-editors');
@@ -260,7 +190,8 @@
 				}
 			});
 			
-			// Save settings.
+			// Save settings 'till next time.
+			// TODO: Think about multiple instances here...
 			switch ($control.attr('name')) {
 				case "show_hidden":
 					localStorage['ace_editor_show_hidden'] = checked;
@@ -272,13 +203,32 @@
 		});
 		
 		/**
-		* The content of the editor has changed, update the span showing line numbers.
-		*/
+		 * The content of the editor has changed, update the span showing line numbers.
+		 * Also transfer the content of the editors to their related textareas.
+		 *
+		 * TODO: Think about a better way to transfer the data between the editor and the textarea,
+		 * I have tried doing this in a the 'blur'-event of the editor, but content wont get saved
+		 * every time...
+		 */
 		function editorContentChange($form_item, editorObject) {
 			$(editorObject['element']).parents('div.ace-editor-container:first').find('div.ace-editor-controls span.num-lines').text(editorObject['editor'].getSession().getValue().split("\n").length + " lines");
 			
 			var $textarea = $form_item.find('textarea');
-			$textarea.val(editorObject['editor'].getSession().getValue());
+			var val = editorObject['editor'].getSession().getValue();
+			$textarea.html(val);
+		}
+		
+		/**
+		*	Returns the controls for an editor.
+		*/
+		function get_editor_controls() {
+			$controls = $('<div class="ace-editor-controls"></div>');
+			$controls.append('<div class="control"><input type="checkbox" name="show_hidden" class="show_hidden" checked>' + 
+							  '<label>Invisibles</label></div>');
+			$controls.append('<div class="control"><input type="checkbox" name="show_line_numbers" class="show_line_numbers" checked>' + 
+							  '<label>Line numbers</label></div>');
+			$controls.append('<div class="info"><span class="num-lines">1 lines</span><a class="key-bindings" target="_blank" href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts">Show key bindings</a></div>');
+			return $controls;
 		}
 		
 		/**
@@ -287,11 +237,8 @@
 		if (localStorage['ace_editor_show_hidden'] == undefined) {
 			localStorage['ace_editor_show_hidden'] = 1;
 			localStorage['ace_editor_show_line_numbers'] = 1;
-		}
-		
-		//$('div.text-format-wrapper')
-		
+		}		
 	}
-  };
+};
 
 })(jQuery);

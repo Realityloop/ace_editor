@@ -1,11 +1,9 @@
 
 pre.ace_editor {
 	position: relative;
-	/*height: 600px;*/
 	border: 1px solid #ccc;
 	border-bottom: 0;
 	margin: 0 0 0 0;
-	/*font-size: 10pt;*/
 }
 
 div.ace-editor-controls {
