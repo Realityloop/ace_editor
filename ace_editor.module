@@ -91,6 +91,7 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
  * Add JS to the page containing the affected forms.
  */
 function ace_editor_node_block_edit_form_attach_js($form) {
+
 	$settings = array(
 		'ace_editor' => array(
 			'admin' => array(

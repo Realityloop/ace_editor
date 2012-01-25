@@ -7,7 +7,8 @@
 		* If the user selected a text format configured to be used with the editor,
 		* show it, else show the default textarea.
 		*/
-		function setAceState($textFormatWrapper) {
+		var editorSettings;
+		function acifyWrapper($textFormatWrapper) {
 
 			// The select list for chosing the text format that will be used.
 			var $filterSelector = $textFormatWrapper.find('select.filter-list');
@@ -15,7 +16,9 @@
 			// TODO: Add documentation.
 			if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.text_formats) != -1) {
 				
-				var editorSettings = Drupal.settings.ace_editor.admin;
+				if (!editorSettings) {
+					editorSettings = $.extend({}, Drupal.settings.ace_editor.admin);
+				}
 				
 				// Check to see if the editor has been added yet.
 				if (!$textFormatWrapper.find('div.ace-editor-container').length) {
@@ -24,7 +27,8 @@
 					
 					// Iterate through all textarea containers that and attach the editor.
 					$('div.form-item.form-type-textarea', $textFormatWrapper).each(function(i) {
-
+						var $form_item = $(this);
+						
 						// Create the editors container.
 						var $ace_editor_container = $('<div class="ace-editor-container"></div>');
 					
@@ -68,8 +72,9 @@
 						};
 						editors.push(editorObject);
 						
+						// Add event listeners.
 						editor_instance.getSession().on('change', function(editor) {
-							editorContentChange(editorObject);
+							editorContentChange($form_item, editorObject);
 						});
 					});
 					
@@ -87,7 +92,6 @@
 						$controls.find('div.control input').trigger('change');
 					});
 				}
-				
 				
 				var editorObjects, editorsJustAdded = false;
 				if (editors) {
@@ -163,12 +167,13 @@
 		*/
 		$('div.text-format-wrapper fieldset.filter-wrapper select.filter-list').live('change', function(e) {
 			var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
-			setAceState($textFormatWrapper);
+			acifyWrapper($textFormatWrapper);
 		});
 	
 		/**
 		* Transfer over the html of the editor to the correct field.
 		*/
+		/*
 		$('#edit-submit').click(function() {
 			
 			$('div.text-format-wrapper').each(function() {
@@ -192,7 +197,45 @@
 				}
 			});
 		});
+		*/
 		
+		
+		/**
+		 *
+		 *//*
+		$('div.form-wrapper input.field-add-more-submit').bind('mousedown', function(e) {
+			$(this).find('div.text-format-wrapper').each(function() {
+				
+				// The select list for chosing the text format that will be used.
+				var $filterSelector = $(this).find('select.filter-list');
+
+				// If currently in editor mode. Transfer the values of all editors to their related textareas.
+				if ($.inArray($filterSelector.val(), Drupal.settings.ace_editor.admin.text_formats) != -1) {
+					
+					var editorObjects = $(this).data('ace-editors');
+					$(editorObjects).each(function(i) {
+						
+						var $formItem = $(this["element"]).parents('div.form-item:first');
+						var $textAreaWrapper = $formItem.find('div.form-textarea-wrapper');
+						var $editorContainer = $formItem.find('div.ace-editor-container');
+						
+						// Transfer content from editor to textarea.
+						$textAreaWrapper.find('textarea').val(this['editor'].getSession().getValue())
+					});
+				}
+			});
+		});
+		*/
+		
+		
+		/**
+		 *
+		 */
+		function editorLostFocus($form_item, editorObject) {
+			var $textarea = $form_item.find('textarea');
+			$textarea.val(editorObject['editor'].getSession().getValue());
+			console.log('Saved');
+		}
 		
 		$('div.text-format-wrapper div.control input').live('change', function(e) {
 
@@ -231,8 +274,11 @@
 		/**
 		* The content of the editor has changed, update the span showing line numbers.
 		*/
-		function editorContentChange(editorObject) {
+		function editorContentChange($form_item, editorObject) {
 			$(editorObject['element']).parents('div.ace-editor-container:first').find('div.ace-editor-controls span.num-lines').text(editorObject['editor'].getSession().getValue().split("\n").length + " lines");
+			
+			var $textarea = $form_item.find('textarea');
+			$textarea.val(editorObject['editor'].getSession().getValue());
 		}
 		
 		/**
@@ -243,6 +289,7 @@
 			localStorage['ace_editor_show_line_numbers'] = 1;
 		}
 		
+		//$('div.text-format-wrapper')
 		
 	}
   };
