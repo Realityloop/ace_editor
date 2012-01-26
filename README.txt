@@ -47,6 +47,13 @@ This will output the content of that field as an editor with syntax highlighting
 the selected options.
 
 
+Add an editor in your template file
+-----------------------------------
+
+You can use the built in API function ace_editor_add($content, $settings) to add an editor anywhere in your
+template files. Settings is an array of key/value pairs that can contain any option specified below.
+
+
 Embedd code snippets in the body of your nodes or blocks
 --------------------------------------------------------
 

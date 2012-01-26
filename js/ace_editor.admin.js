@@ -51,7 +51,7 @@
 							var $pre = $('<pre id="' + $(this).find('textarea').attr('id') + '-aced"></pre>');
 							$ace_editor_container.append($pre);
 							
-							// Get the height for the fields.
+							// Get the stored height for the fields if it exists.
 							var sizeId = formIdentifier + '_' + $form_item.find('textArea').attr('id').replace(new RegExp('-', 'g'), '_')
 							var storedHeight = localStorageGet('ace_editor_' + sizeId + '_height');
 							var height = storedHeight ? storedHeight : null;
@@ -59,8 +59,8 @@
 							// Only append controlls to the main form item.
 							var $controls;
 							if ($(this).attr('class').indexOf("-value") != -1) {
+								
 								$pre.css({'height': height ? height : '500px'});
-							
 								$controls = get_editor_controls();
 								$ace_editor_container.append($controls);
 								$(this).append($ace_editor_container);
@@ -80,6 +80,7 @@
 							$pre.css('font-size', editorSettings['fontsize']);
 							$pre.data('editor_instance', editor_instance);
 							
+							// Adds handles to the editors for vertical resizing.
 							$pre.resizable({
 								handles: 's',
 								resize: function(event, ui) {
