@@ -53,7 +53,7 @@
 							
 							// Get the height for the fields.
 							var sizeId = formIdentifier + '_' + $form_item.find('textArea').attr('id').replace(new RegExp('-', 'g'), '_')
-							var storedHeight = localStorage['ace_editor_' + sizeId + '_height'];
+							var storedHeight = localStorageGet('ace_editor_' + sizeId + '_height');
 							var height = storedHeight ? storedHeight : null;
 							
 							// Only append controlls to the main form item.
@@ -88,7 +88,7 @@
 								},
 								stop: function(event, ui) {
 									var sizeId = formIdentifier + '_' + $form_item.find('textArea').attr('id').replace(new RegExp('-', 'g'), '_')
-									localStorage['ace_editor_' + sizeId + '_height'] = $pre.height();
+									localStorageSet('ace_editor_' + sizeId + '_height', $pre.height());
 								}
 							});
 							
@@ -120,9 +120,9 @@
 						var $textArea = $textFormatWrapper.find('textarea');
 						var textAreaID = formIdentifier + '_' + $textArea.attr('id').replace(new RegExp('-', 'g'), '_');
 						
-						var showHidden = localStorage['ace_editor_' + textAreaID + '_show_hidden'];
-						var lineNumbers = localStorage['ace_editor_' + textAreaID + '_show_line_numbers'];
-						var mode = localStorage['ace_editor_' + textAreaID + '_mode'];
+						var showHidden = localStorageGet('ace_editor_' + textAreaID + '_show_hidden');
+						var lineNumbers = localStorageGet('ace_editor_' + textAreaID + '_show_line_numbers');
+						var mode = localStorageGet('ace_editor_' + textAreaID + '_mode');
 						
 						$controls.find('input.show_hidden').attr('checked', (showHidden == 1) ? true : false);
 						$controls.find('input.show_line_numbers').attr('checked', (lineNumbers == 1) ? true : false);
@@ -242,13 +242,13 @@
 			// Save settings 'till next time.
 			switch ($control.attr('name')) {
 				case "show_hidden":
-					localStorage['ace_editor_' + textAreaID + '_show_hidden'] = checked;
+					localStorageSet('ace_editor_' + textAreaID + '_show_hidden', checked);
 					break;
 				case "show_line_numbers":
-					localStorage['ace_editor_' + textAreaID + '_show_line_numbers'] = checked;
+					localStorageSet('ace_editor_' + textAreaID + '_show_line_numbers', checked);
 					break;
 				case "mode":
-					localStorage['ace_editor_' + textAreaID + '_mode'] = $control.val();
+					localStorageSet('ace_editor_' + textAreaID + '_mode', $control.val());
 					break;
 			}
 		});
@@ -280,6 +280,7 @@
 			var val = editorObject['editor'].getSession().getValue();
 			$textarea.html(val);
 		}
+	
 		
 		/**
 		*	Returns the controls for an editor.
@@ -300,6 +301,33 @@
 			$controls.append('<div class="info"><span class="num-lines">1 lines</span><a class="key-bindings" target="_blank" href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts">Show key bindings</a></div>');
 			
 			return $controls;
+		}
+		
+		/**
+		 * Saves data to localStorage if available.
+		 */
+		function localStorageSet($key, $value) {
+			if (localStorageAvailable()) {
+				localStorage[$key] = $value;
+			}
+		}
+		
+		/**
+		 * Gets data from localStorage if available.
+		 */
+		function localStorageGet($key) {
+			if (localStorageAvailable()) {
+				return localStorage[$key];
+			}
+			
+			return null
+		}
+		
+		/**
+		 *
+		 */
+		function localStorageAvailable() {
+			return 'localStorage' in window && window['localStorage'] !== null;
 		}
 	}
 };
