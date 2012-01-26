@@ -116,13 +116,13 @@ Here are the possible values:
   width
     100%, 600px etc.
 
-  fontsize
+  font-size
     All compatible CSS values for font-size
 
-  linenumbers
+  line-numbers
     1 or 0 (on/off)
 
-  printmargin
+  print-margin
     1 or 0 (on/off)
 
   invisibles

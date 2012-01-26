@@ -177,7 +177,7 @@ function ace_editor_field_formatter_settings_summary($field, $instance, $view_mo
 function ace_editor_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 	
 	// Get the settings.
-	$settings = $display['settings'];
+	$settings = makeJsFriendlySettings($display['settings']);
 	$element = array();
 	
 	$jsSettings = array(
@@ -233,6 +233,7 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
 	if (empty($settings)) {
 		$settings = $defaults;
 	}
+	
 	$element = get_setting_form_elements($settings);
 	
 	return $element;
@@ -244,8 +245,8 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
 function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $cache_id) {
 	
 	if (preg_match_all("/<ace.*?>(.*?)\s*<\/ace>/s", $text, $match)) {
-
-		$settings = $filter->settings;
+		
+		
 		$jsSettings = array(
 			'ace_editor' => array(
 				'editor_instances' => array()
@@ -267,33 +268,23 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 			
 			$replace[] = '<pre id="' . $elementID . '"></pre>';
 			
-			// For theme name lookup on settings override below.
-			$themeDict = array(
-				'dark' => 'twilight',
-				'light' => 'textmate',
-			);
-			
 			// Override settings with attributes on the tag.
+			$settings = $filter->settings;
 			foreach(tag_attributes('ace', $value) as $key => $value) {
-				if ($key == 'theme' && isset($themeDict[$value])) {
-					$value = $themeDict[$value];
-				}
-			
 				$settings[$key] = $value;
 			}
+			$settings = makeJsFriendlySettings($settings);
 
+			$addJsSettings[] = $settings;
 			$jsSettings['ace_editor']['editor_instances'][] = array(
 				'id' => $elementID,
 				'content' => $content,
 				'settings' => $settings,
 			);
-			
-			$addJsSettings[] = $settings;
 		}
 		
 		drupal_add_js($jsSettings, 'setting');
 		ace_editor_add_js($addJsSettings, false);
-		//drupal_add_library('ace_editor', 'ace-editor', FALSE);
 		drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
 		drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
 		
@@ -331,7 +322,7 @@ function tag_attributes($element_name, $xml) {
 			foreach ($matches as $attribute) {
 			
 				$value = substr($attribute[2], 1, -1);
-				if ($value == "0" || $value == "1") {
+				if ($value == "1" || $value == "0" || $value == "true" || $value == "false") {
 					$value = intval($value);
 				}
 
@@ -389,24 +380,24 @@ function get_setting_form_elements($settings) {
 				'style' => 'width: 100px;'
 			),
 		),
-		'fontsize' => array(
+		'font-size' => array(
 			'#type' => 'textfield',
 			'#title' => t('Font size'),
 			'#description' => t('The the font size of the editor.'),
-			'#default_value' => $settings['fontsize'],
+			'#default_value' => $settings['font-size'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'
 			),
 		),
-		'linenumbers' => array(
+		'line-numbers' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show line numbers'),
-			'#default_value' => $settings['linenumbers'],
+			'#default_value' => $settings['line-numbers'],
 		),
-		'printmargin' => array(
+		'print-margin' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show print margin'),
-			'#default_value' => $settings['printmargin'],
+			'#default_value' => $settings['print-margin'],
 		),
 		'invisibles' => array(
 			'#type' => 'checkbox',
@@ -425,9 +416,9 @@ function ace_editor_default_settings() {
 		'syntax' => 'html',
 		'height' => '200px',
 		'width' => '100%',
-		'fontsize' => '10pt',
-		'linenumbers' => true,
-		'printmargin' => false,
+		'font-size' => '10pt',
+		'line-numbers' => true,
+		'print-margin' => false,
 		'invisibles' => false,
 	);
 }
@@ -451,6 +442,17 @@ function ace_editor_add_js($addJsSettings, $forAdminPages) {
 	if ($forAdminPages) {
 		drupal_add_library('system', 'ui.resizable');
 	}
+}
+
+/**
+ * Replaces dashes with underscores in keys for use with JS.
+ */
+function makeJsFriendlySettings($settings) {
+	$jsFriendly = array();
+	foreach($settings as $key => $value) {
+		$jsFriendly[str_replace('-', '_', $key)] = $value;
+	}
+	return $jsFriendly;
 }
 
 /**

@@ -9,6 +9,7 @@ pre.ace-tm {
 	
 }
 
-pre.ace_editor div.ace_gutter-cell.ace_warning {
+div.ace_gutter-cell.ace_error,
+div.ace_gutter-cell.ace_warning {
 	background: none;
 }

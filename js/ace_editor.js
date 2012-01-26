@@ -22,7 +22,7 @@
 				editor_instance.renderer.setHScrollBarAlwaysVisible(false);
 				editor_instance.setReadOnly(true);
 				$pre.css({
-					'font-size': settings['fontsize'],
+					'font-size': settings['font_size'],
 					'height': (settings['height'] == 'auto' || settings['height'] == '') ? '' : settings['height'],
 					'width': settings['width']
 				});

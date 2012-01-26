@@ -35,7 +35,7 @@
 			'#title' => 'Editor theme',
 			'#type' => 'select',
 			'#options' => ace_editor_get_themes(),
-			'#default_value' => variable_get('ace_editor_theme', 'dark'),
+			'#default_value' => variable_get('ace_editor_theme', 'twilight'),
 			'#attributes' => array(
 				'style' => 'min-width: 400px;'
 			),
