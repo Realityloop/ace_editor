@@ -7,12 +7,15 @@ by Max Nylin, max@articstudios.se
 Description
 ===========
 
-Ace is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript
-in a very natural way. It provides syntax hilighting, proper indentation, keyboard shortcuts,
-find and replace (incuding regular expressions), and more.
+Ace is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript (with more).
+in a very natural way. It provides syntax highlighting, proper indentation, keyboard shortcuts, find
+and replace (including regular expressions), and more.
 
-This module integrates the Ace editor into Drupals node/block edit forms, for edititing raw
-HTML/PHP/JavaScript in an intuitive way.
+This module integrates the Ace editor into Drupal's node/block edit forms, for editing raw code in an
+intuitive way.
+
+It also provides a display formatter together with a text filter and an API function to easily let you
+embed and show code in your content.
 
 
 
@@ -43,14 +46,14 @@ Output the contents of a field using code highlighting
 ------------------------------------------------------
 
 Manage the display of any textarea fields attached to a node and select the "Code syntax highlighting" format.
-This will output the content of that field as an editor with syntax highlighting in your node view using
+This will output the content of that field as a read-only editor with syntax highlighting in your node view using
 the selected options.
 
 
 Add an editor in your template file
 -----------------------------------
 
-You can use the built in API function ace_editor_add($content, $settings) to add an editor anywhere in your
+You can use the built in API function ace_editor_add($content, $settings) to add a read-only editor anywhere in your
 template files. Settings is an array of key/value pairs that can contain any option specified below.
 
 
@@ -58,9 +61,10 @@ Embedd code snippets in the body of your nodes or blocks
 --------------------------------------------------------
 
 Add the "Syntax highlighting" filter to any of your text formats. The module will now convert all content
-inside an <ace> tag to display the code using the Ace editor with the selected options.
+inside an <ace> tag to display the code using the selected options.
 
-You can override the default options/settings of the text filter by simply adding the settings as attributes to the <ace> tag.
+You can override the default options/settings of the text filter by simply adding the settings as attributes
+to the <ace> tag.
 
 Here are the possible values:
 
@@ -126,6 +130,6 @@ Here are the possible values:
 
 Examples:
 	
-	<ace theme="light" height="200px" fontsize="12pt" printmargin="1">
-	<ace theme="dark" syntax="php" height="200px" width="50%">
+	<ace theme="textmate" height="200px" fontsize="12pt" printmargin="1">
+	<ace theme="twilight" syntax="php" height="200px" width="50%">
 	<ace height="100px" width="100%" invisibles="1">

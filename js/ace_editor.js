@@ -23,11 +23,27 @@
 				editor_instance.setReadOnly(true);
 				$pre.css({
 					'font-size': settings['fontsize'],
-					'height': (settings['height'] == 'auto' || settings['height'] == '') ? '0px' : settings['height'],
+					'height': (settings['height'] == 'auto' || settings['height'] == '') ? '' : settings['height'],
 					'width': settings['width']
 				});
 				
+				/*
+				if (settings['height'] == 'auto' || settings['height'] == '') {
+					editor_instance.getSession().on('change', function(editor) {
+						// after data update
+				        var cell = $("div.ace_gutter-layer", $pre).find(".ace_gutter-cell:first");
+				        var h = cell.height();
+						alert(h);
+				        var totalH = h * (editor_instance.getSession().getValue().split('\n').length + 1);
+						$pre.height(totalH);
+						$pre.find(":first-child").height($pre.height());
+				        editor_instance.renderer.onResize(true);
+					});
+				}
+				*/
+				
 				editor_instance.getSession().setValue(html);
+				
 								
 				// TODO: Set the height of the editor if field_height is set to auto.	
 				if (settings['height'] == 'auto') {
@@ -39,6 +55,7 @@
 					$pre.css('height', (editor_instance.renderer.lineHeight) * (editor_instance.getSession().getValue().split('\n').length + 2) + editor_instance.renderer.scrollBar.getWidth());
 					*/
 				}
+				
 			});
 		}
 		
