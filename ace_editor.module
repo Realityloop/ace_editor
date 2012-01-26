@@ -119,7 +119,7 @@ function ace_editor_node_block_edit_form_attach_js($form) {
 		),
 	);
 	
-	ace_editor_add_js($addJsSettings);
+	ace_editor_add_js($addJsSettings, true);
 	drupal_add_js($jsSettings, 'setting');
 	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.admin.js');
 	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.admin.css');
@@ -199,7 +199,7 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 		);
 	}
 
-	ace_editor_add_js($settings);
+	ace_editor_add_js($settings, false);
 	drupal_add_js($jsSettings, 'setting');
 	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
 	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
@@ -292,7 +292,7 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 		}
 		
 		drupal_add_js($jsSettings, 'setting');
-		ace_editor_add_js($addJsSettings);
+		ace_editor_add_js($addJsSettings, false);
 		//drupal_add_library('ace_editor', 'ace-editor', FALSE);
 		drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
 		drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
@@ -435,7 +435,7 @@ function ace_editor_default_settings() {
 /**
  * Add all JavaScript needed for the editor to work on the next page.
  */
-function ace_editor_add_js($addJsSettings) {
+function ace_editor_add_js($addJsSettings, $forAdminPages) {
 	drupal_add_library('ace_editor', 'ace-editor', FALSE);
 	global $base_path;
 	if (isset($addJsSettings[0]) && is_array($addJsSettings[0])) {
@@ -446,6 +446,10 @@ function ace_editor_add_js($addJsSettings) {
 	} else {
 		drupal_add_js($base_path . 'sites/all/libraries/ace/src/theme-' . $addJsSettings['theme'] . '.js');
 		drupal_add_js($base_path . 'sites/all/libraries/ace/src/mode-' . $addJsSettings['syntax'] . '.js');
+	}
+	
+	if ($forAdminPages) {
+		drupal_add_library('system', 'ui.resizable');
 	}
 }
 

@@ -50,16 +50,23 @@
 							// Put the different parts together.
 							var $pre = $('<pre id="' + $(this).find('textarea').attr('id') + '-aced"></pre>');
 							$ace_editor_container.append($pre);
+							
+							// Get the height for the fields.
+							var sizeId = formIdentifier + '_' + $form_item.find('textArea').attr('id').replace(new RegExp('-', 'g'), '_')
+							var storedHeight = localStorage['ace_editor_' + sizeId + '_height'];
+							var height = storedHeight ? storedHeight : null;
+							
 							// Only append controlls to the main form item.
 							var $controls;
 							if ($(this).attr('class').indexOf("-value") != -1) {
-								$pre.css({'height': '600px'});
+								$pre.css({'height': height ? height : '500px'});
 							
 								$controls = get_editor_controls();
 								$ace_editor_container.append($controls);
 								$(this).append($ace_editor_container);
 							} else { // It's a summary form item.
-								$pre.css({'height': '200px', 'border-bottom': '1px solid #CCC'});							
+								
+								$pre.css({'height': height ? height : '200px', 'border-bottom': '1px solid #CCC'});
 								$(this).find('div.form-textarea-wrapper').after($ace_editor_container);
 							}
 						
@@ -72,6 +79,18 @@
 							editor_instance.renderer.setHScrollBarAlwaysVisible(false);
 							$pre.css('font-size', editorSettings['fontsize']);
 							$pre.data('editor_instance', editor_instance);
+							
+							$pre.resizable({
+								handles: 's',
+								resize: function(event, ui) {
+									$pre.width('100%');
+									editor_instance.resize();
+								},
+								stop: function(event, ui) {
+									var sizeId = formIdentifier + '_' + $form_item.find('textArea').attr('id').replace(new RegExp('-', 'g'), '_')
+									localStorage['ace_editor_' + sizeId + '_height'] = $pre.height();
+								}
+							});
 							
 							// Add event listeners.
 							editor_instance.getSession().on('change', function(editor) {
@@ -234,7 +253,12 @@
 			}
 		});
 		
-		$('a.link-edit-summary').live('mouseup.test', function(e) {
+		/**
+		 * Add the editor to the summary field.
+		 * Seems that drupal blocks the use of click here, so we need to use
+		 * mouseup with a small delay to get it to work.
+		 */
+		$('a.link-edit-summary').live('mouseup', function(e) {
 			var $link = $(this);
 			window.setTimeout(function() {
 				acifyWrapper($link.parents('div.text-format-wrapper:first'));
