@@ -161,9 +161,11 @@ function ace_editor_field_formatter_settings_summary($field, $instance, $view_mo
 	// Get the settings.
 	$settings = $instance['display'][$view_mode]['settings'];
 
+	$themesDict = ace_editor_get_themes();
+	$modesDict = ace_editor_get_modes();
 	$summary = t('Output with code syntax highlighting for @syntax in the @theme theme.', array(
-		'@syntax' => $settings['syntax'],
-		'@theme' => $settings['theme'],
+		'@syntax' => $modesDict[$settings['syntax']],
+		'@theme' => $themesDict[$settings['theme']],
 	));
 
 	return $summary;
@@ -353,10 +355,7 @@ function get_setting_form_elements($settings) {
 		'theme' => array(
 			'#type' => 'select',
 			'#title' => t('Theme'),
-			'#options' => array(
-				'twilight' => 'Dark',
-				'textmate' => 'Light',
-			),
+			'#options' => ace_editor_get_themes(),
 			'#default_value' => $settings['theme'],
 			'#attributes' => array(
 				'style' => 'width: 150px;'
@@ -366,10 +365,7 @@ function get_setting_form_elements($settings) {
 			'#type' => 'select',
 			'#title' => t('Syntax'),
 			'#description' => t('The syntax that will be highlighted.'),
-			'#options' => array(
-				'html' => 'HTML',
-				'php' => 'PHP',
-			),
+			'#options' => ace_editor_get_modes(),
 			'#default_value' => $settings['syntax'],
 			'#attributes' => array(
 				'style' => 'width: 150px;'
