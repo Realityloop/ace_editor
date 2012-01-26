@@ -18,6 +18,7 @@
 		
 		// Set the defaults to other variables.
 		variable_set('ace_editor_theme', 'dark');
+		variable_set('ace_editor_default_syntax', 'html');
 		variable_set('ace_editor_printmargin', false);
 		variable_set('ace_editor_fontsize', '10pt');
 	}
@@ -30,6 +31,7 @@
 		// Remove the associated variables.
 		variable_del('ace_editor_filter_formats');
 		variable_del('ace_editor_theme');
+		variable_del('ace_editor_default_syntax');
 		variable_del('ace_editor_printmargin');
 		variable_del('ace_editor_fontsize');
 	}
