@@ -1,4 +1,4 @@
-Ace HTML Editor Module
+Ace Editor Module
 ======================
 by Max Nylin, max@articstudios.se
 
@@ -7,15 +7,12 @@ by Max Nylin, max@articstudios.se
 Description
 ===========
 
-Ace is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript (with more).
-in a very natural way. It provides syntax highlighting, proper indentation, keyboard shortcuts, find
-and replace (including regular expressions), and more.
+is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript (and more).
+It provides syntax highlighting, proper indentation, keyboard shortcuts, find and replace (including
+regular expressions).
 
-This module integrates the Ace editor into Drupal's node/block edit forms, for editing raw code in an
-intuitive way.
-
-It also provides a display formatter together with a text filter and an API function to easily let you
-embed and show code in your content.
+This module integrates the Ace editor into Drupal's node/block edit forms, for editing raw
+HTML/PHP/JavaScript (with more) in a familiar way. It also provides a display formatter, along with a text filter and an API to embed and show code snippets in your content.
 
 
 
@@ -25,46 +22,44 @@ Installation
 1. Download the latest version of the Ace Editor at https://github.com/ajaxorg/ace/downloads
 2. Extract and place the contents of the zip file under sites/all/libraries so that ace.js
    is located at sites/all/libraries/ace/src/ace.js
-3. Copy the modules directory to your modules directory and activate the module in Drupal.
-4. A default text format with the name "HTML Editor" is added to use the editor when editing content,
-   additional text formats to use with the editor at admin/config/content/ace-editor.
-5. Enjoy this freakishly fresh editor!
+3. Download, extract and copy the ace_editor module to your sites/all/modules directory.
+4. Enable the "Ace HTML Editor" module on your Drupal Modules page, under the Administration heading.
+   An example "HTML Editor" text format is added that uses the Ace editor for editing content.
 
 
 
 Features
 ========
 
-
 Edit HTML and PHP in your nodes and blocks like a pro
 -----------------------------------------------------
-Go to admin/config/content/ace-editor and setup the module for use with node/block editing.
-Head over to any block or node containing a textarea with the correct text format and hack away!
+
+Go to admin/config/content/ace-editor and configure the module for node/block editing. Then head over 
+to a block or node containing a textarea with the correct text format and hack away!
 
 
-Output the contents of a field using code highlighting
-------------------------------------------------------
+Display fields using syntax highlighting
+----------------------------------------------
 
-Manage the display of any textarea fields attached to a node and select the "Code syntax highlighting" format.
-This will output the content of that field as a read-only editor with syntax highlighting in your node view using
-the selected options.
-
-
-Add an editor in your template file
------------------------------------
-
-You can use the built in API function ace_editor_add($content, $settings) to add a read-only editor anywhere in your
-template files. Settings is an array of key/value pairs that can contain any option specified below.
+Manage the display of any text area fields attached to a node and select the "Code syntax highlighting"
+format. This outputs the content of the field as a ready-only editor, with syntax highlighting in your
+node view using the selected options.
 
 
-Embedd code snippets in the body of your nodes or blocks
---------------------------------------------------------
+Use syntax hilighting from your template files
+-----------------------------------------------------
 
-Add the "Syntax highlighting" filter to any of your text formats. The module will now convert all content
-inside an <ace> tag to display the code using the selected options.
+You can use the ace_editor_add($content, $settings) function to add syntax-highlighting code display
+anywhere in your template files. An optional array contains settings as shown below.
 
-You can override the default options/settings of the text filter by simply adding the settings as attributes
-to the <ace> tag.
+
+Embed code snippets in the body of your nodes or blocks
+---------------------------------------------------------------
+
+Add the syntax highlighting filter to any of your text formats. The module displays text inside an
+<ace> tag as code using the custom formatting options specified as attributes to the <ace> tag.
+
+You can override the default options by adding attributes to the <ace> tag:
 
 Here are the possible values:
 
@@ -130,6 +125,6 @@ Here are the possible values:
 
 Examples:
 	
-	<ace theme="textmate" height="200px" fontsize="12pt" printmargin="1">
+	<ace theme="textmate" height="200px" font-size="12pt" print-margin="1">
 	<ace theme="twilight" syntax="php" height="200px" width="50%">
 	<ace height="100px" width="100%" invisibles="1">
