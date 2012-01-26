@@ -7,12 +7,15 @@ by Max Nylin, max@articstudios.se
 Description
 ===========
 
-Ace is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript
-in a very natural way. It provides syntax hilighting, proper indentation, keyboard shortcuts,
-find and replace (incuding regular expressions), and more.
+Ace is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript (with more).
+in a very natural way. It provides syntax highlighting, proper indentation, keyboard shortcuts, find
+and replace (including regular expressions), and more.
 
-This module integrates the Ace editor into Drupals node/block edit forms, for edititing raw
-HTML/PHP/JavaScript in an intuitive way.
+This module integrates the Ace editor into Drupal's node/block edit forms, for editing raw code in an
+intuitive way.
+
+It also provides a display formatter together with a text filter and an API function to easily let you
+embed and show code in your content.
 
 
 
