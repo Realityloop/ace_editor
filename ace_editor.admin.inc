@@ -31,15 +31,21 @@
 			),
 		);
 
-		$current_theme = variable_get('ace_editor_theme', 'dark');
 		$form['ace_editor_theme'] = array(
 			'#title' => 'Editor theme',
 			'#type' => 'select',
-			'#options' => array(
-				'dark' => 'Dark',
-				'light' => 'Light',
+			'#options' => ace_editor_get_themes(),
+			'#default_value' => variable_get('ace_editor_theme', 'dark'),
+			'#attributes' => array(
+				'style' => 'min-width: 400px;'
 			),
-			'#default_value' => array($current_theme),
+		);
+		
+		$form['ace_editor_default_syntax'] = array(
+			'#title' => 'Editor default syntax',
+			'#type' => 'select',
+			'#options' => ace_editor_get_modes(),
+			'#default_value' => variable_get('ace_editor_default_syntax', 'html'),
 			'#attributes' => array(
 				'style' => 'min-width: 400px;'
 			),

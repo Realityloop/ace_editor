@@ -65,11 +65,7 @@
 						
 						// Initialize the editor and set the correct options.
 						var editor_instance = ace.edit($pre.attr('id'));
-						if (editorSettings.theme == 'dark') {
-							editor_instance.setTheme("ace/theme/twilight");
-						} else {
-							editor_instance.setTheme("ace/theme/textmate");
-						}
+						editor_instance.setTheme("ace/theme/" + editorSettings.theme);
 						var HTMLMode = require("ace/mode/html").Mode;
 						editor_instance.getSession().setMode(new HTMLMode());
 						editor_instance.setShowPrintMargin(editorSettings['printmargin']);
@@ -95,11 +91,20 @@
 					$textFormatWrapper.find('div.ace-editor-controls').each(function(i) {
 						var $controls = $(this);
 						
-						$controls.find('input.show_hidden').attr('checked', (localStorage['ace_editor_show_hidden'] == 1) ? true : false);
-						$controls.find('input.show_line_numbers').attr('checked', (localStorage['ace_editor_show_line_numbers'] == 1) ? true : false);
+						var $textArea = $textFormatWrapper.find('textarea');
+						var textAreaID = $textArea.attr('id').replace(new RegExp('-', 'g'), '_');
+						
+						var showHidden = localStorage['ace_editor_' + textAreaID + '_show_hidden'];
+						var lineNumbers = localStorage['ace_editor_' + textAreaID + '_show_line_numbers'];
+						var mode = localStorage['ace_editor_' + textAreaID + '_mode'];
+						
+						$controls.find('input.show_hidden').attr('checked', (showHidden == 1) ? true : false);
+						$controls.find('input.show_line_numbers').attr('checked', (lineNumbers == 1) ? true : false);
+						$controls.find('select.mode').val((mode != '') ? mode : 'html');
+						console.log('Mode is to ' + $controls.find('select.mode').val());
 						
 						// Trigger controls.
-						$controls.find('div.control input').trigger('change');
+						$controls.find('div.control input, div.control select').trigger('change');
 					});
 				}
 				
@@ -163,41 +168,64 @@
 			var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
 			acifyWrapper($textFormatWrapper);
 		});
-	
+			
 		/**
 		 * Update the editors to reflect the toggled option.
 		 */
-		$('div.text-format-wrapper div.control input').live('change', function(e) {
+		$('div.text-format-wrapper div.control input, div.text-format-wrapper div.control select').live('change', function(e) {
 			
 			var $control = $(this);
 			var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
 			var editorObjects = $textFormatWrapper.data('ace-editors');
-						
+			var $textArea = $textFormatWrapper.find('textarea');
+			var textAreaID = $textArea.attr('id').replace(new RegExp('-', 'g'), '_');
+					
 			var checked;
 			if ($control.attr('type') == 'checkbox') {
 				checked = $(this).is(':checked') ? 1 : 0;
 			}
 			
-			// Apply settings to all editors.
-			$(editorObjects).each(function(i) {
-				switch ($control.attr('name')) {
-					case "show_hidden":
-						this['editor'].setShowInvisibles(checked);
-						break;
-					case "show_line_numbers":
-						this['editor'].renderer.setShowGutter(checked);
-						break;
+			
+			if ($control.attr('name') == 'mode') {
+				if ($control.val() == 'html') {
+					// Apply settings to all editors.
+					$(editorObjects).each(function(i) {
+						var HTMLMode = require("ace/mode/html").Mode;
+						this['editor'].getSession().setMode(new HTMLMode());
+					});
+				} else {
+					$.getScript(editorSettings['ace_src_dir'] + 'mode-' + $control.val() + '.js', function(data, textStatus) {
+						$(editorObjects).each(function(i) {
+							var Mode = require("ace/mode/" + $control.val()).Mode;
+							this['editor'].getSession().setMode(new Mode());
+						});
+					});
 				}
-			});
+			} else {
+				// Apply settings to all editors.
+				$(editorObjects).each(function(i) {
+					switch ($control.attr('name')) {
+						case "show_hidden":
+							this['editor'].setShowInvisibles(checked);
+							break;
+						case "show_line_numbers":
+							this['editor'].renderer.setShowGutter(checked);
+							break;
+					}
+				});
+			}
 			
 			// Save settings 'till next time.
-			// TODO: Think about multiple instances here...
 			switch ($control.attr('name')) {
 				case "show_hidden":
-					localStorage['ace_editor_show_hidden'] = checked;
+					localStorage['ace_editor_' + textAreaID + '_show_hidden'] = checked;
 					break;
 				case "show_line_numbers":
-					localStorage['ace_editor_show_line_numbers'] = checked;
+					localStorage['ace_editor_' + textAreaID + '_show_line_numbers'] = checked;
+					break;
+				case "mode":
+					localStorage['ace_editor_' + textAreaID + '_mode'] = $control.val();
+					console.log('Mode set to ' + $control.val());
 					break;
 			}
 		});
@@ -227,7 +255,15 @@
 							  '<label>Invisibles</label></div>');
 			$controls.append('<div class="control"><input type="checkbox" name="show_line_numbers" class="show_line_numbers" checked>' + 
 							  '<label>Line numbers</label></div>');
+			$modes_select = $('<div class="control"><select name="mode" class="mode"></select></div>');
+			$.each(editorSettings['available_modes'], function(key, value) {
+				var selected = (key == 'html') ? ' selected' : '';
+				$('select', $modes_select).append('<option value="' + key + '"' + selected + '>' + value + '</option>');
+			});
+			$controls.append($modes_select);
+							
 			$controls.append('<div class="info"><span class="num-lines">1 lines</span><a class="key-bindings" target="_blank" href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts">Show key bindings</a></div>');
+			
 			return $controls;
 		}
 		

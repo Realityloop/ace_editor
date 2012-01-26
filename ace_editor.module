@@ -53,7 +53,7 @@ function ace_editor_add($content, $settings) {
 	);
 
 	// Add the javascript files needed.
-	drupal_add_library('ace_editor', 'ace-editor', FALSE);
+	ace_editor_add_js($settings);
 	drupal_add_js($jsSettings, 'setting');
 	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
 	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
@@ -91,20 +91,26 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
  * Add JS to the page containing the affected forms.
  */
 function ace_editor_node_block_edit_form_attach_js($form) {
-
-	$settings = array(
+	
+	global $base_path;
+	$addJsSettings = array(
+		'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
+		'theme' => variable_get('ace_editor_theme', 'dark'),
+		'syntax' => variable_get('ace_editor_default_syntax', 'dark'),
+		'printmargin' => variable_get('ace_editor_printmargin', false),
+		'fontsize' => variable_get('ace_editor_fontsize', '10pt'),
+		'available_modes' => ace_editor_get_modes(),
+		'ace_src_dir' => $base_path . 'sites/all/libraries/ace/src/',
+	);
+	
+	$jsSettings = array(
 		'ace_editor' => array(
-			'admin' => array(
-				'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
-				'theme' => variable_get('ace_editor_theme', 'dark'),
-				'printmargin' => variable_get('ace_editor_printmargin', false),
-				'fontsize' => variable_get('ace_editor_fontsize', '10pt'),
-			),
+			'admin' => $addJsSettings,
 		),
 	);
-
-	drupal_add_library('ace_editor', 'ace-editor', FALSE);
-	drupal_add_js($settings, 'setting');
+	
+	ace_editor_add_js($addJsSettings);
+	drupal_add_js($jsSettings, 'setting');
 	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.admin.js');
 	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.admin.css');
 
@@ -132,7 +138,7 @@ function ace_editor_field_formatter_settings_form($field, $instance, $view_mode,
 	// get the settings.
 	$settings = $instance['display'][$view_mode]['settings'];
 	
-	$element = getSettingFormElements($settings);
+	$element = get_setting_form_elements($settings);
 	
 	return $element;
 }
@@ -181,8 +187,8 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 		);
 	}
 
+	ace_editor_add_js($settings);
 	drupal_add_js($jsSettings, 'setting');
-	drupal_add_library('ace_editor', 'ace-editor', FALSE);
 	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
 	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
 	
@@ -215,7 +221,7 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
 	if (empty($settings)) {
 		$settings = $defaults;
 	}
-	$element = getSettingFormElements($settings);
+	$element = get_setting_form_elements($settings);
 	
 	return $element;
 }
@@ -233,7 +239,8 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 				'editor_instances' => array()
 			)
 		);
-	
+		
+		$addJsSettings = array();
 		foreach ($match[0] as $key => $value) {
 			$elementID = 'ace-editor-inline' . $key;
 			$search[] = $value;
@@ -268,10 +275,13 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 				'content' => $content,
 				'settings' => $settings,
 			);
+			
+			$addJsSettings[] = $settings;
 		}
 		
 		drupal_add_js($jsSettings, 'setting');
-		drupal_add_library('ace_editor', 'ace-editor', FALSE);
+		ace_editor_add_js($addJsSettings);
+		//drupal_add_library('ace_editor', 'ace-editor', FALSE);
 		drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
 		drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
 		
@@ -301,9 +311,11 @@ function tag_attributes($element_name, $xml) {
 						$attribute_string, $matches, PREG_SET_ORDER);
 						
 		if ($found != 0) {
-
-			// Create an associative array that matches attribute
-						// names to attribute values.
+			
+			/*
+			 * Create an associative array that matches attribute
+			 * names with their values.
+			 */
 			foreach ($matches as $attribute) {
 			
 				$value = substr($attribute[2], 1, -1);
@@ -326,7 +338,7 @@ function tag_attributes($element_name, $xml) {
 /**
  * Return the form elements often used in setting forms for late use with editor instances.
  */
-function getSettingFormElements($settings) {
+function get_setting_form_elements($settings) {
 	return array(
 		'theme' => array(
 			'#type' => 'select',
@@ -415,6 +427,86 @@ function ace_editor_default_settings() {
 }
 
 /**
+ * Add all JavaScript needed for the editor to work on the next page.
+ */
+function ace_editor_add_js($addJsSettings) {
+	drupal_add_library('ace_editor', 'ace-editor', FALSE);
+	global $base_path;
+	if (isset($addJsSettings[0]) && is_array($addJsSettings[0])) {
+		foreach ($addJsSettings as $key => $settings) {
+			drupal_add_js($base_path . 'sites/all/libraries/ace/src/theme-' . $settings['theme'] . '.js');
+			drupal_add_js($base_path . 'sites/all/libraries/ace/src/mode-' . $settings['syntax'] . '.js');
+		}
+	} else {
+		drupal_add_js($base_path . 'sites/all/libraries/ace/src/theme-' . $addJsSettings['theme'] . '.js');
+		drupal_add_js($base_path . 'sites/all/libraries/ace/src/mode-' . $addJsSettings['syntax'] . '.js');
+	}
+}
+
+/**
+ * Returns all of the themes.
+ */
+function ace_editor_get_themes() {
+	return array(
+		'clouds' => 'Clouds',
+		'clouds_midnight' => 'Clouds Midnight',
+		'cobalt' => 'Cobalt',
+		'crimson_editor' => 'Crimson Editor',
+		'dawn' => 'Dawn',
+		'idle_fingers' => 'Idle Fingers',
+		'kr_theme' => 'krTheme',
+		'merbivore' => 'Merbivore',
+		'merbivore_soft' => 'Merbivore Soft',
+		'mono_industrial' => 'Mono Industrial',
+		'monokai' => 'Monokai',
+		'pastel_on_dark' => 'Pastel on dark',
+		'solarized_dark' => 'Solarized Dark',
+		'solarized_light' => 'Solarized Light',
+		'textmate' => 'TextMate',
+		'twilight' => 'Twilight',
+		'tomorrow' => 'Tomorrow',
+		'vibrant_ink' => 'Vibrant Ink',
+	);
+}
+
+/**
+ * Returns all of the modes.
+ */
+function ace_editor_get_modes() {
+	return array(
+		'c_cpp' => 'C/C++',
+		'clojure' => 'Clojure',
+		'coffee' => 'CoffeeScript',
+		'coldfusion' => 'ColdFusion Editor',
+		'csharp' => 'C#',
+		'css' => 'CSS',
+		'groovy' => 'Groovy',
+		'haxe' => 'haXe',
+		'html' => 'HTML',
+		'java' => 'Java',
+		'javascript' => 'JavaScript',
+		'json' => 'JSON',
+		'latex' => 'LaTex',
+		'lua' => 'Lua',
+		'markdown' => 'MarkDown',
+		'ocaml' => 'OCaml',
+		'perl' => 'Perl',
+		'php' => 'PHP',
+		'powershell' => 'Powershell',
+		'python' => 'Python',
+		'scala' => 'Scala',
+		'scss' => 'SCSS',
+		'ruby' => 'Ruby',
+		'sql' => 'SQL',
+		'svg' => 'SVG',
+		'text' => 'Text',
+		'textile' => 'Textile',
+		'xml' => 'XML',
+	);
+	
+}
+
+/**
  * Implements hook_library().
  *
  * Add the ace JS library for use with drupal.
@@ -426,12 +518,10 @@ function ace_editor_library() {
 		'version' => '1.0',
 		'js' => array(
 			'sites/all/libraries/ace/src/ace.js' => array(),
-			'sites/all/libraries/ace/src/mode-html.js' => array(),
-			'sites/all/libraries/ace/src/mode-php.js' => array(),
-			'sites/all/libraries/ace/src/theme-twilight.js' => array(),
-			'sites/all/libraries/ace/src/theme-textmate.js' => array(),
 		),
 	);
+	
+	
 
 	return $libraries;
 }
@@ -441,4 +531,11 @@ function ace_editor_library() {
 */
 function ace_editor_library_installed() {
 	return file_exists('sites/all/libraries/ace/src/ace.js');
+}
+
+/**
+* Returns if the library seems to be installed.
+*/
+function ace_editor_include_installed() {
+	return file_exists('sites/all/libraries/include.js');
 }

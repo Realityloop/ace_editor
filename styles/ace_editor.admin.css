@@ -18,6 +18,10 @@ div.control {
 	margin: 9px 20px 0 0;
 }
 
+div.control select {
+	border: 1px solid #9f9f9f;
+}
+
 div.control label, div.control input, div.control select {
 	display: inline;
 }
