@@ -24,14 +24,15 @@ function ace_editor_menu() {
 /**
  * An API function to embed read-only editors into template files.
  */
-function ace_editor_add($content, $settings) {
+function ace_editor_add($content, $userSettings) {
 
 	// Get the default settings and override them with settings defined by user.
 	$settings = ace_editor_default_settings();
-	foreach ($settings as $key => $value) {
+	foreach ($userSettings as $key => $value) {
 		$settings[$key] = $value;
 	}
-	
+	$settings = makeJsFriendlySettings($settings);
+
 	// Get a unique index for the next pre-element added by this API function.
 	$add_index = '1';
 	if ($_SESSION['ace_editor_add_index']) {
@@ -53,7 +54,7 @@ function ace_editor_add($content, $settings) {
 	);
 
 	// Add the javascript files needed.
-	ace_editor_add_js($settings);
+	ace_editor_add_js($settings, false);
 	drupal_add_js($jsSettings, 'setting');
 	drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
 	drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
@@ -163,7 +164,7 @@ function ace_editor_field_formatter_settings_summary($field, $instance, $view_mo
 
 	$themesDict = ace_editor_get_themes();
 	$modesDict = ace_editor_get_modes();
-	$summary = t('Output with code syntax highlighting for @syntax in the @theme theme.', array(
+	$summary = t('Show content with code syntax highlighting for @syntax in the @theme theme.', array(
 		'@syntax' => $modesDict[$settings['syntax']],
 		'@theme' => $themesDict[$settings['theme']],
 	));
@@ -213,7 +214,8 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 function ace_editor_filter_info() {
 	$filters['ace_editor'] = array(
 		'title' => t('Syntax highlighting'), 
-		'description' => t('Use &lt;ace&gt;SOME CODE&lt;/ace&gt; in your content to convert the code to an Ace Editor using selected syntax highlighting.'), 
+		'description' => t('Use &lt;ace&gt; and &lt;/ace&gt; tags to show it with syntax highlighting.
+		   Add attributes to <ace> tag to control formatting.'), 
 		'process callback' => 'ace_editor_filter_process', 
 		'settings callback' => 'ace_editor_filter_settings', 
 		'default settings' => ace_editor_default_settings(), 
@@ -235,6 +237,9 @@ function ace_editor_filter_settings($form, &$form_state, $filter, $format, $defa
 	}
 	
 	$element = get_setting_form_elements($settings);
+	array_unshift($element, array(
+		'#markup' => t('<p>This is the default settings, these settings can be overridden by adding attributes<?php  ?> to the tag.</p>'),
+	));
 	
 	return $element;
 }
