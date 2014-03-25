@@ -1,18 +1,20 @@
-Ace Editor Module
+Ace Editor Module ( https://drupal.org/project/ace_editor )
 ======================
 by Max Nylin, max@articstudios.se
+by Olivier GIRARD, girardol182@gmail.com
 
 
 
 Description
 ===========
 
-is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript (and more).
+AceEditor is a code editor written in JavaScript, allowing you to edit HTML, PHP and JavaScript (and more).
 It provides syntax highlighting, proper indentation, keyboard shortcuts, find and replace (including
 regular expressions).
 
 This module integrates the Ace editor into Drupal's node/block edit forms, for editing raw
-HTML/PHP/JavaScript (with more) in a familiar way. It also provides a display formatter, along with a text filter and an API to embed and show code snippets in your content.
+HTML/PHP/JavaScript (with more) in a familiar way.
+It also provides a display formatter, along with a text filter and an API to embed and show code snippets in your content.
 
 
 

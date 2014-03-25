@@ -24,7 +24,7 @@
 	}
 	
 	/**
-	* Implements hook_install().
+	* Implements hook_uninstall().
 	*/
 	function ace_editor_uninstall() {
 		
