@@ -257,26 +257,18 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 				'editor_instances' => array()
 			)
 		);
-		
+
 		$addJsSettings = array();
 		foreach ($match[0] as $key => $value) {
 			$elementID = 'ace-editor-inline' . $key;
-			$search[] = $value;
-					
-			$content = $match[1][$key];
-			if (strpos('\n', $content) == 0) {
-				$content = substr($content, 1);
-			}
-			if (strpos('\n', $content) == strlen($content)) {
-				$content = substr($content, 0, strlen($content) - 1);
-			}
+			$content = trim($match[1][$key], "\n\r\0\x0B");
 			
-			$replace[] = '<pre id="' . $elementID . '"></pre>';
+			$replace = '<pre id="' . $elementID . '"></pre>';
 			
 			// Override settings with attributes on the tag.
 			$settings = $filter->settings;
-			foreach(tag_attributes('ace', $value) as $key => $value) {
-				$settings[$key] = $value;
+			foreach(tag_attributes('ace', $value) as $attribute_key => $attribute_value) {
+				$settings[$attribute_key] = $attribute_value;
 			}
 			$settings = makeJsFriendlySettings($settings);
 
@@ -286,18 +278,33 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
 				'content' => $content,
 				'settings' => $settings,
 			);
+			
+			$text = str_replace_once($value, $replace, $text);
 		}
-		
+
 		drupal_add_js($jsSettings, 'setting');
 		ace_editor_add_js($addJsSettings, false);
 		drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
 		drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
-		
-		return str_replace($search, $replace, $text);
 	}
 	
 	return $text;
 }
+
+/**
+ * Custom function to replace the code only once.
+ * Probably not the most efficient way, but at least it works.
+ */
+function str_replace_once($needle , $replace , $haystack){ 
+    // Looks for the first occurence of $needle in $haystack 
+    // and replaces it with $replace. 
+    $pos = strpos($haystack, $needle); 
+    if ($pos === false) { 
+        // Nothing found 
+	return $haystack; 
+    } 
+    return substr_replace($haystack, $replace, $pos, strlen($needle)); 
+} 
 
 /**
  * Get all attributes of an <ace> tag in key/value pairs.
@@ -436,12 +443,12 @@ function ace_editor_add_js($addJsSettings, $forAdminPages) {
 	global $base_path;
 	if (isset($addJsSettings[0]) && is_array($addJsSettings[0])) {
 		foreach ($addJsSettings as $key => $settings) {
-			drupal_add_js($base_path . 'sites/all/libraries/ace/src/theme-' . $settings['theme'] . '.js');
-			drupal_add_js($base_path . 'sites/all/libraries/ace/src/mode-' . $settings['syntax'] . '.js');
+			drupal_add_js($base_path . 'sites/all/libraries/ace/src/theme-' . $settings['theme'] . '.js', array('preprocess' => FALSE));
+			drupal_add_js($base_path . 'sites/all/libraries/ace/src/mode-' . $settings['syntax'] . '.js', array('preprocess' => FALSE));
 		}
 	} else {
-		drupal_add_js($base_path . 'sites/all/libraries/ace/src/theme-' . $addJsSettings['theme'] . '.js');
-		drupal_add_js($base_path . 'sites/all/libraries/ace/src/mode-' . $addJsSettings['syntax'] . '.js');
+		drupal_add_js($base_path . 'sites/all/libraries/ace/src/theme-' . $addJsSettings['theme'] . '.js', array('preprocess' => FALSE));
+		drupal_add_js($base_path . 'sites/all/libraries/ace/src/mode-' . $addJsSettings['syntax'] . '.js', array('preprocess' => FALSE));
 	}
 	
 	if ($forAdminPages) {
