@@ -10,7 +10,7 @@
 				var html = this['content'];
 				var settings = this['settings'];
 				
-				var SyntaxMode = require("ace/mode/" + settings['syntax']).Mode;
+				var SyntaxMode = ace.require("ace/mode/" + settings['syntax']).Mode;
 				var themePath = "ace/theme/" + settings['theme'];
 			
 				var editor_instance = ace.edit(this['id']);

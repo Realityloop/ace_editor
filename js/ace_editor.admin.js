@@ -73,7 +73,7 @@
 							// Initialize the editor and set the correct options.
 							editor_instance = ace.edit($pre.attr('id'));
 							editor_instance.setTheme("ace/theme/" + editorSettings.theme);
-							var HTMLMode = require("ace/mode/html").Mode;
+							var HTMLMode = ace.require("ace/mode/html").Mode;
 							editor_instance.getSession().setMode(new HTMLMode());
 							editor_instance.setShowPrintMargin(editorSettings['printmargin']);
 							editor_instance.renderer.setHScrollBarAlwaysVisible(false);
@@ -215,13 +215,13 @@
 				if ($control.val() == 'html') {
 					// Apply settings to all editors.
 					$(editorObjects).each(function(i) {
-						var HTMLMode = require("ace/mode/html").Mode;
+						var HTMLMode = ace.require("ace/mode/html").Mode;
 						this['editor'].getSession().setMode(new HTMLMode());
 					});
 				} else {
 					$.getScript(editorSettings['ace_src_dir'] + 'mode-' + $control.val() + '.js', function(data, textStatus) {
 						$(editorObjects).each(function(i) {
-							var Mode = require("ace/mode/" + $control.val()).Mode;
+							var Mode = ace.require("ace/mode/" + $control.val()).Mode;
 							this['editor'].getSession().setMode(new Mode());
 						});
 					});
