@@ -279,7 +279,7 @@
 			
 			var $textarea = $form_item.find('textarea');
 			var val = editorObject['editor'].getSession().getValue();
-			$textarea.html(val);
+			$textarea.text(val);
 		}
 	
 		
