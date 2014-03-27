@@ -377,7 +377,7 @@ function get_setting_form_elements($settings) {
 		'height' => array(
 			'#type' => 'textfield',
 			'#title' => t('Height'),
-			'#description' => t('The height of the editor in either pixels or percents.'),
+			'#description' => t('The height of the editor in either pixels or percents. You can use "Auto" to let the editor calculate the adequate height.'),
 			'#default_value' => $settings['height'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'

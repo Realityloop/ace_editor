@@ -108,8 +108,8 @@ Here are the possible values:
 	xml = XML
 
   height
-	300px, 75% etc.
-	
+      auto, 300px, 75% etc.
+
   width
     100%, 600px etc.
 
@@ -126,7 +126,6 @@ Here are the possible values:
     1 or 0 (on/off)
 
 Examples:
-	
-	<ace theme="textmate" height="200px" font-size="12pt" print-margin="1">
-	<ace theme="twilight" syntax="php" height="200px" width="50%">
-	<ace height="100px" width="100%" invisibles="1">
+      <ace theme="textmate" height="200px" font-size="12pt" print-margin="1">
+      <ace theme="twilight" syntax="php" height="200px" width="50%">
+      <ace height="100px" width="100%" invisibles="1">
