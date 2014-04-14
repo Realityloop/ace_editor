@@ -21,9 +21,12 @@ It also provides a display formatter, along with a text filter and an API to emb
 Installation
 ============
 
-1. Download the latest version of the Ace Editor at https://github.com/ajaxorg/ace/downloads
+1. Download the latest version of the Ace Editor at https://github.com/ajaxorg/ace-builds/
+   or directly via https://github.com/ajaxorg/ace-builds/archive/master.zip
+   Do not use a version < 1.0.0.
 2. Extract and place the contents of the zip file under sites/all/libraries so that ace.js
-   is located at sites/all/libraries/ace/src/ace.js
+   is located at sites/all/libraries/ace/src/ace.js .
+   If you want to use any of the other src (minified, noconflict...), make sure you rename the folder as "src" for the module to find it.
 3. Download, extract and copy the ace_editor module to your sites/all/modules directory.
 4. Enable the "Ace HTML Editor" module on your Drupal Modules page, under the Administration heading.
    An example "HTML Editor" text format is added that uses the Ace editor for editing content.
