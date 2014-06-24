@@ -12,7 +12,7 @@ function ace_editor_menu() {
 		'title' => t('Ace Editor'),
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('ace_editor_settings_form'),
-		'access arguments' => array('access administration pages'),
+		'access arguments' => array('configure ace editor'),
 		'type' => MENU_NORMAL_ITEM,
 		'file' => 'ace_editor.admin.inc',
 	);
@@ -20,6 +20,18 @@ function ace_editor_menu() {
 	return $items;
 }
 
+/**
+ * Implements hook_permission().
+ */
+function ace_editor_permission() {
+	return array(
+		'configure ace editor' =>  array(
+			'title' => t('Configure Ace Editor'),
+			'description' => t('Access the configuration page for Ace Editor.'),
+			'restrict access' => TRUE,
+		),
+	);
+}
 
 /**
  * An API function to embed read-only editors into template files.
