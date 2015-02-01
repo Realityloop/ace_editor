@@ -1,4 +1,6 @@
-22398f8 (HEAD, origin/HEAD, origin/7.x-1.x, 7.x-1.x) Issue #2287147 by tonylegrone: Add new custom permission for the config page of the module
+22a506e (HEAD, 7.x-1.x) Issue #2270799 by Alex Bukach: Not working when library is not in sites/all/libraries. Added dependency from Libraries API module.
+7dac151 (origin/HEAD, origin/7.x-1.x) Added CHANGELOG.txt file.
+22398f8 Issue #2287147 by tonylegrone: Add new custom permission for the config page of the module
 b0fb30d (tag: 7.x-1.1) #2230725 by Growiel,tempo22: Update the README to specify that we need to use a version of Ace > 1.0.0 and update the download links to reflect that
 b41f13d Issue #2227443 by Growiel: Editor is now able to calculate its own height
 a9c2e91 (tag: 7.x-1.0) Small tweaks to the README and fix a comment in ace_editor_install. We're ready for a stable release.

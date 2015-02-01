@@ -3,5 +3,6 @@ description = Lets you edit your nodes with the Ace Editor.
 package = Administration
 core = 7.x
 configure = admin/config/content/ace-editor
+dependencies[] = libraries
 
 files[] = ace_editor.admin.inc

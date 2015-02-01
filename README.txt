@@ -32,6 +32,11 @@ Installation
    An example "HTML Editor" text format is added that uses the Ace editor for editing content.
 
 
+Dependencies
+============
+
+Libraries API module (https://www.drupal.org/project/libraries)
+
 
 Features
 ========
@@ -39,7 +44,7 @@ Features
 Edit HTML and PHP in your nodes and blocks like a pro
 -----------------------------------------------------
 
-Go to admin/config/content/ace-editor and configure the module for node/block editing. Then head over 
+Go to admin/config/content/ace-editor and configure the module for node/block editing. Then head over
 to a block or node containing a textarea with the correct text format and hack away!
 
 
