@@ -1,0 +1,52 @@
+22398f8 (HEAD, origin/HEAD, origin/7.x-1.x, 7.x-1.x) Issue #2287147 by tonylegrone: Add new custom permission for the config page of the module
+b0fb30d (tag: 7.x-1.1) #2230725 by Growiel,tempo22: Update the README to specify that we need to use a version of Ace > 1.0.0 and update the download links to reflect that
+b41f13d Issue #2227443 by Growiel: Editor is now able to calculate its own height
+a9c2e91 (tag: 7.x-1.0) Small tweaks to the README and fix a comment in ace_editor_install. We're ready for a stable release.
+f553f37 Issue #1425558 by Amitaibu: change the way we include JS files to prevent conflicts
+ab94907 Issue #1933320 by Growiel: remplace .html by .text to allow the use of <script> tags
+66efca2 Issue #2090921 by tjerah: Don't preprocess the JS to make them work with aggregated. Issue #2192611 by growiel: Don't remove the first letter and allow multiple instance of the exact same code
+cd6e878 (tag: 7.x-1.0-alpha12) FIxed a bug where the settings for the API didn't apply.
+f188389 Updated README.
+108b540 Changed attributes on the <pre> tag to reflect css attributes better to avoid confusion.
+0267269 Updated README.
+5fe89f3 Updated README.
+0a497de (tag: 7.x-1.0-alpha11) Added documentation.
+4ad9b3e No longer uses localStorage if browser does not support it.
+148ebb3 Issue #1417680 by nylin: Resize editors and make changes persistent.
+64efcde Issue #1415160 by nylin: Activating Ace editor reveals summary field.
+457d461 (tag: 7.x-1.0-alpha10) Added all themes and modes to all places the editor could be used.
+10acda8 Updated README to document all new themes and modes added.
+1a563c7 Issue #1415420 by nylin: More syntax highligting options
+3a43e65 Issue #1415420 by nylin: More syntax highligting options
+561e3c4 Added and fixed comments for code.
+90687b2 Fields with multiple values now all get an editor when a new textarea is added.
+6f22f76 Minor fixes.
+ad0d820 Minor fixes.
+4ebfd99 Updated README to show examples with an <ace> tag instead of the old [editor].
+bdbc587 Updated README with examples for embedding an editor in a node field.
+3628bb4 (tag: 7.x-1.0-alpha9) Changed all setting names to be more user friendly.
+bc47032 Changed text format filter tag from [editor] to <ace>.
+b726c3f Issue #1415484 by nylin: Add an api function to get a printable Ace Editor field.
+19eb541 Remove unused file.
+d83603e (tag: 7.x-1.0-alpha8) Documentation edit
+badccf2 Issue #1415396 by nylin: Override text filter options by tag attributes
+3add889 Added module features and explanations to the README.
+880f3b4 (tag: 7.x-1.0-alpha7) Merged the code of ace_editor.field_format.js and ace_editor.format_filter.js into into ace_editor.se. The file are now handeling all cases.
+6c322f5 Issue #1414280 by nylin: Text format filter to output [editor][/editor] wrapped content into an Ace Editor
+700b0f0 (tag: 7.x-1.0-alpha6) Issue #1414278 by nylin: Display formatter that outputs the content in an ace editor
+86a0b9c (tag: 7.x-1.0-alpha5) Removed unnecessary cache clear in install file.
+0727de8 JavaScript completely re-written to allow editors for field summaries as well.
+0d8e578 (tag: 7.x-1.0-alpha4) Moved font size and print margin settings to the module's config page. Changed bug where content didn't save correctly.
+ee5b468 (tag: 7.x-1.0-alpha3) Added selection of dark or light theme in the module's settings page. Moved controls to the bottom of the editor and added control for sont size.
+3000968 (tag: 7.x-1.0-alpha2) Added check to see if the Ace Editor JS library is installed when it's about to be used. Also added hook_install() to add a default text format to use with the editor. Modified README.txt
+3a37322 Some styling fixes.
+721eb1c Added documentation.
+97812b1 (tag: 7.x-1.0-alpha1) Added some toggle controls for the editor.
+d6ba612 Wrapped the pre tag inside a div with class ace-editor to hold both the editor itself and the soon to be added controls.
+7062de8 Added documentation to code.
+4ec962c Added functionality to custom blocks.
+367f22a Added an installation step to the README.
+ce9224a Added a settings page to let user chose what text formats to use with the editor.
+9598566 Added text to README.txt
+2a9ea9c The editor is now showing when selecting the Ace Editor (ace_editor) option in the text format selector and hiding otherwise.
+d8a9ac8 Changed name to ace_editor.
