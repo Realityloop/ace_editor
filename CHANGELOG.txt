@@ -1,5 +1,6 @@
-22a506e (HEAD, 7.x-1.x) Issue #2270799 by Alex Bukach: Not working when library is not in sites/all/libraries. Added dependency from Libraries API module.
-7dac151 (origin/HEAD, origin/7.x-1.x) Added CHANGELOG.txt file.
+a729744 (HEAD, 7.x-1.x) Issue #1420290 by interdruper: Added autowrap and line highlighting options to admin panel.
+d44843f (origin/HEAD, origin/7.x-1.x) Issue #2270799 by Alex Bukach: Not working when library is not in sites/all/libraries. Added dependency from Libraries API module.
+7dac151 Added CHANGELOG.txt file.
 22398f8 Issue #2287147 by tonylegrone: Add new custom permission for the config page of the module
 b0fb30d (tag: 7.x-1.1) #2230725 by Growiel,tempo22: Update the README to specify that we need to use a version of Ace > 1.0.0 and update the download links to reflect that
 b41f13d Issue #2227443 by Growiel: Editor is now able to calculate its own height

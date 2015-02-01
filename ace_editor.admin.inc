@@ -13,7 +13,7 @@
 		foreach($filter_formats as $key => $format_obj) {
 			$filter_formats_options[$key] = $format_obj->name;
 		}
-		
+
 		$form['explanation'] = array(
 			'#markup' => t('These settings affect the editor only when used to edit HTML/PHP in your nodes or blocks.<br><br>'),
 		);
@@ -40,7 +40,7 @@
 				'style' => 'min-width: 400px;'
 			),
 		);
-		
+
 		$form['ace_editor_default_syntax'] = array(
 			'#title' => 'Editor default syntax',
 			'#type' => 'select',
@@ -70,6 +70,18 @@
 			'#type' => 'checkbox',
 			'#title' => t('Show print margin'),
 			'#default_value' => variable_get('ace_editor_printmargin'),
+		);
+
+		$form['ace_editor_autowrap'] = array(
+			'#type' => 'checkbox',
+			'#title' => t('Autowrap lines'),
+			'#default_value' => variable_get('ace_editor_autowrap'),
+		);
+
+		$form['ace_editor_linehighlighting'] = array(
+			'#type' => 'checkbox',
+			'#title' => t('Line highlighting'),
+			'#default_value' => variable_get('ace_editor_linehighlighting'),
 		);
 
 		return system_settings_form($form);

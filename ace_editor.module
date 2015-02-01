@@ -121,6 +121,8 @@ function ace_editor_node_block_edit_form_attach_js($form) {
 		'theme' => variable_get('ace_editor_theme', 'dark'),
 		'syntax' => variable_get('ace_editor_default_syntax', 'dark'),
 		'printmargin' => variable_get('ace_editor_printmargin', false),
+		'autowrap' => variable_get('ace_editor_autowrap', true),
+		'linehighlighting' => variable_get('ace_editor_linehighlighting', false),
 		'fontsize' => variable_get('ace_editor_fontsize', '10pt'),
 		'available_modes' => ace_editor_get_modes(),
 		'ace_src_dir' => libraries_get_path('ace') . '/src/',
@@ -423,6 +425,17 @@ function get_setting_form_elements($settings) {
 			'#title' => t('Show print margin'),
 			'#default_value' => $settings['print-margin'],
 		),
+		'autowrap' => array(
+			'#type' => 'checkbox',
+			'#title' => t('Autowrap lines'),
+			'#default_value' => $settings['autowrap'],
+		),
+		'linehighlighting' => array(
+			'#type' => 'checkbox',
+			'#title' => t('Line highlighting'),
+			'#default_value' => $settings['linehighlighting'],
+		),
+
 		'invisibles' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show invisibles'),
@@ -443,6 +456,8 @@ function ace_editor_default_settings() {
 		'font-size' => '10pt',
 		'line-numbers' => true,
 		'print-margin' => false,
+		'autowrap' => true,
+		'linehighlighting' => false,
 		'invisibles' => false,
 	);
 }
