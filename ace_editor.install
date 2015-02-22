@@ -17,12 +17,12 @@
 		variable_set('ace_editor_filter_formats', array('ace_editor'));
 
 		// Set the defaults to other variables.
-		variable_set('ace_editor_theme', 'dark');
-		variable_set('ace_editor_default_syntax', 'html');
-		variable_set('ace_editor_printmargin', false);
-		variable_set('ace_editor_fontsize', '10pt');
 		variable_set('ace_editor_autowrap', true);
-		variable_set('ace_editor_linehighlighting', false);
+		variable_set('ace_editor_default_syntax', 'html');
+		variable_set('ace_editor_fontsize', '12pt');
+		variable_set('ace_editor_linehighlighting', true);
+		variable_set('ace_editor_printmargin', false);
+		variable_set('ace_editor_theme', 'cobalt');
 	}
 
 	/**
@@ -31,12 +31,12 @@
 	function ace_editor_uninstall() {
 
 		// Remove the associated variables.
-		variable_del('ace_editor_filter_formats');
-		variable_del('ace_editor_theme');
-		variable_del('ace_editor_default_syntax');
-		variable_del('ace_editor_printmargin');
-		variable_del('ace_editor_fontsize');
 		variable_del('ace_editor_autowrap');
+		variable_del('ace_editor_default_syntax');
+		variable_del('ace_editor_filter_formats');
+		variable_del('ace_editor_fontsize');
 		variable_del('ace_editor_linehighlighting');
+		variable_del('ace_editor_printmargin');
+		variable_del('ace_editor_theme');
 	}
 

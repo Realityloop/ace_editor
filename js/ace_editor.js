@@ -9,6 +9,7 @@
 
                               var SyntaxMode = ace.require("ace/mode/" + settings['syntax']).Mode;
                               var themePath = "ace/theme/" + settings['theme'];
+                              var langTools = ace.require("ace/ext/language_tools");
 
                               var editor_instance = ace.edit(this['id']);
                               editor_instance.getSession().setMode(new SyntaxMode());
@@ -18,6 +19,12 @@
                               editor_instance.getSession().setUseWrapMode(settings['autowrap']);
                               editor_instance.setHighlightActiveLine(settings['linehighlighting']);
                               editor_instance.setShowInvisibles(settings['invisibles']);
+                              editor_instance.setOptions({
+                                enableBasicAutocompletion: true,
+                                // The following parameters need work...
+                                //  enableSnippets: true,
+                                //  enableLiveAutocompletion: true,
+                              });
                               editor_instance.renderer.setHScrollBarAlwaysVisible(false);
                               editor_instance.setReadOnly(true);
                               $pre.css({

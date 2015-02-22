@@ -238,6 +238,9 @@
 						case "show_line_numbers":
 							this['editor'].renderer.setShowGutter(checked);
 							break;
+            case "autocomplete":
+              this['editor'].setBehavioursEnabled(checked);
+              break;
 					}
 				});
 			}
@@ -250,6 +253,9 @@
 				case "show_line_numbers":
 					localStorageSet('ace_editor_' + textAreaID + '_show_line_numbers', checked);
 					break;
+        case "autocomplete":
+          localStorageSet('ace_editor_' + textAreaID + '_autocomplete', checked);
+          break;
 				case "mode":
 					localStorageSet('ace_editor_' + textAreaID + '_mode', $control.val());
 					break;
@@ -293,7 +299,9 @@
 			$controls.append('<div class="control"><input type="checkbox" name="show_hidden" class="show_hidden" checked>' +
 							  '<label>Invisibles</label></div>');
 			$controls.append('<div class="control"><input type="checkbox" name="show_line_numbers" class="show_line_numbers" checked>' +
-							  '<label>Line numbers</label></div>');
+							  '<label>Line numbers (show errors)</label></div>');
+      $controls.append('<div class="control"><input type="checkbox" name="autocomplete" class="autocomplete" checked>' +
+                '<label>Autocomplete</label></div>');
 			$modes_select = $('<div class="control"><select name="mode" class="mode"></select></div>');
 			$.each(editorSettings['available_modes'], function(key, value) {
 				var selected = (key == 'html') ? ' selected' : '';

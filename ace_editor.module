@@ -117,15 +117,17 @@ function ace_editor_node_block_edit_form_attach_js($form) {
 
 	global $base_path;
 	$addJsSettings = array(
-		'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
-		'theme' => variable_get('ace_editor_theme', 'dark'),
-		'syntax' => variable_get('ace_editor_default_syntax', 'dark'),
-		'printmargin' => variable_get('ace_editor_printmargin', false),
-		'autowrap' => variable_get('ace_editor_autowrap', true),
-		'linehighlighting' => variable_get('ace_editor_linehighlighting', false),
-		'fontsize' => variable_get('ace_editor_fontsize', '10pt'),
-		'available_modes' => ace_editor_get_modes(),
 		'ace_src_dir' => libraries_get_path('ace') . '/src/',
+		'autocomplete' => variable_get('ace_editor_autocomplete', true),
+		'autowrap' => variable_get('ace_editor_autowrap', true),
+		'available_modes' => ace_editor_get_modes(),
+		'fontsize' => variable_get('ace_editor_fontsize', '12pt'),
+		'invisibles' => variable_get('ace_editor_invisibles', false),
+		'linehighlighting' => variable_get('ace_editor_linehighlighting', true),
+		'printmargin' => variable_get('ace_editor_printmargin', false),
+		'syntax' => variable_get('ace_editor_default_syntax', 'html'),
+		'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
+		'theme' => variable_get('ace_editor_theme', 'cobalt'),
 	);
 
 	$jsSettings = array(
@@ -415,11 +417,6 @@ function get_setting_form_elements($settings) {
 				'style' => 'width: 100px;'
 			),
 		),
-		'line-numbers' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show line numbers'),
-			'#default_value' => $settings['line-numbers'],
-		),
 		'print-margin' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show print margin'),
@@ -435,11 +432,21 @@ function get_setting_form_elements($settings) {
 			'#title' => t('Line highlighting'),
 			'#default_value' => $settings['linehighlighting'],
 		),
-
+		// The following settings are embedded in the editor instances for real-time setups:
 		'invisibles' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Show invisibles'),
 			'#default_value' => $settings['invisibles'],
+		),
+		'line-numbers' => array(
+			'#type' => 'checkbox',
+			'#title' => t('Show line numbers and errors'),
+			'#default_value' => $settings['line-numbers'],
+		),
+		'autocomplete' => array(
+			'#type' => 'checkbox',
+			'#title' => t('Enable autocompletion'),
+			'#default_value' => $settings['autocomplete'],
 		),
 	);
 }
@@ -449,16 +456,17 @@ function get_setting_form_elements($settings) {
  */
 function ace_editor_default_settings() {
 	return array(
-		'theme' => 'twilight',
-		'syntax' => 'html',
-		'height' => '200px',
-		'width' => '100%',
-		'font-size' => '10pt',
-		'line-numbers' => true,
-		'print-margin' => false,
+		'autocomplete' => true,
 		'autowrap' => true,
-		'linehighlighting' => false,
+		'font-size' => '12pt',
+		'height' => '200px',
 		'invisibles' => false,
+		'line-numbers' => true,
+		'linehighlighting' => true,
+		'print-margin' => false,
+		'syntax' => 'html',
+		'theme' => 'cobalt',
+		'width' => '100%',
 	);
 }
 
