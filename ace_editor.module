@@ -46,15 +46,7 @@ function ace_editor_add($content, $userSettings) {
 	$settings = makeJsFriendlySettings($settings);
 
 	// Get a unique index for the next pre-element added by this API function.
-	$add_index = '1';
-	if ($_SESSION['ace_editor_add_index']) {
-		$add_index = $_SESSION['ace_editor_add_index'];
-		$_SESSION['ace_editor_add_index'] = $add_index + 1;
-	} else {
-		$_SESSION['ace_editor_add_index'] = $add_index;
-	}
-
-	$preID = 'ace-editor-add-' . $add_index;
+	$preID = drupal_html_id('ace-editor-add');
 	$pre = '<pre id="' . $preID . '">' . $content . '</pre>';
 
 	// Put all instances and their settings to JS.
