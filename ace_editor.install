@@ -9,13 +9,22 @@
 */
 function ace_editor_install() {
 
-  // Create a default text format to use with the editor.
-  $html_editor_format = new stdClass();
-  $html_editor_format->format = 'ace_editor';
-  $html_editor_format->name = 'Ace Editor';
-  $html_editor_format->status = 1;
-  $html_editor_format->weight = 100;
-  filter_format_save($html_editor_format);
+  // Create a default filter format to use with the editor.
+  if (!filter_format_exists('ace_editor')) {
+    $html_editor_format = new stdClass();
+    $html_editor_format->format = 'ace_editor';
+    $html_editor_format->name = 'Ace Editor';
+    $html_editor_format->status = 1;
+    $html_editor_format->weight = 100;
+    filter_format_save($html_editor_format);
+  }
+  else {
+    // Enabled a
+    db_update('filter_format')
+      ->fields(array('status' => 1))
+      ->condition('format', 'ace_editor')
+      ->execute();
+  }
 
   // Set the newly created text format to use the editor.
   variable_set('ace_editor_filter_formats', array('ace_editor'));
@@ -33,6 +42,14 @@ function ace_editor_install() {
 * Implements hook_uninstall().
 */
 function ace_editor_uninstall() {
+
+  // Disable the ace_editor filter format
+  $html_editor_format = new stdClass();
+  $html_editor_format->format = 'ace_editor';
+  $html_editor_format->name = 'Ace Editor';
+  $html_editor_format->status = 1;
+  $html_editor_format->weight = 100;
+  filter_format_disable($html_editor_format);
 
   // Remove the associated variables.
   variable_del('ace_editor_autowrap');

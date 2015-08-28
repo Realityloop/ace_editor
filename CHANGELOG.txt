@@ -1,5 +1,6 @@
-8252b60 (HEAD, 7.x-1.x) Issue #2330383 by torotil: Multi-site libraries path.
-f6f777a Issue #2468489 by torotil: Use drupal_html_id instead of custom code.
+23799a2 (HEAD, 7.x-1.x) Added hook_requirements() to provide a library status message on the Status Report.
+b47c8fb (origin/HEAD, origin/7.x-1.x) Issue #2330383 by torotil: Multi-site libraries path.
+9f50437 Issue #2468489 by torotil: Use drupal_html_id instead of custom code.
 fc0d2cb Issue #2431371 by interdruper: Option inside the editor to dinamically enable or disable auto-completion.
 b1cd37b Issue #1420290 by interdruper: Added autowrap and line highlighting options to admin panel.
 d44843f Issue #2270799 by Alex Bukach: Not working when library is not in sites/all/libraries. Added dependency from Libraries API module.
