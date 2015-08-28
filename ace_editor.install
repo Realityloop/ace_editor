@@ -1,42 +1,89 @@
 <?php
+/**
+ * @file
+ * Install, update and uninstall functions for the module.
+ */
 
-	/**
-	* Implements hook_install().
-	*/
-	function ace_editor_install() {
+/**
+* Implements hook_install().
+*/
+function ace_editor_install() {
 
-		// Create a default text format to use with the editor.
-		$html_editor_format = new stdClass();
-		$html_editor_format->format = 'ace_editor';
-		$html_editor_format->name = 'Ace Editor';
-		$html_editor_format->status = 1;
-		$html_editor_format->weight = 100;
-		filter_format_save($html_editor_format);
+  // Create a default text format to use with the editor.
+  $html_editor_format = new stdClass();
+  $html_editor_format->format = 'ace_editor';
+  $html_editor_format->name = 'Ace Editor';
+  $html_editor_format->status = 1;
+  $html_editor_format->weight = 100;
+  filter_format_save($html_editor_format);
 
-		// Set the newly created text format to use the editor.
-		variable_set('ace_editor_filter_formats', array('ace_editor'));
+  // Set the newly created text format to use the editor.
+  variable_set('ace_editor_filter_formats', array('ace_editor'));
 
-		// Set the defaults to other variables.
-		variable_set('ace_editor_autowrap', true);
-		variable_set('ace_editor_default_syntax', 'html');
-		variable_set('ace_editor_fontsize', '12pt');
-		variable_set('ace_editor_linehighlighting', true);
-		variable_set('ace_editor_printmargin', false);
-		variable_set('ace_editor_theme', 'cobalt');
-	}
+  // Set the defaults to other variables.
+  variable_set('ace_editor_autowrap', true);
+  variable_set('ace_editor_default_syntax', 'html');
+  variable_set('ace_editor_fontsize', '12pt');
+  variable_set('ace_editor_linehighlighting', true);
+  variable_set('ace_editor_printmargin', false);
+  variable_set('ace_editor_theme', 'cobalt');
+}
 
-	/**
-	* Implements hook_uninstall().
-	*/
-	function ace_editor_uninstall() {
+/**
+* Implements hook_uninstall().
+*/
+function ace_editor_uninstall() {
 
-		// Remove the associated variables.
-		variable_del('ace_editor_autowrap');
-		variable_del('ace_editor_default_syntax');
-		variable_del('ace_editor_filter_formats');
-		variable_del('ace_editor_fontsize');
-		variable_del('ace_editor_linehighlighting');
-		variable_del('ace_editor_printmargin');
-		variable_del('ace_editor_theme');
-	}
+  // Remove the associated variables.
+  variable_del('ace_editor_autowrap');
+  variable_del('ace_editor_default_syntax');
+  variable_del('ace_editor_filter_formats');
+  variable_del('ace_editor_fontsize');
+  variable_del('ace_editor_linehighlighting');
+  variable_del('ace_editor_printmargin');
+  variable_del('ace_editor_theme');
+}
 
+/**
+* Implements hook_requirements().
+*/
+function ace_editor_requirements($phase) {
+
+  $requirements = array();
+  $t = get_t();
+  // Verify that the library is present.
+  if ($phase == 'runtime') {
+    drupal_load('module', 'libraries');
+
+  	if (!is_dir(libraries_get_path('ace'))) {
+      $requirements['ace_editor'] = array(
+        'title' => $t('Ace Editor'),
+        'value' => $t(
+        'The required Ace library is missing. The library can be found
+        at <a href="@url">@url</a>. Please add it to your library directory.',
+        array(
+          '@url' => 'https://github.com/ajaxorg/ace')
+        ),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+    else {
+      $requirements['ace_editor'] = array(
+        'title' => $t('Ace Editor'),
+        'severity' => REQUIREMENT_OK,
+        'value' => $t('Ace library installed.'),
+      );
+    }
+  }
+
+  if ($phase == 'install') {
+    if (!is_dir(libraries_get_path('ace'))) {
+      drupal_set_message($t('The required Ace library is missing.
+        The library can be found at @url.
+        Please add it to your library directory.',
+        array('@url' => 'https://github.com/ajaxorg/ace')), 'error');
+    }
+  }
+
+  return $requirements;
+}
