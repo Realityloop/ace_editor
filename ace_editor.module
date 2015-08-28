@@ -575,12 +575,6 @@ function ace_editor_library() {
 * Returns if the library seems to be installed.
 */
 function ace_editor_library_installed() {
-	return file_exists('sites/all/libraries/ace/src/ace.js');
-}
-
-/**
-* Returns if the library seems to be installed.
-*/
-function ace_editor_include_installed() {
-	return file_exists(libraries_get_path('ace') . '/src/ace.js');
+	$path = libraries_get_path('ace');
+	return $path && file_exists(DRUPAL_ROOT . '/' . $path . '/src/ace.js');
 }
