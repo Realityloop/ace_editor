@@ -43,13 +43,7 @@ The module adds a filter format named 'Ace Editor' on installation. This filter
 format is not disabled when the module is uninstalled, to preserve any content
 saved using it. If you are sure that there is no valuable content in your
 database saved under 'Ace Editor' filter format, you can manually disable the
-filter format running this snippet from Devel PHP console:
-
-  $html_editor_format = new stdClass();
-  $html_editor_format->format = 'ace_editor';
-  filter_format_disable($html_editor_format);
-
-
+filter format at admin/config/content/formats.
 
 Dependencies
 ============

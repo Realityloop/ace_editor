@@ -1,5 +1,10 @@
-8252b60 (HEAD, 7.x-1.x) Issue #2330383 by torotil: Multi-site libraries path.
-f6f777a Issue #2468489 by torotil: Use drupal_html_id instead of custom code.
+c4316ed (HEAD, origin/HEAD, origin/7.x-1.x, 7.x-1.x) Do not create but just enable the 'Ace Editor' filter format if the format has been previously disabled.
+b26df89 README.txt updated with instructions for removing Ace Editor filter format after unsintalling the module.
+2fe66d4 Revert "Disable Ace Editor filter format if module is uninstalled." Content saved with 'Ace Editor' filter format will not be shown. This reverts commit 7cdc3cb8019f1ff8b74e8edc32913b031b61a02f.
+7cdc3cb Disable Ace Editor filter format if module is uninstalled.
+481049a Added hook_requirements() to provide a library status message on the Status Report.
+b47c8fb Issue #2330383 by torotil: Multi-site libraries path.
+9f50437 Issue #2468489 by torotil: Use drupal_html_id instead of custom code.
 fc0d2cb Issue #2431371 by interdruper: Option inside the editor to dinamically enable or disable auto-completion.
 b1cd37b Issue #1420290 by interdruper: Added autowrap and line highlighting options to admin panel.
 d44843f Issue #2270799 by Alex Bukach: Not working when library is not in sites/all/libraries. Added dependency from Libraries API module.
