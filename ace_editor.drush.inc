@@ -1,0 +1,171 @@
+<?php
+
+/**
+ * @file
+ *   drush integration for Ace Editor.
+ */
+
+/**
+ * The Ace plugin URI and the internal path inside the zip.
+ */
+define('ACE_DOWNLOAD_URI',
+  'https://github.com/ajaxorg/ace-builds/archive/master.zip');
+define('ACE_ZIP_INTERNAL_PATH', '/ace-builds-master/');
+
+/**
+ * Implementation of hook_drush_command().
+ *
+ * @return
+ *   An associative array describing your command(s).
+ */
+function ace_editor_drush_command() {
+  $items = array();
+
+  // the key in the $items array is the name of the command.
+  $items['download-ace'] = array(
+    'callback' => 'drush_download_ace',
+    'description' => dt('Download and install the Ace editor plugin from ' .
+      ACE_DOWNLOAD_URI . ' in the Libraries directory.'),
+    'arguments' => array(
+      'ace version' => dt('Ace library version to install:' . PHP_EOL .
+        '  src: concatenated but not minified (default)' . PHP_EOL .
+        '  src-min: concatenated and minified with uglify.js.'),
+    ),
+    'drupal dependencies' => array('libraries'),
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
+    'aliases' => array('dl-ace'),
+  );
+
+  return $items;
+}
+
+/**
+ * Command to download the Ace plugin.
+ */
+function drush_download_ace($ace_version = '') {
+
+  // Reset --yes/no global options
+  drush_set_context('DRUSH_NEGATIVE', FALSE);
+  drush_set_context('DRUSH_AFFIRMATIVE', FALSE);
+
+  // Libraries module is a dependency
+  if (!module_exists('libraries')) {
+    drush_log(dt('Libraries module must be installed and enabled.'), 'error');
+    return;
+  }
+
+  // Chek argument if available
+  if (!empty($ace_version) &&
+    !in_array($ace_version, array('src', 'src-min'))) {
+      drush_log(dt('Invalid argument provided. Must be "src" or "src-min".'),
+        'error');
+    return;
+  }
+
+  $path = drush_get_context('DRUSH_DRUPAL_ROOT') . '/sites/all/libraries/ace';
+
+  // Ask the Ace version to be installed
+  if (empty($ace_version)) {
+    $versions = array(
+      'src' => 'concatenated but not minified',
+      'src-min' => 'concatenated and minified with uglify.js',
+      );
+    $choice = drush_choice($versions,
+      dt('Select the Ace version to be downloaded and installed:'));
+
+    if (empty($choice)) {
+      drush_user_abort();
+      return;
+    }
+    else {
+      $ace_version = $choice;
+    }
+  }
+
+  // Check if the Ace library dir exists.
+  if (is_dir($path)) {
+    if (!drush_confirm('The Ace library seems installed at ' .
+      $path . '. Do you want to override it with the selected version?')) {
+        drush_user_abort();
+        return;
+    }
+    else {
+      drush_delete_dir($path, TRUE);
+    }
+  }
+
+  // Create the path
+  if (!drush_get_option('simulate')) {
+    drupal_mkdir($path);
+  }
+
+  // Make sure that the target directory exists and is writable
+  if (!file_prepare_directory($path)) {
+    drush_log(dt('Directory @path does not exist or is not writable.',
+      array('@path' => $path)),
+        'error');
+    return;
+  }
+
+  // Download the chosen Ace version files to the libraries directory.
+  $rc = drush_shell_cd_and_exec($path,
+    'wget --no-check-certificate ' . ACE_DOWNLOAD_URI .
+    ' -O ' . basename(ACE_DOWNLOAD_URI)
+    );
+
+  if ($rc && !drush_get_option('simulate')) {
+    // Unzip. Move to the expected subdir. Clean temporary and unrequired fields.
+    do {
+      $rc = drush_tarball_extract($path . '/' . basename(ACE_DOWNLOAD_URI));
+      if (!$rc) break;
+      $rc = drush_move_dir($path . ACE_ZIP_INTERNAL_PATH . $ace_version,
+        $path . '/src');
+      if (!$rc) break;
+      $rc = copy($path . ACE_ZIP_INTERNAL_PATH . 'ChangeLog.txt',
+        $path . '/ChangeLog.txt');
+      if (!$rc) break;
+      $rc = drush_delete_dir($path . ACE_ZIP_INTERNAL_PATH, TRUE);
+      if (!$rc) break;
+      $rc = unlink($path . '/' . basename(ACE_DOWNLOAD_URI));
+    } while (FALSE);
+  }
+/*
+  $rc = drush_shell_cd_and_exec($path,
+    'rm -rf *' .
+    ' && wget ' . ACE_DOWNLOAD_URI .
+    ' && unzip ' . basename(ACE_DOWNLOAD_URI) .
+    ' && mv ' . ACE_ZIP_INTERNAL_PATH . $ace_version . ' src' .
+    ' && cp ' . ACE_ZIP_INTERNAL_PATH . 'ChangeLog.txt .' .
+    ' && rm -rf ' . ACE_ZIP_INTERNAL_PATH .
+    ' && rm -f *.html' .
+    ' && rm -f ' . basename(ACE_DOWNLOAD_URI)
+    );
+*/
+  if ($rc) {
+    // Get the installed release from ChangeLog.txt 1st line
+    $release_intalled = '';
+    if ($fp = fopen($path . '/ChangeLog.txt', 'r')) {
+      $release_intalled = trim(fgets($fp));
+    }
+
+    drush_log(dt('Ace Editor plugin (release ' .
+      $release_intalled . ') has been installed in @path',
+      array('@path' => $path)), 'success');
+  }
+  else {
+    drush_log(dt('Drush was unable to install the Ace Editor plugin to @path. Run the drush command with the --debug option for more info.',
+      array('@path' => $path)),
+       'error');
+  }
+}
+
+/**
+ * Implements drush_MODULE_post_COMMAND().
+ */
+function drush_ace_editor_post_pm_enable($project = NULL) {
+
+  if ($project == 'ace_editor' &&
+    drush_confirm('Do you want to automatically install the library now?')) {
+      drush_download_ace();
+  }
+}
