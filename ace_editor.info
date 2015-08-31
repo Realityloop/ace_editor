@@ -1,8 +1,15 @@
-name = Ace HTML Editor
-description = Lets you edit your nodes with the Ace Editor.
+name = Ace Editor
+description = Lets you edit code with the Ace Editor.
 package = Administration
 core = 7.x
 configure = admin/config/content/ace-editor
 dependencies[] = libraries
 
 files[] = ace_editor.admin.inc
+
+; Information added by Drupal.org packaging script on 2015-08-28
+version = "7.x-1.1+12-dev"
+core = "7.x"
+project = "ace_editor"
+datestamp = "1440805440"
+
