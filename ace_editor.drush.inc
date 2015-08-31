@@ -129,18 +129,7 @@ function drush_download_ace($ace_version = '') {
       $rc = unlink($path . '/' . basename(ACE_DOWNLOAD_URI));
     } while (FALSE);
   }
-/*
-  $rc = drush_shell_cd_and_exec($path,
-    'rm -rf *' .
-    ' && wget ' . ACE_DOWNLOAD_URI .
-    ' && unzip ' . basename(ACE_DOWNLOAD_URI) .
-    ' && mv ' . ACE_ZIP_INTERNAL_PATH . $ace_version . ' src' .
-    ' && cp ' . ACE_ZIP_INTERNAL_PATH . 'ChangeLog.txt .' .
-    ' && rm -rf ' . ACE_ZIP_INTERNAL_PATH .
-    ' && rm -f *.html' .
-    ' && rm -f ' . basename(ACE_DOWNLOAD_URI)
-    );
-*/
+
   if ($rc) {
     // Get the installed release from ChangeLog.txt 1st line
     $release_intalled = '';
