@@ -124,6 +124,9 @@ function drush_download_ace($ace_version = '') {
       $rc = copy($path . ACE_ZIP_INTERNAL_PATH . 'ChangeLog.txt',
         $path . '/ChangeLog.txt');
       if (!$rc) break;
+      $rc = copy($path . ACE_ZIP_INTERNAL_PATH . 'package.json',
+        $path . '/package.json');
+      if (!$rc) break;
       $rc = drush_delete_dir($path . ACE_ZIP_INTERNAL_PATH, TRUE);
       if (!$rc) break;
       $rc = unlink($path . '/' . basename(ACE_DOWNLOAD_URI));

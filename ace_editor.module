@@ -466,7 +466,7 @@ function ace_editor_default_settings() {
  * Add all JavaScript needed for the editor to work on the next page.
  */
 function ace_editor_add_js($addJsSettings, $forAdminPages) {
-	drupal_add_library('ace_editor', 'ace-editor', FALSE);
+	drupal_add_library('ace_editor', 'ace', FALSE);
 	global $base_path;
 	$ace_lib_path = libraries_get_path('ace');
 	if (isset($addJsSettings[0]) && is_array($addJsSettings[0])) {
@@ -554,21 +554,45 @@ function ace_editor_get_modes() {
 /**
  * Implements hook_library().
  *
- * Add the ace JS library for use with drupal.
+ * For using drupal_add_library()
  */
 function ace_editor_library() {
 
-	$libraries['ace-editor'] = array(
+	$libraries['ace'] = array(
 		'title' => 'Ace Editor',
-		'version' => '1.0',
+		'website' => 'http://ace.c9.io/',
+		'version' => '',
 		'js' => array(
 			libraries_get_path('ace') . '/src/ace.js' => array(),
+			libraries_get_path('ace') . '/src/ext-language_tools.js' => array(),
 		),
 	);
 
-
-
 	return $libraries;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function ace_editor_libraries_info() {
+  $libraries['ace'] = array(
+    'title' => 'Ace Editor',
+    'vendor url' => 'http://ace.c9.io/',
+    'download url' => 'https://github.com/ajaxorg/ace-builds/archive/master.zip',
+    'version arguments' => array(
+      'file' => 'package.json',
+      'pattern' => '/"version": "(\d+\.+\d+.+\d+)"/',
+      'lines' => 3,
+    ),
+    'files' => array(
+      'js' => array(
+        'src/ace.js',
+        'src/ext-language_tools.js',   // required for autocompletion
+      ),
+    ),
+  );
+
+  return $libraries;
 }
 
 /**

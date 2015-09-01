@@ -1,5 +1,6 @@
-f2c3ca2 (HEAD, 7.x-1.x) Added Drush command 'dl-ace' for easily download and install the Ace library (some fixes).
-e381ca0 (origin/HEAD, origin/7.x-1.x) Added Drush command 'dl-ace' for easily download and install the Ace library.
+c55b9ca (HEAD, 7.x-1.x) Removing some commented code from ace_editor.drush.inc.
+87f37e7 (origin/HEAD, origin/7.x-1.x) Added Drush command 'dl-ace' for easily download and install the Ace library (some fixes).
+e381ca0 Added Drush command 'dl-ace' for easily download and install the Ace library.
 7ef4102 README.txt: fixing typos.
 c4316ed Do not create but just enable the 'Ace Editor' filter format if the format has been previously disabled.
 b26df89 README.txt updated with instructions for removing Ace Editor filter format after unsintalling the module.
