@@ -359,7 +359,7 @@ function tag_attributes($element_name, $xml) {
 }
 
 /**
- * Return the form elements often used in setting forms for late use with editor instances.
+ * Field formatter settings form.
  */
 function get_setting_form_elements($settings) {
 	return array(
@@ -385,7 +385,8 @@ function get_setting_form_elements($settings) {
 		'height' => array(
 			'#type' => 'textfield',
 			'#title' => t('Height'),
-			'#description' => t('The height of the editor in either pixels or percents. You can use "Auto" to let the editor calculate the adequate height.'),
+			'#description' => t('The height of the editor in either pixels or percents.
+        You can use "auto" to let the editor calculate the adequate height.'),
 			'#default_value' => $settings['height'],
 			'#attributes' => array(
 				'style' => 'width: 100px;'
@@ -409,36 +410,21 @@ function get_setting_form_elements($settings) {
 				'style' => 'width: 100px;'
 			),
 		),
-		'print-margin' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show print margin'),
-			'#default_value' => $settings['print-margin'],
-		),
-		'autowrap' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Autowrap lines'),
-			'#default_value' => $settings['autowrap'],
-		),
+    // wrapmode breaks the read-only editor if activated
+//		'autowrap' => array(
+//			'#type' => 'checkbox',
+//			'#title' => t('Autowrap lines'),
+//			'#default_value' => $settings['autowrap'],
+//		),
 		'linehighlighting' => array(
 			'#type' => 'checkbox',
 			'#title' => t('Line highlighting'),
 			'#default_value' => $settings['linehighlighting'],
 		),
-		// The following settings are embedded in the editor instances for real-time setups:
-		'invisibles' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Show invisibles'),
-			'#default_value' => $settings['invisibles'],
-		),
 		'line-numbers' => array(
 			'#type' => 'checkbox',
-			'#title' => t('Show line numbers and errors'),
+			'#title' => t('Show line numbers'),
 			'#default_value' => $settings['line-numbers'],
-		),
-		'autocomplete' => array(
-			'#type' => 'checkbox',
-			'#title' => t('Enable autocompletion'),
-			'#default_value' => $settings['autocomplete'],
 		),
 	);
 }
