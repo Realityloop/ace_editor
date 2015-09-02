@@ -596,9 +596,9 @@ function ace_editor_libraries_info() {
 }
 
 /**
-* Returns if the library seems to be installed.
+* Returns if the library is installed.
 */
 function ace_editor_library_installed() {
-	$path = libraries_get_path('ace');
-	return $path && file_exists(DRUPAL_ROOT . '/' . $path . '/src/ace.js');
+	$library = libraries_detect('ace');
+	return isset($library['installed']) && $library['installed'];
 }
