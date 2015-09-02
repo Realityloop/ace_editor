@@ -1,5 +1,6 @@
-b7c9d8d (HEAD, 7.x-1.x) Using libraries_detect() for checking if Ace Library is properly installed.
-64417be (origin/HEAD, origin/7.x-1.x) Added hook_libraries_info().
+4b2e461 (HEAD, 7.x-1.x) Issue #414278 by interdruper: Display formatter that outputs the content in an ace editor: fixed minor issues, available options reviewed.
+c1709d6 (origin/HEAD, origin/7.x-1.x) Using libraries_detect() for checking if Ace Library is properly installed.
+64417be Added hook_libraries_info().
 755ac3e Removing some commented code from ace_editor.drush.inc.
 87f37e7 Added Drush command 'dl-ace' for easily download and install the Ace library (some fixes).
 e381ca0 Added Drush command 'dl-ace' for easily download and install the Ace library.
