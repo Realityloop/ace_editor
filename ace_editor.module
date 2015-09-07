@@ -482,29 +482,24 @@ function makeJsFriendlySettings($settings) {
 }
 
 /**
- * Returns all of the themes.
+ * Returns the installed themes.
  */
 function ace_editor_get_themes() {
-	return array(
-		'clouds' => 'Clouds',
-		'clouds_midnight' => 'Clouds Midnight',
-		'cobalt' => 'Cobalt',
-		'crimson_editor' => 'Crimson Editor',
-		'dawn' => 'Dawn',
-		'idle_fingers' => 'Idle Fingers',
-		'kr_theme' => 'krTheme',
-		'merbivore' => 'Merbivore',
-		'merbivore_soft' => 'Merbivore Soft',
-		'mono_industrial' => 'Mono Industrial',
-		'monokai' => 'Monokai',
-		'pastel_on_dark' => 'Pastel on dark',
-		'solarized_dark' => 'Solarized Dark',
-		'solarized_light' => 'Solarized Light',
-		'textmate' => 'TextMate',
-		'twilight' => 'Twilight',
-		'tomorrow' => 'Tomorrow',
-		'vibrant_ink' => 'Vibrant Ink',
-	);
+
+	$library_path = DRUPAL_ROOT . '/' . libraries_get_path('ace') . '/src';
+
+	$themes_files = array_keys(file_scan_directory(
+		$library_path, '/^theme-.*\.js$/i' ));
+
+	$themes = array();
+	foreach ($themes_files as $filename) {
+   $tmp = explode('/theme-',$filename);
+   $themes[] = substr(array_pop($tmp), 0, -3);
+	};
+
+	asort($themes);
+
+	return array_combine($themes, $themes);
 }
 
 /**

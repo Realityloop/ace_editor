@@ -34,6 +34,8 @@
 		$form['ace_editor_theme'] = array(
 			'#title' => 'Editor theme',
 			'#type' => 'select',
+      '#description' => 'You can check the availables themes <a href="'.
+        'http://ace.c9.io/build/kitchen-sink.html" target="_blank">here.</a>',
 			'#options' => ace_editor_get_themes(),
 			'#default_value' => variable_get('ace_editor_theme', 'twilight'),
 			'#attributes' => array(
@@ -55,10 +57,13 @@
 			'#type' => 'select',
 			'#title' => t('Font size'),
 			'#options' => array(
+        '8pt' => '8pt',
 				'9pt' => '9pt',
 				'10pt' => '10pt',
 				'11pt' => '11pt',
 				'12pt' => '12pt',
+        '13pt' => '13pt',
+        '14pt' => '14pt',
 			),
 			'#default_value' => variable_get('ace_editor_fontsize', '10pt'),
 			'#attributes' => array(
