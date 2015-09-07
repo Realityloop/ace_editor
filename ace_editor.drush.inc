@@ -62,7 +62,8 @@ function drush_download_ace($ace_version = '') {
     return;
   }
 
-  $path = drush_get_context('DRUSH_DRUPAL_ROOT') . '/sites/all/libraries/ace';
+  $path = drush_get_context('DRUSH_DRUPAL_ROOT') . '/' .
+    libraries_get_path('ace');
 
   // Ask the Ace version to be installed
   if (empty($ace_version)) {

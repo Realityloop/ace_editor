@@ -1,5 +1,6 @@
-0fd7122 (HEAD, 7.x-1.x) Show all the installed themes in the theme list.
-4780cf5 (origin/HEAD, origin/7.x-1.x) CHANGELOG.txt updated.
+c3bfca9 (HEAD, 7.x-1.x) Issue #2330383 by mkhamash,interdruper: Multi-site libraries path.
+916e6ab (origin/HEAD, origin/7.x-1.x) Show all the installed themes in the theme list.
+4780cf5 CHANGELOG.txt updated.
 544afe2 Issue #414278 by interdruper: Display formatter that outputs the content in an ace editor: fixed minor issues, available options reviewed.
 c1709d6 Using libraries_detect() for checking if Ace Library is properly installed.
 64417be Added hook_libraries_info().

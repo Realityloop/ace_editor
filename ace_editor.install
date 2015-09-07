@@ -78,7 +78,7 @@ function ace_editor_requirements($phase) {
         'title' => $t('Ace Editor'),
         'severity' => REQUIREMENT_OK,
         'value' => $t('Ace library installed (release ' .
-        trim(fgets(fopen(DRUPAL_ROOT . '/sites/all/libraries/ace/ChangeLog.txt', 'r'))) .
+        trim(fgets(fopen(DRUPAL_ROOT . '/' . libraries_get_path('ace') .'/ChangeLog.txt', 'r'))) .
         ').'),
       );
     }
