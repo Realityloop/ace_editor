@@ -7,9 +7,3 @@ dependencies[] = libraries
 
 files[] = ace_editor.admin.inc
 
-; Information added by Drupal.org packaging script on 2015-08-28
-version = "7.x-1.1+12-dev"
-core = "7.x"
-project = "ace_editor"
-datestamp = "1440805440"
-
