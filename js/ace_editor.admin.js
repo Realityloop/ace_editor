@@ -277,17 +277,13 @@
     /**
      * The content of the editor has changed, update the span showing line numbers.
      * Also transfer the content of the editors to their related textareas.
-     *
-     * TODO: Think about a better way to transfer the data between the editor and the textarea,
-     * I have tried doing this in a the 'blur'-event of the editor, but content wont get saved
-     * every time...
      */
     function editorContentChange($form_item, editorObject) {
       $(editorObject['element']).parents('div.ace-editor-container:first').find('div.ace-editor-controls span.num-lines').text(editorObject['editor'].getSession().getValue().split("\n").length + " lines");
 
       var $textarea = $form_item.find('textarea');
       var val = editorObject['editor'].getSession().getValue();
-      $textarea.text(val);
+      $textarea[0].value = val;
     }
 
 
