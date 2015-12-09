@@ -1,6 +1,7 @@
-9b806b5 (HEAD, 7.x-1.x) Issue #2625650 by Infanty, interdruper: Fix PHP syntax highlighting: missing base_path in library source path.
+7542015 (HEAD, origin/HEAD, origin/7.x-1.x, 7.x-1.x) Issue #2426307 by interdruper, Quty: Saving field with an ace format fails the first time
+7b9f1a5 Issue #2625650 by Infanty, interdruper: Fix PHP syntax highlighting: missing base_path in library source path.
 ab41d17 Code styling: replacing tabs by spaces in all source files.
-418888c (origin/HEAD, origin/7.x-1.x) Issue #2330383 by mkhamash,interdruper: Multi-site libraries path.
+418888c Issue #2330383 by mkhamash,interdruper: Multi-site libraries path.
 916e6ab Show all the installed themes in the theme list.
 4780cf5 CHANGELOG.txt updated.
 544afe2 Issue #414278 by interdruper: Display formatter that outputs the content in an ace editor: fixed minor issues, available options reviewed.
