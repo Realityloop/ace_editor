@@ -96,7 +96,7 @@
               });
 
               // Add event listeners.
-              editor_instance.getSession().addEventListener( function(editor) {
+              editor_instance.getSession().on('change', function(editor) {
                 editorContentChange($form_item, editorObject);
               });
 
@@ -191,7 +191,7 @@
     /**
     * Bind the change event to all text format select lists.
     */
-    $('div.text-format-wrapper fieldset.filter-wrapper select.filter-list').change( function(e) {
+    $('div.text-format-wrapper fieldset.filter-wrapper select.filter-list').live('change', function(e) {
       var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
       acifyWrapper($textFormatWrapper);
     });
@@ -199,7 +199,7 @@
     /**
      * Update the editors to reflect the toggled option.
      */
-    $('div.text-format-wrapper div.control input, div.text-format-wrapper div.control select').change( function(e) {
+    $('div.text-format-wrapper div.control input, div.text-format-wrapper div.control select').live('change', function(e) {
 
       var $control = $(this);
       var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
@@ -267,7 +267,7 @@
      * Seems that drupal blocks the use of click here, so we need to use
      * mouseup with a small delay to get it to work.
      */
-    $('a.link-edit-summary').mouseup(function(e) {
+    $('a.link-edit-summary').live('mouseup', function(e) {
       var $link = $(this);
       window.setTimeout(function() {
         acifyWrapper($link.parents('div.text-format-wrapper:first'));
