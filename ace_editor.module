@@ -108,8 +108,9 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 function ace_editor_node_block_edit_form_attach_js($form) {
 
   global $base_path;
+
   $addJsSettings = array(
-    'ace_src_dir' => libraries_get_path('ace') . '/src/',
+    'ace_src_dir' => $base_path . libraries_get_path('ace') . '/src/',
     'autocomplete' => variable_get('ace_editor_autocomplete', true),
     'autowrap' => variable_get('ace_editor_autowrap', true),
     'available_modes' => ace_editor_get_modes(),

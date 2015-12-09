@@ -1,5 +1,7 @@
-c3bfca9 (HEAD, 7.x-1.x) Issue #2330383 by mkhamash,interdruper: Multi-site libraries path.
-916e6ab (origin/HEAD, origin/7.x-1.x) Show all the installed themes in the theme list.
+9b806b5 (HEAD, 7.x-1.x) Issue #2625650 by Infanty, interdruper: Fix PHP syntax highlighting: missing base_path in library source path.
+ab41d17 Code styling: replacing tabs by spaces in all source files.
+418888c (origin/HEAD, origin/7.x-1.x) Issue #2330383 by mkhamash,interdruper: Multi-site libraries path.
+916e6ab Show all the installed themes in the theme list.
 4780cf5 CHANGELOG.txt updated.
 544afe2 Issue #414278 by interdruper: Display formatter that outputs the content in an ace editor: fixed minor issues, available options reviewed.
 c1709d6 Using libraries_detect() for checking if Ace Library is properly installed.
