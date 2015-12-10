@@ -2,6 +2,7 @@ Ace Editor Module ( https://drupal.org/project/ace_editor )
 ======================
 by Max Nylin, max@articstudios.se
 by Olivier GIRARD, girardol182@gmail.com
+by interdruper, https://www.drupal.org/u/interdruper
 
 
 Description
@@ -21,14 +22,15 @@ an API to embed and show code snippets in your content.
 Installation
 ============
 
-a) Using Drush (recommended):
-     Just run 'drush en ace_editor'. After enabling the module, you will be
-     asked to pick the desired Ace library release to be installed in
-     sites/all/libraries. Drush will download and extract the library using
-     the command 'drush dl-ace'.
+a) Using Drush (recommended from 7.x-1.2):
+     Just run 'drush en ace_editor'. The module will be downloaded and enabled.
+     While enabling, you will be asked to pick the desired Ace library release
+     to be installed in sites/all/libraries. Drush will download and extract
+     the Ace library using the command 'drush dl-ace'.
 
-     An example "Ace Editor" filter format is added that uses the Ace editor for editing content. You can enable the Ace editor for other filter formats
-     at admin/config/content/ace-editor.
+     An new "Ace Editor" filter format is added. It uses the Ace editor
+     for editing content. You can enable the Ace editor also for any other
+     filter formats at admin/config/content/ace-editor.
 
 b) Manually:
     1. Make sure that Libraries 7.x-2.x module is installed and enabled.
@@ -38,11 +40,11 @@ b) Manually:
        Do not use a version < 1.0.0.
     3. Extract and place the contents of the zip file under
        sites/all/libraries so that ace.js is located at
-       sites/all/libraries/ace/src/ace.js. If you want to use any of the other src
-       (minified, noconflict...), make sure you rename the folder as "src"
-       for the module to find it.
+       sites/all/libraries/ace/src/ace.js. If you want to use any other src
+       (minified, noconflict...), make sure that you rename the folder as "src"
+       for allowing the module to find it.
     4. Download, extract and copy the ace_editor module to your
-       sites/all/modules directory.
+       sites/all/modules or sites/all/modules/contrib directory.
     5. Enable the "Ace HTML Editor" module on your Drupal Modules page,
        under the Administration heading. An example "Ace Editor" filter format
        is added that uses the Ace editor for editing content. You can enable the
@@ -54,7 +56,7 @@ Uninstallation
 The module adds a filter format named 'Ace Editor' on installation. This filter
 format is not disabled when the module is uninstalled, to preserve any content
 saved using it. If you are sure that there is no valuable content in your
-database saved under 'Ace Editor' filter format, you can manually disable the
+database saved under the 'Ace Editor' filter format, you can manually disable the
 filter format at admin/config/content/formats.
 
 Drush support
@@ -128,6 +130,8 @@ Here are the possible values:
     twilight = Twilight
     tomorrow = Tomorrow
     vibrant_ink = Vibrant Ink
+
+    ... and any other theme-*.js file available in sites\all\libraries\ace\src
 
   syntax
     c_cpp = C/C++

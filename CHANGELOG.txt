@@ -1,5 +1,6 @@
-cf2c7f7 (HEAD, tag: 7.x-1.2, 7.x-1.x) Revert "Issue #2255597 by interdruper, alex-bukach: Make it work with jQuery 1.10 and above"
-a020316 (origin/HEAD, origin/7.x-1.x) Issue #2255597 by interdruper, alex-bukach: Make it work with jQuery 1.10 and above
+e4e54d2 (HEAD, 7.x-1.x) README.txt updated
+76dd09a (tag: 7.x-1.3, origin/HEAD, origin/7.x-1.x) Revert "Issue #2255597 by interdruper, alex-bukach: Make it work with jQuery 1.10 and above"
+a020316 (tag: 7.x-1.2) Issue #2255597 by interdruper, alex-bukach: Make it work with jQuery 1.10 and above
 26a853f Issue #2426307 by interdruper, Quty: Saving field with an ace format fails the first time
 7542015 Issue #2426307 by interdruper, Quty: Saving field with an ace format fails the first time
 7b9f1a5 Issue #2625650 by Infanty, interdruper: Fix PHP syntax highlighting: missing base_path in library source path.
