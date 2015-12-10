@@ -12,7 +12,6 @@
     * show it, else show the default textarea.
     */
     function acifyWrapper($textFormatWrapper) {
-      //console.log("Acify");
       // The select list for chosing the text format that will be used.
       var $filterSelector = $textFormatWrapper.find('select.filter-list');
 
@@ -96,7 +95,7 @@
               });
 
               // Add event listeners.
-              editor_instance.getSession().on('change', function(editor) {
+              editor_instance.getSession().addEventListener( function(editor) {
                 editorContentChange($form_item, editorObject);
               });
 
@@ -191,7 +190,9 @@
     /**
     * Bind the change event to all text format select lists.
     */
-    $('div.text-format-wrapper fieldset.filter-wrapper select.filter-list').live('change', function(e) {
+    var toAcify = 'div.text-format-wrapper fieldset.filter-wrapper select.filter-list';
+
+    $(toAcify).change(function(e) {
       var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
       acifyWrapper($textFormatWrapper);
     });
@@ -199,7 +200,22 @@
     /**
      * Update the editors to reflect the toggled option.
      */
-    $('div.text-format-wrapper div.control input, div.text-format-wrapper div.control select').live('change', function(e) {
+
+    // Customize this handler depending on the installed JQuery version,
+    // to ensure compatibility from JQuery 1.4 to 1.9+. Issue #2255597
+    var iCanUseOn = !!$.fn.on;
+    if (iCanUseOn) {
+      var func = 'on';
+      var selections = 'div.text-format-wrapper div.control input, div.text-format-wrapper div.control select';
+      var container = 'div#content';
+    }
+    else {
+      var func = 'live';
+      var selections = 'div.text-format-wrapper div.control input, div.text-format-wrapper div.control select';
+      var container = selections;
+    }
+
+    $(container)[func]('change', selections, function(e) {
 
       var $control = $(this);
       var $textFormatWrapper = $(this).parents('div.text-format-wrapper:first');
@@ -211,7 +227,6 @@
       if ($control.attr('type') == 'checkbox') {
         checked = $(this).is(':checked') ? 1 : 0;
       }
-
 
       if ($control.attr('name') == 'mode') {
         if ($control.val() == 'html') {
@@ -267,10 +282,9 @@
      * Seems that drupal blocks the use of click here, so we need to use
      * mouseup with a small delay to get it to work.
      */
-    $('a.link-edit-summary').live('mouseup', function(e) {
-      var $link = $(this);
+    $('div#content').mouseup('a.link-edit-summary', function(e) {
       window.setTimeout(function() {
-        acifyWrapper($link.parents('div.text-format-wrapper:first'));
+        acifyWrapper($('a.link-edit-summary').parents('div.text-format-wrapper:first'));
       }, 10);
     });
 
