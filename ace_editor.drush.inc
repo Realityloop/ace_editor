@@ -62,8 +62,10 @@ function drush_download_ace($ace_version = '') {
     return;
   }
 
-  $path = drush_get_context('DRUSH_DRUPAL_ROOT') . '/' .
-    libraries_get_path('ace');
+  $lib_path = libraries_get_path('ace');
+  $path = (!empty($lib_path)) ?
+    drush_get_context('DRUSH_DRUPAL_ROOT') . '/' . $lib_path :
+    drush_get_context('DRUSH_DRUPAL_ROOT') . '/sites/all/libraries/ace';
 
   // Ask the Ace version to be installed
   if (empty($ace_version)) {
@@ -84,14 +86,16 @@ function drush_download_ace($ace_version = '') {
   }
 
   // Check if the Ace library dir exists.
-  if (is_dir($path)) {
+  if (!empty($lib_path) && is_dir($path)) {
     if (!drush_confirm('The Ace library seems installed at ' .
-      $path . '. Do you want to override it with the selected version?')) {
+      $path . '. Do you want to delete and override it with the selected version?')) {
         drush_user_abort();
         return;
     }
     else {
-      drush_delete_dir($path, TRUE);
+      if (!drush_get_option('simulate')) {
+        drush_delete_dir($path, TRUE);
+      }
     }
   }
 
