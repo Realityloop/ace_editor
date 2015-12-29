@@ -1,4 +1,7 @@
-82210ac (tag: 7.x-1.4) Issue #2255597 by interdruper: Make it work with jQuery 1.10 and above
+1f6c7b8 (HEAD, 7.x-1.x) Issue #2641022 by interdruper: Content changes not saved.
+d48b735 (origin/HEAD, origin/7.x-1.x) CHANGELOG.txt updated.
+3e6cd94 (tag: 7.x-1.4) Issue #2255597 by interdruper: Make it work with jQuery 1.10 and above
+82210ac Issue #2255597 by interdruper: Make it work with jQuery 1.10 and above
 ef6ab82 Fixes in drush command 'dl-ace'.
 a079406 README.txt updated
 76dd09a (tag: 7.x-1.3) Revert "Issue #2255597 by interdruper, alex-bukach: Make it work with jQuery 1.10 and above"

@@ -95,7 +95,7 @@
               });
 
               // Add event listeners.
-              editor_instance.getSession().addEventListener( function(editor) {
+              editor_instance.getSession().on('change', function(editor) {
                 editorContentChange($form_item, editorObject);
               });
 
