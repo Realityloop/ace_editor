@@ -1,4 +1,4 @@
-82210ac (HEAD, origin/HEAD, origin/7.x-1.x, 7.x-1.x, 2255597) Issue #2255597 by interdruper: Make it work with jQuery 1.10 and above
+82210ac (tag: 7.x-1.4) Issue #2255597 by interdruper: Make it work with jQuery 1.10 and above
 ef6ab82 Fixes in drush command 'dl-ace'.
 a079406 README.txt updated
 76dd09a (tag: 7.x-1.3) Revert "Issue #2255597 by interdruper, alex-bukach: Make it work with jQuery 1.10 and above"
