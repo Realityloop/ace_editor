@@ -1,5 +1,6 @@
-1f6c7b8 (HEAD, 7.x-1.x) Issue #2641022 by interdruper: Content changes not saved.
-d48b735 (origin/HEAD, origin/7.x-1.x) CHANGELOG.txt updated.
+2438c35 (HEAD, tag: 7.x-1.5, 7.x-1.x) Issue #2409583 by jarviss,interdruper: add Ace Editor to Devep php execute form.
+83e5b80 (origin/HEAD, origin/7.x-1.x) Issue #2641022 by interdruper: Content changes not saved.
+d48b735 CHANGELOG.txt updated.
 3e6cd94 (tag: 7.x-1.4) Issue #2255597 by interdruper: Make it work with jQuery 1.10 and above
 82210ac Issue #2255597 by interdruper: Make it work with jQuery 1.10 and above
 ef6ab82 Fixes in drush command 'dl-ace'.

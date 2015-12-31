@@ -350,6 +350,54 @@
     function localStorageAvailable() {
       return 'localStorage' in window && window['localStorage'] !== null;
     }
+
+
+    /**
+     * PHP consoles handling (Devel, Views PHP if available)
+     */
+    // @TODO: Views PHP: textarea#edit-options-php-output.ace-enabled
+    // Devel PHP console
+    $('textarea#edit-code.ace-enabled').show(function() {
+      ace.require("ace/ext/language_tools");
+      ace.require("ace/mode/php");
+
+      var textarea = $(this);
+      id = textarea.attr('id');
+      var ace_pre_id = id + '-ace';
+
+      textarea.before('<div id="' + ace_pre_id + '"></div>');
+
+      var editor = ace.edit(ace_pre_id);
+      var editorSettings = $.extend({}, Drupal.settings.ace_editor.admin);
+
+      $('#'+ace_pre_id).css('height','30em');
+
+      // Set ace configuration options
+      $('#'+ace_pre_id).css('font-size', editorSettings['fontsize']);
+      editor.setTheme("ace/theme/" + editorSettings.theme);
+      editor.getSession().setMode("ace/mode/php");
+      editor.setShowPrintMargin(editorSettings['printmargin']);
+      editor.setHighlightActiveLine(editorSettings['linehighlighting']);
+      editor.renderer.setHScrollBarAlwaysVisible(false);
+      // enable autocompletion and snippets
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false
+      });
+
+      // Restore the textarea value
+      editor.getSession().setValue(textarea.val());
+      editor.focus();
+
+      editor.getSession().on('change', function(){
+        textarea.val(editor.getSession().getValue());
+      });
+
+      textarea.hide();
+
+    });
+    //  End Devel PHP console
   }
 };
 

@@ -70,35 +70,70 @@ function ace_editor_add($content, $userSettings) {
 /**
  * Implements hook_form_alter().
  *
- * If the form is either a custom block form or a node edit form, add the JS nessesary.
+ * For selected forms where Ace will be used, add the JS nessesary
  */
 function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 
-  if (isset($form['#node_edit_form']) && $form['#node_edit_form']
-    || isset($form['module']) && $form['module']['#value'] == 'block') {
-      $formIdent = '';
-      if (isset($form['#node_edit_form']) && $form['#node_edit_form']) {
-        $formIdent = 'node_' . $form['nid']['#value'];
-      } else {
-        $formIdent = 'block_' . $form['delta']['#value'];
-      }
+  // Node edit forms
+  if (isset($form['#node_edit_form']) && $form['#node_edit_form']) {
+    $formIdent = 'node_' . $form['nid']['#value'];
+  }
+  // Blocks
+  elseif (isset($form['module']) && $form['module']['#value'] == 'block') {
+    $formIdent = 'block_' . $form['delta']['#value'];
+  }
+  // Panels IPE text fields, see https://www.drupal.org/node/1484026#comment-8995807
+  elseif ($form_id == 'ctools_custom_content_type_edit_form') {
+    $formIdent = $form_id;
+  }
+  // Beans
+  elseif (isset($form['#entity_type']) && $form['#entity_type'] == 'bean') {
+    $formIdent = $form_id;
+  }
+  // Devel PHP console
+  elseif ($form_id == 'devel_execute_form' || $form_id == 'devel_execute_block_form') {
+    $formIdent = $form_id;
+    $form['execute']['code']['#attributes']['class'][] = 'ace-enabled';
+    $form['execute']['code']['#resizable'] = FALSE;
+    $form['#submit'] = array('ace_editor_execute_form_submit');
+    // Ace editor requires initial PHP tag so prepend it
+    if (strpos($form['execute']['code']['#default_value'], '<?php') !== 0) {
+      $form['execute']['code']['#default_value'] = '<?php' .
+        $form['execute']['code']['#default_value'];
+    }
+    $form['execute']['code']['#description'] = t('Enter some code. Use <code>&lt;?php ?&gt;</code> tags to benefit from the Ace Editor.');
+    // Restore the textarea content
+    $_SESSION['devel_execute_code'] = $form['execute']['code']['#default_value'];
+  }
+  // Views PHP  @TODO: in progress...
+  /*
+  elseif ($form_id == 'views_ui_config_item_form' && $form['#section'] == 'default-field-php') {
+      $formIdent = $form_id;
+      $form['options']['php_output']['php_output']['#attributes']['class'][] = 'ace-enabled';
+  }
+  */
+  else {
+    return;
+  }
 
-      // Add JavaScript to the form if the ace editor library is installed.
-      if (ace_editor_library_installed()) {
-        $form['ace_editor_identifier'] = array(
-          '#type' => 'hidden',
-          '#value' => $formIdent,
-        );
-        $form['#after_build'] = array('ace_editor_node_block_edit_form_attach_js');
-      } else {
-        global $base_path;
-        drupal_set_message(
-          t(
-            'The Ace Editor JS library is missing, please check the !readme_link for installation instructions.',
-            array('!readme_link' => '<a href="' . $base_path . drupal_get_path('module', 'ace_editor') . '/README.txt" target="_blank">README</a>')
-          ), 'error'
-        );
-      }
+  // Add JavaScript to the form if the ace editor library is installed.
+  if (ace_editor_library_installed()) {
+   $form['ace_editor_identifier'] = array(
+     '#type' => 'hidden',
+     '#value' => $formIdent,
+   );
+   $form['#after_build'] = array('ace_editor_node_block_edit_form_attach_js');
+  }
+  else {
+   global $base_path;
+
+   drupal_set_message(
+     t('The Ace Editor JS library is missing, please check the !readme_link for installation instructions.',
+       array('!readme_link' => '<a href="' . $base_path .
+          drupal_get_path('module', 'ace_editor') .
+          '/README.txt" target="_blank">README</a>')),
+       'error'
+   );
   }
 }
 
@@ -583,4 +618,16 @@ function ace_editor_libraries_info() {
 function ace_editor_library_installed() {
   $library = libraries_detect('ace');
   return isset($library['installed']) && $library['installed'];
+}
+
+/**
+ * Implementation of hook_init().
+ */
+function ace_editor_init() {
+  // Load PHP consoles support for specific modules
+  if (module_exists('devel')) {
+    $module_path = drupal_get_path('module', 'ace_editor');
+    // Load module includes
+    module_load_include('inc', 'ace_editor', 'ace_editor.devel');
+  }
 }
