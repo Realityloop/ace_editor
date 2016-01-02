@@ -89,6 +89,17 @@
       '#default_value' => variable_get('ace_editor_linehighlighting'),
     );
 
+    $form['ace_editor_codefolding'] = array(
+      '#type' => 'select',
+      '#title' => t('Code folding'),
+      '#options' => array(
+        'manual' => 'disabled',
+        'markbegin' => 'mark begin',
+        'markbeginend' => 'mark begin and end',
+      ),
+      '#default_value' => variable_get('ace_editor_codefolding', 'markbegin'),
+    );
+
     return system_settings_form($form);
   }
 

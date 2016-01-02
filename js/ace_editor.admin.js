@@ -77,6 +77,7 @@
               editor_instance.setShowPrintMargin(editorSettings['printmargin']);
               editor_instance.getSession().setUseWrapMode(editorSettings['autowrap']);
               editor_instance.setHighlightActiveLine(editorSettings['linehighlighting']);
+              editor_instance.getSession().setFoldStyle(editorSettings['codefolding']);
               editor_instance.renderer.setHScrollBarAlwaysVisible(false);
               $pre.css('font-size', editorSettings['fontsize']);
               $pre.data('editor_instance', editor_instance);
@@ -378,6 +379,7 @@
       editor.getSession().setMode("ace/mode/php");
       editor.setShowPrintMargin(editorSettings['printmargin']);
       editor.setHighlightActiveLine(editorSettings['linehighlighting']);
+      editor.getSession().setFoldStyle(editorSettings['codefolding']);
       editor.renderer.setHScrollBarAlwaysVisible(false);
       // enable autocompletion and snippets
       editor.setOptions({

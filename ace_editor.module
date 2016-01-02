@@ -153,6 +153,7 @@ function ace_editor_node_block_edit_form_attach_js($form) {
     'invisibles' => variable_get('ace_editor_invisibles', false),
     'linehighlighting' => variable_get('ace_editor_linehighlighting', true),
     'printmargin' => variable_get('ace_editor_printmargin', false),
+    'codefolding' => variable_get('ace_editor_codefolding', 'markbegin'),
     'syntax' => variable_get('ace_editor_default_syntax', 'html'),
     'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
     'theme' => variable_get('ace_editor_theme', 'cobalt'),
