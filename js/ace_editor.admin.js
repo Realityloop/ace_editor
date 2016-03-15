@@ -311,7 +311,7 @@
                 '<label>Invisibles</label></div>');
       $controls.append('<div class="control"><input type="checkbox" name="show_line_numbers" class="show_line_numbers" checked>' +
                 '<label>Line numbers (show errors)</label></div>');
-      $controls.append('<div class="control"><input type="checkbox" name="autocomplete" class="autocomplete" checked>' +
+      $controls.append('<div class="control"><input type="checkbox" name="autocomplete" class="ace_autocomplete" checked>' +
                 '<label>Autocomplete</label></div>');
       $modes_select = $('<div class="control"><select name="mode" class="mode"></select></div>');
       $.each(editorSettings['available_modes'], function(key, value) {
