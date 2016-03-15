@@ -77,7 +77,7 @@ function drush_download_ace($ace_version = '') {
       dt('Select the Ace version to be downloaded and installed:'));
 
     if (empty($choice)) {
-      drush_user_abort();
+//      drush_user_abort();
       return;
     }
     else {
@@ -89,7 +89,6 @@ function drush_download_ace($ace_version = '') {
   if (!empty($lib_path) && is_dir($path)) {
     if (!drush_confirm('The Ace library seems installed at ' .
       $path . '. Do you want to delete and override it with the selected version?')) {
-        drush_user_abort();
         return;
     }
     else {
