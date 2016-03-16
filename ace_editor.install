@@ -29,12 +29,25 @@ function ace_editor_install() {
   // Set the newly created text format to use the editor.
   variable_set('ace_editor_filter_formats', array('ace_editor'));
 
+  // Find out available themes and modes in the library
+  $files = file_scan_directory(libraries_get_path('ace') . '/src',
+    '/(mode|theme)-(.+)\.js$/', array('recurse' => FALSE));
+  $assets = array();
+  foreach($files as $file_info) {
+    $asset = explode('-', $file_info->name);
+    $assets[$asset[0]][$asset[1]] = ucwords(str_replace('_', ' ', $asset[1]));
+  }
+  variable_set('ace_editor_assets', $assets);
+
   // Set the defaults to other variables.
-  variable_set('ace_editor_autowrap', true);
+  variable_set('ace_editor_autocomplete', TRUE);
+  variable_set('ace_editor_autowrap', TRUE);
   variable_set('ace_editor_default_syntax', 'html');
   variable_set('ace_editor_fontsize', '12pt');
-  variable_set('ace_editor_linehighlighting', true);
-  variable_set('ace_editor_printmargin', false);
+  variable_set('ace_editor_invisibles', FALSE);
+  variable_set('ace_editor_linehighlighting', TRUE);
+  variable_set('ace_editor_line_numbers', TRUE);
+  variable_set('ace_editor_printmargin', FALSE);
   variable_set('ace_editor_codefolding', 'markbegin');
   variable_set('ace_editor_theme', 'cobalt');
 }
@@ -45,10 +58,13 @@ function ace_editor_install() {
 function ace_editor_uninstall() {
 
   // Remove the associated variables.
+  variable_del('ace_editor_assets');
+  variable_del('ace_editor_autocomplete');
   variable_del('ace_editor_autowrap');
   variable_del('ace_editor_default_syntax');
   variable_del('ace_editor_filter_formats');
   variable_del('ace_editor_fontsize');
+  variable_del('ace_editor_invisibles');
   variable_del('ace_editor_linehighlighting');
   variable_del('ace_editor_printmargin');
   variable_del('ace_editor_codefolding');

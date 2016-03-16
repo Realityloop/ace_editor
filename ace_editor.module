@@ -39,7 +39,7 @@ function ace_editor_permission() {
 function ace_editor_add($content, $userSettings) {
 
   // Get the default settings and override them with settings defined by user.
-  $settings = ace_editor_default_settings();
+  $settings = ace_editor_field_formatter_default_settings();
   foreach ($userSettings as $key => $value) {
     $settings[$key] = $value;
   }
@@ -146,13 +146,14 @@ function ace_editor_node_block_edit_form_attach_js($form) {
 
   $addJsSettings = array(
     'ace_src_dir' => $base_path . libraries_get_path('ace') . '/src/',
-    'autocomplete' => variable_get('ace_editor_autocomplete', true),
-    'autowrap' => variable_get('ace_editor_autowrap', true),
+    'autocomplete' => variable_get('ace_editor_autocomplete', TRUE),
+    'autowrap' => variable_get('ace_editor_autowrap', TRUE),
     'available_modes' => ace_editor_get_modes(),
     'fontsize' => variable_get('ace_editor_fontsize', '12pt'),
-    'invisibles' => variable_get('ace_editor_invisibles', false),
-    'linehighlighting' => variable_get('ace_editor_linehighlighting', true),
-    'printmargin' => variable_get('ace_editor_printmargin', false),
+    'invisibles' => variable_get('ace_editor_invisibles', FALSE),
+    'linehighlighting' => variable_get('ace_editor_linehighlighting', TRUE),
+    'line_numbers' => variable_get('ace_editor_line_numbers', TRUE),
+    'printmargin' => variable_get('ace_editor_printmargin', FALSE),
     'codefolding' => variable_get('ace_editor_codefolding', 'markbegin'),
     'syntax' => variable_get('ace_editor_default_syntax', 'html'),
     'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
@@ -165,7 +166,7 @@ function ace_editor_node_block_edit_form_attach_js($form) {
     ),
   );
 
-  ace_editor_add_js($addJsSettings, true);
+  ace_editor_add_js($addJsSettings, TRUE);
   drupal_add_js($jsSettings, 'setting');
   drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.admin.js');
   drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.admin.css');
@@ -181,7 +182,7 @@ function ace_editor_field_formatter_info() {
     'ace_editor_code_readonly_formatter' => array(
       'label' => t('Code syntax highlighting'),
       'field types' => array('text_long', 'text_with_summary'),
-      'settings'  => ace_editor_default_settings(),
+      'settings'  => ace_editor_field_formatter_default_settings(),
     ),
   );
 }
@@ -263,7 +264,7 @@ function ace_editor_filter_info() {
        Add attributes to <ace> tag to control formatting.'),
     'process callback' => 'ace_editor_filter_process',
     'settings callback' => 'ace_editor_filter_settings',
-    'default settings' => ace_editor_default_settings(),
+    'default settings' => ace_editor_field_formatter_default_settings(),
     //'tips callback' => '_filter_html_tips',
   );
 
@@ -467,20 +468,20 @@ function get_setting_form_elements($settings) {
 }
 
 /**
- * The default settings used with the editor.
+ * The default settings used with the Ace field formatter.
  */
-function ace_editor_default_settings() {
+function ace_editor_field_formatter_default_settings() {
   return array(
-    'autocomplete' => true,
-    'autowrap' => true,
-    'font-size' => '12pt',
+    'autocomplete' => FALSE,
+    'autowrap' => TRUE,
+    'font-size' => variable_get('ace_editor_fontsize', '12pt'),
     'height' => '200px',
-    'invisibles' => false,
-    'line-numbers' => true,
-    'linehighlighting' => true,
-    'print-margin' => false,
-    'syntax' => 'html',
-    'theme' => 'cobalt',
+    'invisibles' => FALSE,
+    'line-numbers' => FALSE,
+    'linehighlighting' => TRUE,
+    'print-margin' => FALSE,
+    'syntax' => variable_get('ace_editor_default_syntax', 'html'),
+    'theme' => variable_get('ace_editor_theme', 'cobalt'),
     'width' => '100%',
   );
 }
@@ -523,51 +524,40 @@ function makeJsFriendlySettings($settings) {
  */
 function ace_editor_get_themes() {
 
-  $library_path = DRUPAL_ROOT . '/' . libraries_get_path('ace') . '/src';
-
-  $themes_files = array_keys(file_scan_directory(
-    $library_path, '/^theme-.*\.js$/i' ));
-
-  $themes = array();
-  foreach ($themes_files as $filename) {
-   $tmp = explode('/theme-',$filename);
-   $themes[] = substr(array_pop($tmp), 0, -3);
-  };
-
+  // Available themes are loaded on installation.
+  $assets = variable_get('ace_editor_assets',
+    array('theme' => array('cobalt' => 'Cobalt')));
+  $themes = $assets['theme'];
   asort($themes);
-
-  return array_combine($themes, $themes);
+  return $themes;
 }
 
 /**
  * Returns all of the modes.
  */
 function ace_editor_get_modes() {
-  return array(
-    'c_cpp' => 'C/C++',
-    'clojure' => 'Clojure',
-    'coffee' => 'CoffeeScript',
-    'csharp' => 'C#',
-    'css' => 'CSS',
-    'groovy' => 'Groovy',
-    'html' => 'HTML',
-    'java' => 'Java',
-    'javascript' => 'JavaScript',
-    'json' => 'JSON',
-    'markdown' => 'MarkDown',
-    'ocaml' => 'OCaml',
-    'perl' => 'Perl',
-    'php' => 'PHP',
-    'python' => 'Python',
-    'scala' => 'Scala',
-    'scss' => 'SCSS',
-    'ruby' => 'Ruby',
-    'svg' => 'SVG',
-    'textile' => 'Textile',
-    'xml' => 'XML',
-  );
+  // Available modeses are loaded on installation.
+  $assets = variable_get('ace_editor_assets',
+    array('mode' => array('html' => 'HTML')));
+  asort($assets['mode']);
+  $modes = array_merge($assets['mode'], array(
+      // Translate some most used languages to their common name
+      'c_cpp' => 'C/C++',
+      'coffee' => 'CoffeeScript',
+      'csharp' => 'C#',
+      'css' => 'CSS',
+      'html' => 'HTML',
+      'json' => 'JSON',
+      'less' => 'LESS',
+      'php' => 'PHP',
+      'scss' => 'SCSS',
+      'xml' => 'XML',
+      'yaml' => 'YAML',
+    ));
 
+  return $modes;
 }
+
 
 /**
  * Implements hook_library().
