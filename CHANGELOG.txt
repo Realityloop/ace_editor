@@ -1,6 +1,10 @@
-a564309 (HEAD, 7.x-1.x) Issue #2645880 by OnkelTem,interdruper: Add full list of Themes and Modes
+40d2582 (HEAD, 7.x-1.x) Issue #2645864: Autocomplete isn'\''t implemented (fixed).
+20a1176 (origin/HEAD, origin/7.x-1.x) Issue #2645806 by OnkelTem,interdruper: [drush] Correct version fetching
+8660548 Issue #2659476 by pobster, interdruper: Worker .js files not found, console error, syntax highlight doesn't work
+c4c6337 Added option inside the editor to set the tabsize.
+46bb58e Issue #2645880 by OnkelTem,interdruper: Add full list of Themes and Modes
 08d84de Do not call drush_user_abort() if user selects not to download the library when installing with drush.
-4808dca (origin/HEAD, origin/7.x-1.x) Issue #2645848 by onkeltem: Uncaught TypeError: Cannot read property form of undefined.
+4808dca Issue #2645848 by onkeltem: Uncaught TypeError: Cannot read property form of undefined.
 e642546 Issue #2643228 by interdruper: adding code folding option.
 1dd13f4 (tag: 7.x-1.5) Issue #2409583 by jarviss,interdruper: add Ace Editor to Devep php execute form.
 83e5b80 Issue #2641022 by interdruper: Content changes not saved.

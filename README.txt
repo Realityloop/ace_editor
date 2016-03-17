@@ -82,6 +82,10 @@ Go to admin/config/content/ace-editor and configure the module for
 node/block editing. Then head over to a block or node containing a textarea
 with the correct text format and hack away!
 
+Autocompletion
+--------------
+
+Press Ctrl+Space to use the autocomplete option while coding.
 
 Display fields using syntax highlighting
 ----------------------------------------------
@@ -154,6 +158,8 @@ Here are the possible values:
     svg = SVG
     textile = Textile
     xml = XML
+
+    ... and any other mode-*.js file available in sites\all\libraries\ace\src
 
   height
     auto, 300px, 75% etc.
