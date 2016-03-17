@@ -71,6 +71,7 @@
 
               // Initialize the editor and set the correct options.
               editor_instance = ace.edit($pre.attr('id'));
+              ace.config.set('basePath', editorSettings['ace_src_dir']);
               editor_instance.setTheme("ace/theme/" + editorSettings.theme);
               var HTMLMode = ace.require("ace/mode/html").Mode;
               editor_instance.getSession().setMode(new HTMLMode());
