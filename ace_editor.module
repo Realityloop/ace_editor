@@ -105,7 +105,13 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
     // Restore the textarea content
     $_SESSION['devel_execute_code'] = $form['execute']['code']['#default_value'];
   }
-  // Views PHP  @TODO: in progress...
+  // Global Text areas in Views.
+  // Global Custom fields are not supported, see https://www.drupal.org/node/2683745
+  elseif ($form_id == 'views_ui_config_item_form' &&
+    strpos($form['#title'], 'Global: Text area') !== FALSE) {
+        $formIdent = $form_id;
+  }
+  // Views PHP  @TODO: work in progress...
   /*
   elseif ($form_id == 'views_ui_config_item_form' && $form['#section'] == 'default-field-php') {
       $formIdent = $form_id;
