@@ -138,14 +138,14 @@ function drush_download_ace($ace_version = '') {
   }
 
   if ($rc) {
-    // Get the installed release from ChangeLog.txt 1st line
-    $release_intalled = '';
-    if ($fp = fopen($path . '/ChangeLog.txt', 'r')) {
-      $release_intalled = trim(fgets($fp));
+    // Get the installed release from package.json
+    $release_installed = '';
+    if ($pjson = drupal_json_decode(file_get_contents($path. '/package.json'))) {
+      $release_installed = $pjson['version'];
     }
 
     drush_log(dt('Ace Editor plugin (release ' .
-      $release_intalled . ') has been installed in @path',
+      $release_installed . ') has been installed in @path',
       array('@path' => $path)), 'success');
   }
   else {
