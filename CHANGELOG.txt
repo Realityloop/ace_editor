@@ -1,5 +1,6 @@
-40d2582 (HEAD, 7.x-1.x) Issue #2645864: Autocomplete isn'\''t implemented (fixed).
-20a1176 (origin/HEAD, origin/7.x-1.x) Issue #2645806 by OnkelTem,interdruper: [drush] Correct version fetching
+633f202 (HEAD, origin/HEAD, origin/7.x-1.x, 7.x-1.x) Issue #2683745: Views - 'Global: Text area' support (in Header, Footer, No Results Behavior).
+7335bc5 (tag: 7.x-1.6) Issue #2645864: Autocomplete isn'\''t implemented (fixed).
+20a1176 Issue #2645806 by OnkelTem,interdruper: [drush] Correct version fetching
 8660548 Issue #2659476 by pobster, interdruper: Worker .js files not found, console error, syntax highlight doesn't work
 c4c6337 Added option inside the editor to set the tabsize.
 46bb58e Issue #2645880 by OnkelTem,interdruper: Add full list of Themes and Modes
