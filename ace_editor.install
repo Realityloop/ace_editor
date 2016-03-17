@@ -42,13 +42,14 @@ function ace_editor_install() {
   // Set the defaults to other variables.
   variable_set('ace_editor_autocomplete', TRUE);
   variable_set('ace_editor_autowrap', TRUE);
+  variable_set('ace_editor_codefolding', 'markbegin');
   variable_set('ace_editor_default_syntax', 'html');
   variable_set('ace_editor_fontsize', '12pt');
   variable_set('ace_editor_invisibles', FALSE);
   variable_set('ace_editor_linehighlighting', TRUE);
   variable_set('ace_editor_line_numbers', TRUE);
   variable_set('ace_editor_printmargin', FALSE);
-  variable_set('ace_editor_codefolding', 'markbegin');
+  variable_set('ace_editor_tabsize', 2);
   variable_set('ace_editor_theme', 'cobalt');
 }
 
@@ -61,13 +62,14 @@ function ace_editor_uninstall() {
   variable_del('ace_editor_assets');
   variable_del('ace_editor_autocomplete');
   variable_del('ace_editor_autowrap');
+  variable_del('ace_editor_codefolding');
   variable_del('ace_editor_default_syntax');
   variable_del('ace_editor_filter_formats');
   variable_del('ace_editor_fontsize');
   variable_del('ace_editor_invisibles');
   variable_del('ace_editor_linehighlighting');
   variable_del('ace_editor_printmargin');
-  variable_del('ace_editor_codefolding');
+  variable_del('ace_editor_tabsize');
   variable_del('ace_editor_theme');
 }
 

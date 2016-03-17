@@ -156,6 +156,7 @@ function ace_editor_node_block_edit_form_attach_js($form) {
     'printmargin' => variable_get('ace_editor_printmargin', FALSE),
     'codefolding' => variable_get('ace_editor_codefolding', 'markbegin'),
     'syntax' => variable_get('ace_editor_default_syntax', 'html'),
+    'tabsize' => variable_get('ace_editor_tabsize', 2),
     'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
     'theme' => variable_get('ace_editor_theme', 'cobalt'),
   );
@@ -481,6 +482,7 @@ function ace_editor_field_formatter_default_settings() {
     'linehighlighting' => TRUE,
     'print-margin' => FALSE,
     'syntax' => variable_get('ace_editor_default_syntax', 'html'),
+    'tabsize' => variable_get('ace_editor_tabsize', 2),
     'theme' => variable_get('ace_editor_theme', 'cobalt'),
     'width' => '100%',
   );

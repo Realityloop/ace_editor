@@ -67,7 +67,7 @@
       ),
       '#default_value' => variable_get('ace_editor_fontsize', '10pt'),
       '#attributes' => array(
-        'style' => 'min-width: 100px;'
+        'style' => 'min-width: 75px;'
       ),
     );
 
@@ -98,6 +98,24 @@
         'markbeginend' => 'mark begin and end',
       ),
       '#default_value' => variable_get('ace_editor_codefolding', 'markbegin'),
+    );
+
+    $form['ace_editor_tabsize'] = array(
+      '#type' => 'select',
+      '#title' => t('Tab size'),
+      '#options' => array(
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+        5 => 5,
+        6 => 6,
+        7 => 7,
+        8 => 8),
+      '#default_value' => variable_get('ace_editor_tabsize', 2),
+      '#attributes' => array(
+        'style' => 'min-width: 75px;'
+      ),
     );
 
     return system_settings_form($form);

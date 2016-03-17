@@ -81,6 +81,11 @@
               editor_instance.renderer.setHScrollBarAlwaysVisible(false);
               $pre.css('font-size', editorSettings['fontsize']);
               $pre.data('editor_instance', editor_instance);
+              // enable options and snippets
+              editor_instance.setOptions({
+                tabSize: editorSettings['tabsize'],
+                useSoftTabs: true
+              });
 
               // Adds handles to the editors for vertical resizing.
               $pre.resizable({
@@ -381,11 +386,13 @@
       editor.setHighlightActiveLine(editorSettings['linehighlighting']);
       editor.getSession().setFoldStyle(editorSettings['codefolding']);
       editor.renderer.setHScrollBarAlwaysVisible(false);
-      // enable autocompletion and snippets
+      // enable options and snippets
       editor.setOptions({
         enableBasicAutocompletion: true,
+        enableLiveAutocompletion: false,
         enableSnippets: true,
-        enableLiveAutocompletion: false
+        tabSize: editorSettings['tabsize'],
+        useSoftTabs: true
       });
 
       // Restore the textarea value
