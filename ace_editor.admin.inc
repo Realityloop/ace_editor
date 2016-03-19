@@ -15,7 +15,7 @@
     }
 
     $form['explanation'] = array(
-      '#markup' => t('These settings affect the editor only when used to edit HTML/PHP in your nodes or blocks.<br><br>'),
+      '#markup' => t('Select the default behaviours for the Ace editor.<br>'),
     );
 
     $form['ace_editor_filter_formats'] = array(
