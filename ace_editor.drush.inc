@@ -156,9 +156,9 @@ function drush_download_ace($ace_version = '') {
 }
 
 /**
- * Implements drush_MODULE_post_COMMAND().
+ * Implements drush_MODULE_pre_COMMAND().
  */
-function drush_ace_editor_post_pm_enable($project = NULL) {
+function drush_ace_editor_pre_pm_enable($project = NULL) {
 
   if ($project == 'ace_editor' &&
     drush_confirm('Do you want to automatically install the library now?')) {
