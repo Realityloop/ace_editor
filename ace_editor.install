@@ -30,14 +30,17 @@ function ace_editor_install() {
   variable_set('ace_editor_filter_formats', array('ace_editor'));
 
   // Find out available themes and modes in the library
-  $files = file_scan_directory(libraries_get_path('ace') . '/src',
+  $libraries = libraries_get_libraries();
+  $files = file_scan_directory($libraries['ace'] . '/src',
     '/(mode|theme)-(.+)\.js$/', array('recurse' => FALSE));
   $assets = array();
   foreach($files as $file_info) {
     $asset = explode('-', $file_info->name);
     $assets[$asset[0]][$asset[1]] = ucwords(str_replace('_', ' ', $asset[1]));
   }
-  variable_set('ace_editor_assets', $assets);
+  if (!empty($assets)) {
+    variable_set('ace_editor_assets', $assets);
+  }
 
   // Set the defaults to other variables.
   variable_set('ace_editor_autocomplete', TRUE);
@@ -68,6 +71,7 @@ function ace_editor_uninstall() {
   variable_del('ace_editor_fontsize');
   variable_del('ace_editor_invisibles');
   variable_del('ace_editor_linehighlighting');
+  variable_del('ace_editor_line_numbers');
   variable_del('ace_editor_printmargin');
   variable_del('ace_editor_tabsize');
   variable_del('ace_editor_theme');
@@ -105,7 +109,15 @@ function ace_editor_requirements($phase) {
   }
 
   if ($phase == 'install') {
-    if (!is_dir(libraries_get_path('ace'))) {
+    if (!drupal_get_path('module', 'libraries')) {
+      $requirements['ace_editor'] = array(
+        'title' => t('Libraries module missing'),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => t('Libraries module required for Ace Editor.'),
+        'description' => $t('Ace Editor module requires the <a href="@url">Libraries module</a> to be installed.', array('@url' => 'http://drupal.org/project/libraries')),
+       );
+    }
+    else if (function_exists('libraries_get_libraries') && !is_dir(libraries_get_path('ace'))) {
       drupal_set_message(
         $t('The required Ace library is missing. The library can be found at <a href="@url">@url</a>. You can install it manually following the README.txt instructions or using the provided drush command "drush dl-ace".',
           array('@url' => 'https://github.com/ajaxorg/ace')),

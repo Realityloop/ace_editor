@@ -1,4 +1,5 @@
-846464b (HEAD, 7.x-1.x) Issue #2691575 by Ruichao: [drush] Mod and theme list not loaded via drush en
+04f3d58 (HEAD, 7.x-1.x) Issue #2691557: [drush] call to undefined function libraries_get_path()
+e39fcbd Issue #2691575 by Ruichao: [drush] Mod and theme list not loaded via drush en
 0c6aa8e (origin/HEAD, origin/7.x-1.x) Fixing explanation in the admin form.
 d0350fb CHANGELOG.txt updated.
 633f202 Issue #2683745: Views - 'Global: Text area' support (in Header, Footer, No Results Behavior).
