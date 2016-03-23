@@ -31,17 +31,18 @@ function ace_editor_install() {
 
   // Find out available themes and modes in the library
   $libraries = libraries_get_libraries();
-  $files = file_scan_directory($libraries['ace'] . '/src',
-    '/(mode|theme)-(.+)\.js$/', array('recurse' => FALSE));
-  $assets = array();
-  foreach($files as $file_info) {
-    $asset = explode('-', $file_info->name);
-    $assets[$asset[0]][$asset[1]] = ucwords(str_replace('_', ' ', $asset[1]));
+  if (isset($libraries['ace'])) {
+    $files = file_scan_directory($libraries['ace'] . '/src',
+      '/(mode|theme)-(.+)\.js$/', array('recurse' => FALSE));
+    $assets = array();
+    foreach($files as $file_info) {
+      $asset = explode('-', $file_info->name);
+      $assets[$asset[0]][$asset[1]] = ucwords(str_replace('_', ' ', $asset[1]));
+    }
+    if (!empty($assets)) {
+      variable_set('ace_editor_assets', $assets);
+    }
   }
-  if (!empty($assets)) {
-    variable_set('ace_editor_assets', $assets);
-  }
-
   // Set the defaults to other variables.
   variable_set('ace_editor_autocomplete', TRUE);
   variable_set('ace_editor_autowrap', TRUE);
