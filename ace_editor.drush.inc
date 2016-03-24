@@ -162,6 +162,21 @@ function drush_ace_editor_pre_pm_enable($project = NULL) {
 
   if ($project == 'ace_editor' &&
     drush_confirm('Do you want to automatically install the library now?')) {
+      // If Libraries module was not enabled at this moment,
+      // library download will fail. We will try again in the post_COMMAND()
       drush_download_ace();
+  }
+}
+
+/**
+ * Implements drush_MODULE_post_COMMAND().
+ */
+function drush_ace_editor_post_pm_enable($project = NULL) {
+
+  if ($project == 'ace_editor') {
+    if (!ace_editor_library_installed()) {
+      drush_download_ace();
+      ace_editor_get_assets();
+    }
   }
 }

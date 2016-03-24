@@ -1,5 +1,6 @@
-a1f344f (HEAD, 7.x-1.x) Fixed: Notice: Undefined index: ace in ace_editor_install() (line 34 of ace_editor.install
-62bd0fe (tag: 7.x-1.7, origin/HEAD, origin/7.x-1.x) Issue #2691557: [drush] call to undefined function libraries_get_path()
+ea678be (HEAD, 7.x-1.x) Issue #2693631: Ace editor assets are not properly loaded if Libraries is not enabled before installation
+77f6904 (origin/HEAD, origin/7.x-1.x) Fixed: Notice: Undefined index: ace in ace_editor_install() (line 34 of ace_editor.install
+62bd0fe (tag: 7.x-1.7) Issue #2691557: [drush] call to undefined function libraries_get_path()
 e39fcbd Issue #2691575 by Ruichao: [drush] Mod and theme list not loaded via drush en
 0c6aa8e Fixing explanation in the admin form.
 d0350fb CHANGELOG.txt updated.

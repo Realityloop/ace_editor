@@ -620,9 +620,36 @@ function ace_editor_library_installed() {
 }
 
 /**
+* Fills the global var 'ace_editor_assets'
+*/
+function ace_editor_get_assets() {
+
+  // Find out available themes and modes in the library
+  $libraries = libraries_get_libraries();
+  if (isset($libraries['ace'])) {
+    $files = file_scan_directory($libraries['ace'] . '/src',
+      '/(mode|theme)-(.+)\.js$/', array('recurse' => FALSE));
+    $assets = array();
+    foreach($files as $file_info) {
+      $asset = explode('-', $file_info->name);
+      $assets[$asset[0]][$asset[1]] = ucwords(str_replace('_', ' ', $asset[1]));
+    }
+    if (!empty($assets)) {
+      variable_set('ace_editor_assets', $assets);
+    }
+  }
+}
+
+/**
  * Implementation of hook_init().
  */
 function ace_editor_init() {
+
+  // Load the library assets if it was not installed before enabling the module
+  if (!variable_get('ace_editor_assets') && ace_editor_library_installed()) {
+    ace_editor_get_assets();
+  }
+
   // Load PHP consoles support for specific modules
   if (module_exists('devel')) {
     $module_path = drupal_get_path('module', 'ace_editor');

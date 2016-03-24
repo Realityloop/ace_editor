@@ -8,6 +8,14 @@
   function ace_editor_settings_form($form, &$form_state) {
     $form = array();
 
+    if (function_exists('libraries_get_libraries') && !is_dir(libraries_get_path('ace'))) {
+      drupal_set_message(
+        t('The required Ace library is missing. The library can be found at <a href="@url">@url</a>. You can install it manually following the README.txt instructions or using the provided drush command "drush dl-ace".',
+          array('@url' => 'https://github.com/ajaxorg/ace')),
+        'warning'
+        );
+    }
+
     $filter_formats = filter_formats();
     $filter_formats_options = array();
     foreach($filter_formats as $key => $format_obj) {
