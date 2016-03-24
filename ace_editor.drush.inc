@@ -77,7 +77,6 @@ function drush_download_ace($ace_version = '') {
       dt('Select the Ace version to be downloaded and installed:'));
 
     if (empty($choice)) {
-//      drush_user_abort();
       return;
     }
     else {
@@ -140,7 +139,7 @@ function drush_download_ace($ace_version = '') {
   if ($rc) {
     // Get the installed release from package.json
     $release_installed = '';
-    if ($pjson = drupal_json_decode(file_get_contents($path. '/package.json'))) {
+    if ($pjson = drupal_json_decode(file_get_contents($path . '/package.json'))) {
       $release_installed = $pjson['version'];
     }
 

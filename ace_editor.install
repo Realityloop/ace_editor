@@ -5,8 +5,8 @@
  */
 
 /**
-* Implements hook_install().
-*/
+ * Implements hook_install().
+ */
 function ace_editor_install() {
 
   // Create a default text format to use with the editor.
@@ -47,8 +47,8 @@ function ace_editor_install() {
 }
 
 /**
-* Implements hook_uninstall().
-*/
+ * Implements hook_uninstall().
+ */
 function ace_editor_uninstall() {
 
   // Remove the associated variables.
@@ -68,8 +68,8 @@ function ace_editor_uninstall() {
 }
 
 /**
-* Implements hook_requirements().
-*/
+ * Implements hook_requirements().
+ */
 function ace_editor_requirements($phase) {
 
   $requirements = array();
@@ -78,7 +78,7 @@ function ace_editor_requirements($phase) {
   if ($phase == 'runtime') {
     drupal_load('module', 'libraries');
 
-  	if (!is_dir(libraries_get_path('ace'))) {
+    if (!is_dir(libraries_get_path('ace'))) {
       $requirements['ace_editor'] = array(
         'title' => $t('Ace Editor'),
         'value' =>
@@ -92,8 +92,8 @@ function ace_editor_requirements($phase) {
         'title' => $t('Ace Editor'),
         'severity' => REQUIREMENT_OK,
         'value' => $t('Ace library installed (release ' .
-        trim(fgets(fopen(DRUPAL_ROOT . '/' . libraries_get_path('ace') .'/ChangeLog.txt', 'r'))) .
-        ').'),
+          trim(fgets(fopen(DRUPAL_ROOT . '/' . libraries_get_path('ace') . '/ChangeLog.txt', 'r'))) .
+          ').'),
       );
     }
   }
@@ -105,22 +105,22 @@ function ace_editor_requirements($phase) {
         'severity' => REQUIREMENT_ERROR,
         'value' => $t('Libraries module is required for Ace Editor.'),
         'description' => $t('Ace Editor module requires the <a href="@url">Libraries module</a> to be installed.', array('@url' => 'http://drupal.org/project/libraries')),
-       );
+      );
     }
-    else if (function_exists('libraries_get_libraries') && !is_dir(libraries_get_path('ace'))) {
+    elseif (function_exists('libraries_get_libraries') && !is_dir(libraries_get_path('ace'))) {
       $requirements['ace_editor'] = array(
         'title' => $t('Ace Library is missing'),
         'severity' => REQUIREMENT_ERROR,
         'value' => $t('Ace Library required for Ace Editor.'),
         'description' => $t('The required Ace library is missing. The library can be found at <a href="@url">@url</a>. You can install it manually following the README.txt instructions or using the provided drush command "drush dl-ace".',
           array('@url' => 'https://github.com/ajaxorg/ace')),
-       );
+      );
       drupal_set_message(
         $t('The required Ace library is missing. The library can be found at <a href="@url">@url</a>. You can install it manually following the README.txt instructions or using the provided drush command "drush dl-ace".',
           array('@url' => 'https://github.com/ajaxorg/ace')),
         'warning'
         );
-     }
+    }
   }
 
   return $requirements;

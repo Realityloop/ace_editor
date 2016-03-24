@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Admin forms to configure the module.
+ */
   /**
    * Implements hook_form().
    *
@@ -18,7 +21,7 @@
 
     $filter_formats = filter_formats();
     $filter_formats_options = array();
-    foreach($filter_formats as $key => $format_obj) {
+    foreach ($filter_formats as $key => $format_obj) {
       $filter_formats_options[$key] = $format_obj->name;
     }
 
@@ -42,7 +45,7 @@
     $form['ace_editor_theme'] = array(
       '#title' => 'Editor theme',
       '#type' => 'select',
-      '#description' => 'You can check the availables themes <a href="'.
+      '#description' => 'You can check the availables themes <a href="' .
         'http://ace.c9.io/build/kitchen-sink.html" target="_blank">here.</a>',
       '#options' => ace_editor_get_themes(),
       '#default_value' => variable_get('ace_editor_theme', 'twilight'),

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Ace Editor module.
+ */
 /**
  * Implementation of hook_menu().
  *
@@ -9,7 +12,7 @@ function ace_editor_menu() {
   $items = array();
 
   $items['admin/config/content/ace-editor'] = array(
-    'title' => t('Ace Editor'),
+    'title' => 'Ace Editor',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ace_editor_settings_form'),
     'access arguments' => array('configure ace editor'),
@@ -36,30 +39,30 @@ function ace_editor_permission() {
 /**
  * An API function to embed read-only editors into template files.
  */
-function ace_editor_add($content, $userSettings) {
+function ace_editor_add($content, $user_settings) {
 
   // Get the default settings and override them with settings defined by user.
   $settings = ace_editor_field_formatter_default_settings();
-  foreach ($userSettings as $key => $value) {
+  foreach ($user_settings as $key => $value) {
     $settings[$key] = $value;
   }
-  $settings = makeJsFriendlySettings($settings);
+  $settings = ace_editor_make_js_friendly_settings($settings);
 
   // Get a unique index for the next pre-element added by this API function.
-  $preID = drupal_html_id('ace-editor-add');
-  $pre = '<pre id="' . $preID . '">' . $content . '</pre>';
+  $pre_id = drupal_html_id('ace-editor-add');
+  $pre = '<pre id="' . $pre_id . '">' . $content . '</pre>';
 
   // Put all instances and their settings to JS.
-  $jsSettings = array();
-  $jsSettings['ace_editor']['editor_instances'][] = array(
-    'id' => $preID,
+  $js_ettings = array();
+  $js_settings['ace_editor']['editor_instances'][] = array(
+    'id' => $pre_id,
     'content' => $content,
     'settings' => $settings,
   );
 
   // Add the javascript files needed.
-  ace_editor_add_js($settings, false);
-  drupal_add_js($jsSettings, 'setting');
+  ace_editor_add_js($settings, FALSE);
+  drupal_add_js($js_settings, 'setting');
   drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
   drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
 
@@ -76,23 +79,23 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 
   // Node edit forms
   if (isset($form['#node_edit_form']) && $form['#node_edit_form']) {
-    $formIdent = 'node_' . $form['nid']['#value'];
+    $form_ident = 'node_' . $form['nid']['#value'];
   }
   // Blocks
   elseif (isset($form['module']) && $form['module']['#value'] == 'block') {
-    $formIdent = 'block_' . $form['delta']['#value'];
+    $form_ident = 'block_' . $form['delta']['#value'];
   }
   // Panels IPE text fields, see https://www.drupal.org/node/1484026#comment-8995807
   elseif ($form_id == 'ctools_custom_content_type_edit_form') {
-    $formIdent = $form_id;
+    $form_ident = $form_id;
   }
   // Beans
   elseif (isset($form['#entity_type']) && $form['#entity_type'] == 'bean') {
-    $formIdent = $form_id;
+    $form_ident = $form_id;
   }
   // Devel PHP console
   elseif ($form_id == 'devel_execute_form' || $form_id == 'devel_execute_block_form') {
-    $formIdent = $form_id;
+    $form_ident = $form_id;
     $form['execute']['code']['#attributes']['class'][] = 'ace-enabled';
     $form['execute']['code']['#resizable'] = FALSE;
     $form['#submit'] = array('ace_editor_execute_form_submit');
@@ -109,12 +112,12 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
   // Global Custom fields are not supported, see https://www.drupal.org/node/2683745
   elseif ($form_id == 'views_ui_config_item_form' &&
     strpos($form['#title'], 'Global: Text area') !== FALSE) {
-        $formIdent = $form_id;
+        $form_ident = $form_id;
   }
   // Views PHP  @TODO: work in progress...
   /*
   elseif ($form_id == 'views_ui_config_item_form' && $form['#section'] == 'default-field-php') {
-      $formIdent = $form_id;
+      $form_ident = $form_id;
       $form['options']['php_output']['php_output']['#attributes']['class'][] = 'ace-enabled';
   }
   */
@@ -124,22 +127,22 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 
   // Add JavaScript to the form if the ace editor library is installed.
   if (ace_editor_library_installed()) {
-   $form['ace_editor_identifier'] = array(
+    $form['ace_editor_identifier'] = array(
      '#type' => 'hidden',
-     '#value' => $formIdent,
-   );
-   $form['#after_build'] = array('ace_editor_node_block_edit_form_attach_js');
+     '#value' => $form_ident,
+    );
+    $form['#after_build'] = array('ace_editor_node_block_edit_form_attach_js');
   }
   else {
-   global $base_path;
+    global $base_path;
 
-   drupal_set_message(
-     t('The Ace Editor JS library is missing, please check the !readme_link for installation instructions.',
-       array('!readme_link' => '<a href="' . $base_path .
+    drupal_set_message(
+      t('The Ace Editor JS library is missing, please check the !readme_link for installation instructions.',
+        array('!readme_link' => '<a href="' . $base_path .
           drupal_get_path('module', 'ace_editor') .
           '/README.txt" target="_blank">README</a>')),
-       'error'
-   );
+        'error'
+    );
   }
 }
 
@@ -150,7 +153,7 @@ function ace_editor_node_block_edit_form_attach_js($form) {
 
   global $base_path;
 
-  $addJsSettings = array(
+  $add_js_settings = array(
     'ace_src_dir' => $base_path . libraries_get_path('ace') . '/src/',
     'autocomplete' => variable_get('ace_editor_autocomplete', TRUE),
     'autowrap' => variable_get('ace_editor_autowrap', TRUE),
@@ -167,14 +170,14 @@ function ace_editor_node_block_edit_form_attach_js($form) {
     'theme' => variable_get('ace_editor_theme', 'cobalt'),
   );
 
-  $jsSettings = array(
+  $js_settings = array(
     'ace_editor' => array(
-      'admin' => $addJsSettings,
+      'admin' => $add_js_settings,
     ),
   );
 
-  ace_editor_add_js($addJsSettings, TRUE);
-  drupal_add_js($jsSettings, 'setting');
+  ace_editor_add_js($add_js_settings, TRUE);
+  drupal_add_js($js_settings, 'setting');
   drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.admin.js');
   drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.admin.css');
 
@@ -215,11 +218,11 @@ function ace_editor_field_formatter_settings_summary($field, $instance, $view_mo
   // Get the settings.
   $settings = $instance['display'][$view_mode]['settings'];
 
-  $themesDict = ace_editor_get_themes();
-  $modesDict = ace_editor_get_modes();
+  $themes_dict = ace_editor_get_themes();
+  $modes_dict = ace_editor_get_modes();
   $summary = t('Show content with code syntax highlighting for @syntax in the @theme theme.', array(
-    '@syntax' => $modesDict[$settings['syntax']],
-    '@theme' => $themesDict[$settings['theme']],
+    '@syntax' => $modes_dict[$settings['syntax']],
+    '@theme' => $themes_dict[$settings['theme']],
   ));
 
   return $summary;
@@ -231,10 +234,10 @@ function ace_editor_field_formatter_settings_summary($field, $instance, $view_mo
 function ace_editor_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 
   // Get the settings.
-  $settings = makeJsFriendlySettings($display['settings']);
+  $settings = ace_editor_make_js_friendly_settings($display['settings']);
   $element = array();
 
-  $jsSettings = array(
+  $js_settings = array(
     'ace_editor' => array(
       'editor_instances' => array()
     )
@@ -242,19 +245,19 @@ function ace_editor_field_formatter_view($entity_type, $entity, $field, $instanc
 
   // Add all values to their own editor intance.
   foreach ($items as $delta => $item) {
-    $elementID = $field['field_name'] . '-' . $delta. '-pre';
-    $preElement = '<pre id="' . $elementID . '" </pre>';
-    $element[]['#markup'] = $preElement;
+    $element_id = $field['field_name'] . '-' . $delta . '-pre';
+    $pre_element = '<pre id="' . $element_id . '" </pre>';
+    $element[]['#markup'] = $pre_element;
 
-    $jsSettings['ace_editor']['editor_instances'][] = array(
-      'id' => $elementID,
+    $js_settings['ace_editor']['editor_instances'][] = array(
+      'id' => $element_id,
       'content' => $item['value'],
       'settings' => $settings,
     );
   }
 
-  ace_editor_add_js($settings, false);
-  drupal_add_js($jsSettings, 'setting');
+  ace_editor_add_js($settings, FALSE);
+  drupal_add_js($js_settings, 'setting');
   drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
   drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
 
@@ -305,29 +308,29 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
   if (preg_match_all("/<ace.*?>(.*?)\s*<\/ace>/s", $text, $match)) {
 
 
-    $jsSettings = array(
+    $js_settings = array(
       'ace_editor' => array(
         'editor_instances' => array()
       )
     );
 
-    $addJsSettings = array();
+    $add_js_settings = array();
     foreach ($match[0] as $key => $value) {
-      $elementID = 'ace-editor-inline' . $key;
+      $element_id = 'ace-editor-inline' . $key;
       $content = trim($match[1][$key], "\n\r\0\x0B");
 
-      $replace = '<pre id="' . $elementID . '"></pre>';
+      $replace = '<pre id="' . $element_id . '"></pre>';
 
       // Override settings with attributes on the tag.
       $settings = $filter->settings;
-      foreach(tag_attributes('ace', $value) as $attribute_key => $attribute_value) {
+      foreach (tag_attributes('ace', $value) as $attribute_key => $attribute_value) {
         $settings[$attribute_key] = $attribute_value;
       }
-      $settings = makeJsFriendlySettings($settings);
+      $settings = ace_editor_make_js_friendly_settings($settings);
 
-      $addJsSettings[] = $settings;
-      $jsSettings['ace_editor']['editor_instances'][] = array(
-        'id' => $elementID,
+      $add_js_settings[] = $settings;
+      $js_settings['ace_editor']['editor_instances'][] = array(
+        'id' => $element_id,
         'content' => $content,
         'settings' => $settings,
       );
@@ -335,8 +338,8 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
       $text = str_replace_once($value, $replace, $text);
     }
 
-    drupal_add_js($jsSettings, 'setting');
-    ace_editor_add_js($addJsSettings, false);
+    drupal_add_js($js_settings, 'setting');
+    ace_editor_add_js($add_js_settings, FALSE);
     drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.js');
     drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.css');
   }
@@ -348,13 +351,13 @@ function ace_editor_filter_process($text, $filter, $format, $langcode, $cache, $
  * Custom function to replace the code only once.
  * Probably not the most efficient way, but at least it works.
  */
-function str_replace_once($needle , $replace , $haystack){
+function str_replace_once($needle , $replace , $haystack) {
     // Looks for the first occurence of $needle in $haystack
     // and replaces it with $replace.
     $pos = strpos($haystack, $needle);
-    if ($pos === false) {
-        // Nothing found
-  return $haystack;
+    if ($pos === FALSE) {
+      // Nothing found
+      return $haystack;
     }
     return substr_replace($haystack, $replace, $pos, strlen($needle));
 }
@@ -400,7 +403,7 @@ function tag_attributes($element_name, $xml) {
 
   // Attributes either weren't found, or couldn't be extracted
   // by the regular expression.
-  return false;
+  return FALSE;
 }
 
 /**
@@ -497,21 +500,22 @@ function ace_editor_field_formatter_default_settings() {
 /**
  * Add all JavaScript needed for the editor to work on the next page.
  */
-function ace_editor_add_js($addJsSettings, $forAdminPages) {
+function ace_editor_add_js($add_js_settings, $for_admin_pages) {
   drupal_add_library('ace_editor', 'ace', FALSE);
   global $base_path;
   $ace_lib_path = libraries_get_path('ace');
-  if (isset($addJsSettings[0]) && is_array($addJsSettings[0])) {
-    foreach ($addJsSettings as $key => $settings) {
+  if (isset($add_js_settings[0]) && is_array($add_js_settings[0])) {
+    foreach ($add_js_settings as $key => $settings) {
       drupal_add_js($ace_lib_path . '/src/theme-' . $settings['theme'] . '.js', array('preprocess' => FALSE));
       drupal_add_js($ace_lib_path . '/src/mode-' . $settings['syntax'] . '.js', array('preprocess' => FALSE));
     }
-  } else {
-    drupal_add_js($ace_lib_path . '/src/theme-' . $addJsSettings['theme'] . '.js', array('preprocess' => FALSE));
-    drupal_add_js($ace_lib_path . '/src/mode-' . $addJsSettings['syntax'] . '.js', array('preprocess' => FALSE));
+  }
+  else {
+    drupal_add_js($ace_lib_path . '/src/theme-' . $add_js_settings['theme'] . '.js', array('preprocess' => FALSE));
+    drupal_add_js($ace_lib_path . '/src/mode-' . $add_js_settings['syntax'] . '.js', array('preprocess' => FALSE));
   }
 
-  if ($forAdminPages) {
+  if ($for_admin_pages) {
     drupal_add_library('system', 'ui.resizable');
   }
 }
@@ -519,12 +523,12 @@ function ace_editor_add_js($addJsSettings, $forAdminPages) {
 /**
  * Replaces dashes with underscores in keys for use with JS.
  */
-function makeJsFriendlySettings($settings) {
-  $jsFriendly = array();
-  foreach($settings as $key => $value) {
-    $jsFriendly[str_replace('-', '_', $key)] = $value;
+function ace_editor_make_js_friendly_settings($settings) {
+  $js_friendly = array();
+  foreach ($settings as $key => $value) {
+    $js_friendly[str_replace('-', '_', $key)] = $value;
   }
-  return $jsFriendly;
+  return $js_friendly;
 }
 
 /**
@@ -612,16 +616,16 @@ function ace_editor_libraries_info() {
 }
 
 /**
-* Returns if the library is installed.
-*/
+ * Returns if the library is installed.
+ */
 function ace_editor_library_installed() {
   $library = libraries_detect('ace');
   return isset($library['installed']) && $library['installed'];
 }
 
 /**
-* Fills the global var 'ace_editor_assets'
-*/
+ * Fills the global var 'ace_editor_assets'
+ */
 function ace_editor_get_assets() {
 
   // Find out available themes and modes in the library
@@ -630,7 +634,7 @@ function ace_editor_get_assets() {
     $files = file_scan_directory($libraries['ace'] . '/src',
       '/(mode|theme)-(.+)\.js$/', array('recurse' => FALSE));
     $assets = array();
-    foreach($files as $file_info) {
+    foreach ($files as $file_info) {
       $asset = explode('-', $file_info->name);
       $assets[$asset[0]][$asset[1]] = ucwords(str_replace('_', ' ', $asset[1]));
     }
