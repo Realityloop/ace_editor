@@ -56,8 +56,8 @@ Uninstallation
 The module adds a filter format named 'Ace Editor' on installation. This filter
 format is not disabled when the module is uninstalled, to preserve any content
 saved using it. If you are sure that there is no valuable content in your
-database saved under the 'Ace Editor' filter format, you can manually disable the
-filter format at admin/config/content/formats.
+database saved under the 'Ace Editor' filter format, you can manually disable
+the filter format at admin/config/content/formats.
 
 Drush support
 =============

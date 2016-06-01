@@ -1,4 +1,3 @@
-
 pre.ace_editor {
   position: relative;
   border: 1px solid #ccc;
@@ -11,7 +10,7 @@ div.ace-editor-controls {
   height: 40px;
   border: 1px solid #ccc;
   border-top: 0;
-  background-color: #E8E8E8;
+  background-color: #e8e8e8;
 }
 
 div.control {
@@ -23,7 +22,9 @@ div.control select {
   border: 1px solid #9f9f9f;
 }
 
-div.control label, div.control input, div.control select {
+div.control label,
+div.control input,
+div.control select {
   display: inline;
 }
 
@@ -47,7 +48,8 @@ div.info {
   float: right;
   margin: 9px 20px 0 0;
 }
-span.num-lines, a.key-bindings {
+span.num-lines,
+a.key-bindings {
   font-family: Monaco, "Menlo", "Courier New", monospace;
   font-size: 9pt;
   margin: 0 0 0 20px;

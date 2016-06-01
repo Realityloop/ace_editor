@@ -8,9 +8,9 @@
     var formIdentifier;
 
     /**
-    * If the user selected a text format configured to be used with the editor,
-    * show it, else show the default textarea.
-    */
+     * If the user selected a text format configured to be used with the editor,
+     * show it, else show the default textarea.
+     */
     function acifyWrapper($textFormatWrapper) {
       // The select list for chosing the text format that will be used.
       var $filterSelector = $textFormatWrapper.find('select.filter-list');
@@ -22,8 +22,8 @@
 
         /**
          * If the settings has not been set I will copy them into a new object.
-         * if I don't the settings will be duplicated every time I add a textarea
-         * on fields that supports multiple values.
+         * if I don't the settings will be duplicated every time I add a
+         * textarea on fields that supports multiple values.
          */
         if (!editorSettings) {
           editorSettings = $.extend({}, Drupal.settings.ace_editor.admin);
@@ -34,8 +34,8 @@
         if ($textFormatWrapper.find('div.ace-editor-container').length !=
           $textFormatWrapper.find('div.form-item.form-type-textarea').length) {
 
-          // Init the array that will hold all editor elements and instances inside
-          // of each text format wrapper.
+          // Init the array that will hold all editor elements and instances
+          // inside of each text format wrapper.
           var editors = new Array();
 
           // Iterate through all textarea containers that and attach the editor.
@@ -63,8 +63,8 @@
                 $controls = get_editor_controls();
                 $ace_editor_container.append($controls);
                 $(this).append($ace_editor_container);
-              } else { // It's a summary form item.
-
+              } else {
+                // It's a summary form item.
                 $pre.css({'height': height ? height : '200px', 'border-bottom': '1px solid #CCC'});
                 $(this).find('div.form-textarea-wrapper').after($ace_editor_container);
               }
@@ -82,7 +82,7 @@
               editor_instance.renderer.setHScrollBarAlwaysVisible(false);
               $pre.css('font-size', editorSettings['fontsize']);
               $pre.data('editor_instance', editor_instance);
-              // enable options and snippets
+              // Enable options and snippets.
               ace.require("ace/ext/language_tools");
               editor_instance.setOptions({
                 enableBasicAutocompletion: true,
@@ -122,7 +122,7 @@
             editors.push(editorObject);
           });
 
-          // Store the newly created editor instances for later use
+          // Store the newly created editor instances for later use.
           $textFormatWrapper.data('ace-editors', editors);
 
           // Set control states.
@@ -169,8 +169,8 @@
           }
         });
 
-      } else { // Show the textarea.
-
+      } else {
+        // Show the textarea.
         var editorObjects = $textFormatWrapper.data('ace-editors');
         if (editorObjects) {
 
@@ -212,7 +212,7 @@
      */
 
     // Customize this handler depending on the installed JQuery version,
-    // to ensure compatibility from JQuery 1.4 to 1.9+. Issue #2255597
+    // to ensure compatibility from JQuery 1.4 to 1.9+. Issue #2255597.
     var iCanUseOn = !!$.fn.on;
     if (iCanUseOn) {
       var func = 'on';
@@ -260,9 +260,11 @@
             case "show_hidden":
               this['editor'].setShowInvisibles(checked);
               break;
+
             case "show_line_numbers":
               this['editor'].renderer.setShowGutter(checked);
               break;
+
             case "autocomplete":
               this['editor'].setBehavioursEnabled(checked);
               break;
@@ -275,12 +277,15 @@
         case "show_hidden":
           localStorageSet('ace_editor_' + textAreaID + '_show_hidden', checked);
           break;
+
         case "show_line_numbers":
           localStorageSet('ace_editor_' + textAreaID + '_show_line_numbers', checked);
           break;
+
         case "autocomplete":
           localStorageSet('ace_editor_' + textAreaID + '_autocomplete', checked);
           break;
+
         case "mode":
           localStorageSet('ace_editor_' + textAreaID + '_mode', $control.val());
           break;
@@ -299,8 +304,9 @@
     });
 
     /**
-     * The content of the editor has changed, update the span showing line numbers.
-     * Also transfer the content of the editors to their related textareas.
+     * The content of the editor has changed, update the span showing line
+     * numbers. Also transfer the content of the editors to their related
+     * textareas.
      */
     function editorContentChange($form_item, editorObject) {
       $(editorObject['element']).parents('div.ace-editor-container:first').find('div.ace-editor-controls span.num-lines').text(editorObject['editor'].getSession().getValue().split("\n").length + " lines");
@@ -310,18 +316,17 @@
       $textarea[0].value = val;
     }
 
-
     /**
     *  Returns the controls for an editor.
     */
     function get_editor_controls() {
       $controls = $('<div class="ace-editor-controls"></div>');
       $controls.append('<div class="control"><input type="checkbox" name="show_hidden" class="show_hidden" checked>' +
-                '<label>Invisibles</label></div>');
+        '<label>Invisibles</label></div>');
       $controls.append('<div class="control"><input type="checkbox" name="show_line_numbers" class="show_line_numbers" checked>' +
-                '<label>Line numbers (show errors)</label></div>');
+        '<label>Line numbers (show errors)</label></div>');
       $controls.append('<div class="control"><input type="checkbox" name="autocomplete" class="ace_autocomplete" checked>' +
-                '<label>Auto-pairing</label></div>');
+        '<label>Auto-pairing</label></div>');
       $modes_select = $('<div class="control"><select name="mode" class="mode"></select></div>');
       $.each(editorSettings['available_modes'], function(key, value) {
         var selected = (key == 'html') ? ' selected' : '';
@@ -350,7 +355,6 @@
       if (localStorageAvailable()) {
         return localStorage[$key];
       }
-
       return null
     }
 
@@ -361,12 +365,11 @@
       return 'localStorage' in window && window['localStorage'] !== null;
     }
 
-
     /**
-     * PHP consoles handling (Devel, Views PHP if available)
+     * PHP consoles handling (Devel, Views PHP if available).
      */
-    // @TODO: Views PHP: textarea#edit-options-php-output.ace-enabled
-    // Devel PHP console
+    // @TODO: Views PHP: textarea#edit-options-php-output.ace-enabled.
+    // Devel PHP console.
     $('textarea#edit-code.ace-enabled').show(function() {
       ace.require("ace/ext/language_tools");
       ace.require("ace/mode/php");
@@ -380,17 +383,17 @@
       var editor = ace.edit(ace_pre_id);
       var editorSettings = $.extend({}, Drupal.settings.ace_editor.admin);
 
-      $('#'+ace_pre_id).css('height','30em');
+      $('#' + ace_pre_id).css('height','30em');
 
-      // Set ace configuration options
-      $('#'+ace_pre_id).css('font-size', editorSettings['fontsize']);
+      // Set ace configuration options.
+      $('#' + ace_pre_id).css('font-size', editorSettings['fontsize']);
       editor.setTheme("ace/theme/" + editorSettings.theme);
       editor.getSession().setMode("ace/mode/php");
       editor.setShowPrintMargin(editorSettings['printmargin']);
       editor.setHighlightActiveLine(editorSettings['linehighlighting']);
       editor.getSession().setFoldStyle(editorSettings['codefolding']);
       editor.renderer.setHScrollBarAlwaysVisible(false);
-      // enable options and snippets
+      // Enable options and snippets.
       editor.setOptions({
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: false,
@@ -399,7 +402,7 @@
         useSoftTabs: true
       });
 
-      // Restore the textarea value
+      // Restore the textarea value.
       editor.getSession().setValue(textarea.val());
       editor.focus();
 
@@ -410,8 +413,7 @@
       textarea.hide();
 
     });
-    //  End Devel PHP console
+    // End Devel PHP console.
   }
 };
-
 })(jQuery);

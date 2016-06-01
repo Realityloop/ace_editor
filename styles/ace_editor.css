@@ -1,10 +1,6 @@
-
 pre.ace_editor {
   position: relative;
-  border: 1px solid #CCC;
-}
-
-pre.ace-tm {
+  border: 1px solid #ccc;
 }
 
 div.ace_gutter-cell.ace_error,

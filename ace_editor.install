@@ -19,7 +19,7 @@ function ace_editor_install() {
     filter_format_save($html_editor_format);
   }
   else {
-    // Enabled a
+    // Enable ace_editor.
     db_update('filter_format')
       ->fields(array('status' => 1))
       ->condition('format', 'ace_editor')
@@ -42,7 +42,7 @@ function ace_editor_install() {
   variable_set('ace_editor_tabsize', 2);
   variable_set('ace_editor_theme', 'cobalt');
 
-  //Get modes and themes
+  // Get modes and themes.
   ace_editor_get_assets();
 }
 
@@ -81,9 +81,7 @@ function ace_editor_requirements($phase) {
     if (!is_dir(libraries_get_path('ace'))) {
       $requirements['ace_editor'] = array(
         'title' => $t('Ace Editor'),
-        'value' =>
-          $t('The required Ace library is missing. ') . PHP_EOL .
-          $t('See README.txt for the installation instructions.'),
+        'value' => $t('The required Ace library is missing. @eol See README.txt for the installation instructions.', array('eol' => PHP_EOL)),
         'severity' => REQUIREMENT_ERROR,
       );
     }
