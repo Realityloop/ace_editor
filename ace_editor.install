@@ -1,71 +1,9 @@
 <?php
+
 /**
  * @file
  * Install, update and uninstall functions for the module.
  */
-
-/**
- * Implements hook_install().
- */
-function ace_editor_install() {
-
-  // Create a default text format to use with the editor.
-  if (!filter_format_exists('ace_editor')) {
-    $html_editor_format = new stdClass();
-    $html_editor_format->format = 'ace_editor';
-    $html_editor_format->name = 'Ace Editor';
-    $html_editor_format->status = 1;
-    $html_editor_format->weight = 100;
-    filter_format_save($html_editor_format);
-  }
-  else {
-    // Enable ace_editor.
-    db_update('filter_format')
-      ->fields(array('status' => 1))
-      ->condition('format', 'ace_editor')
-      ->execute();
-  }
-
-  // Set the newly created text format to use the editor.
-  variable_set('ace_editor_filter_formats', array('ace_editor'));
-
-  // Set the defaults to other variables.
-  variable_set('ace_editor_autocomplete', TRUE);
-  variable_set('ace_editor_autowrap', TRUE);
-  variable_set('ace_editor_codefolding', 'markbegin');
-  variable_set('ace_editor_default_syntax', 'html');
-  variable_set('ace_editor_fontsize', '12pt');
-  variable_set('ace_editor_invisibles', FALSE);
-  variable_set('ace_editor_linehighlighting', TRUE);
-  variable_set('ace_editor_line_numbers', TRUE);
-  variable_set('ace_editor_printmargin', FALSE);
-  variable_set('ace_editor_tabsize', 2);
-  variable_set('ace_editor_theme', 'cobalt');
-
-  // Get modes and themes.
-  ace_editor_get_assets();
-}
-
-/**
- * Implements hook_uninstall().
- */
-function ace_editor_uninstall() {
-
-  // Remove the associated variables.
-  variable_del('ace_editor_assets');
-  variable_del('ace_editor_autocomplete');
-  variable_del('ace_editor_autowrap');
-  variable_del('ace_editor_codefolding');
-  variable_del('ace_editor_default_syntax');
-  variable_del('ace_editor_filter_formats');
-  variable_del('ace_editor_fontsize');
-  variable_del('ace_editor_invisibles');
-  variable_del('ace_editor_linehighlighting');
-  variable_del('ace_editor_line_numbers');
-  variable_del('ace_editor_printmargin');
-  variable_del('ace_editor_tabsize');
-  variable_del('ace_editor_theme');
-}
 
 /**
  * Implements hook_requirements().

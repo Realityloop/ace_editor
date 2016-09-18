@@ -1,0 +1,16 @@
+ace_editor:
+  js:
+    js/ace_editor.js: { }
+  dependencies:
+    - libraries/ace
+
+ace_editor.admin:
+  js:
+    js/ace_editor.admin.js: { }
+  dependencies:
+    - core/jquery
+    - core/jquery.ui.resizable
+    - core/drupal
+    - core/drupalSettings
+    - libraries/ace
+    - editor/drupal.editor

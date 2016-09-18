@@ -1,0 +1,8 @@
+uuid: a0e9a29e-ccbb-4282-823e-384e5177bb33
+langcode: en
+status: true
+dependencies: {  }
+name: 'Ace Editor'
+format: ace_editor
+weight: 0
+filters: {  }

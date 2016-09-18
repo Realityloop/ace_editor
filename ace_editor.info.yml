@@ -1,0 +1,9 @@
+name: Ace Editor
+description: Lets you edit code with the Ace Editor.
+type: module
+package: Administration
+core: 8.x
+dependencies:
+  - libraries
+library_dependencies:
+  - ace

@@ -1,40 +1,9 @@
 <?php
+
 /**
  * @file
  * Ace Editor module.
  */
-
-/**
- * Implements hook_menu().
- *
- * Add a settings page to configure the module.
- */
-function ace_editor_menu() {
-  $items = array();
-  $items['admin/config/content/ace-editor'] = array(
-    'title' => 'Ace Editor',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ace_editor_settings_form'),
-    'access arguments' => array('configure ace editor'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'ace_editor.admin.inc',
-  );
-
-  return $items;
-}
-
-/**
- * Implements hook_permission().
- */
-function ace_editor_permission() {
-  return array(
-    'configure ace editor' => array(
-      'title' => t('Configure Ace Editor'),
-      'description' => t('Access the configuration page for Ace Editor.'),
-      'restrict access' => TRUE,
-    ),
-  );
-}
 
 /**
  * An API function to embed read-only editors into template files.
@@ -135,52 +104,16 @@ function ace_editor_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Add JS to the page containing the affected forms.
- */
-function ace_editor_node_block_edit_form_attach_js($form) {
-  global $base_path;
-
-  $add_js_settings = array(
-    'ace_src_dir' => $base_path . libraries_get_path('ace') . '/src/',
-    'autocomplete' => variable_get('ace_editor_autocomplete', TRUE),
-    'autowrap' => variable_get('ace_editor_autowrap', TRUE),
-    'available_modes' => ace_editor_get_modes(),
-    'fontsize' => variable_get('ace_editor_fontsize', '12pt'),
-    'invisibles' => variable_get('ace_editor_invisibles', FALSE),
-    'linehighlighting' => variable_get('ace_editor_linehighlighting', TRUE),
-    'line_numbers' => variable_get('ace_editor_line_numbers', TRUE),
-    'printmargin' => variable_get('ace_editor_printmargin', FALSE),
-    'codefolding' => variable_get('ace_editor_codefolding', 'markbegin'),
-    'syntax' => variable_get('ace_editor_default_syntax', 'html'),
-    'tabsize' => variable_get('ace_editor_tabsize', 2),
-    'text_formats' => array_values(variable_get('ace_editor_filter_formats', array())),
-    'theme' => variable_get('ace_editor_theme', 'cobalt'),
-  );
-  $js_settings = array(
-    'ace_editor' => array(
-      'admin' => $add_js_settings,
-    ),
-  );
-  ace_editor_add_js($add_js_settings, TRUE);
-  drupal_add_js($js_settings, 'setting');
-  drupal_add_js(drupal_get_path('module', 'ace_editor') . '/js/ace_editor.admin.js');
-  drupal_add_js(libraries_get_path('ace') . '/src/mode-html.js');
-  drupal_add_css(drupal_get_path('module', 'ace_editor') . '/styles/ace_editor.admin.css');
-
-  return $form;
-}
-
-/**
  * Implements hook_field_formatter_info().
  */
 function ace_editor_field_formatter_info() {
-  return array(
-    'ace_editor_code_readonly_formatter' => array(
-      'label' => t('Code syntax highlighting'),
-      'field types' => array('text_long', 'text_with_summary'),
-      'settings'  => ace_editor_field_formatter_default_settings(),
-    ),
-  );
+  return [
+    'ace_editor_code_readonly_formatter' => [
+      'label'       => t('Code syntax highlighting'),
+      'field types' => ['text_long', 'text_with_summary'],
+      'settings'    => ace_editor_field_formatter_default_settings(),
+    ],
+  ];
 }
 
 /**
@@ -490,11 +423,12 @@ function ace_editor_make_js_friendly_settings($settings) {
  */
 function ace_editor_get_themes() {
   // Available themes are loaded on installation.
-  $assets = variable_get('ace_editor_assets',
-    array('theme' => array('cobalt' => 'Cobalt')));
-  $themes = $assets['theme'];
-  asort($themes);
-  return $themes;
+//  $assets = variable_get('ace_editor_assets',
+//    array('theme' => array('cobalt' => 'Cobalt')));
+//  $themes = $assets['theme'];
+//  asort($themes);
+//  return $themes;
+  return [];
 }
 
 /**
@@ -502,67 +436,26 @@ function ace_editor_get_themes() {
  */
 function ace_editor_get_modes() {
   // Available modeses are loaded on installation.
-  $assets = variable_get('ace_editor_assets',
-    array('mode' => array('html' => 'HTML')));
-  asort($assets['mode']);
-  $modes = array_merge($assets['mode'], array(
-    // Translate some most used languages to their common name.
-    'c_cpp' => 'C/C++',
-    'coffee' => 'CoffeeScript',
-    'csharp' => 'C#',
-    'css' => 'CSS',
-    'html' => 'HTML',
-    'json' => 'JSON',
-    'less' => 'LESS',
-    'php' => 'PHP',
-    'scss' => 'SCSS',
-    'xml' => 'XML',
-    'yaml' => 'YAML',
-  ));
-  return $modes;
-}
-
-
-/**
- * Implements hook_library().
- *
- * For using drupal_add_library()
- */
-function ace_editor_library() {
-  $libraries['ace'] = array(
-    'title' => 'Ace Editor',
-    'website' => 'http://ace.c9.io/',
-    'version' => '',
-    'js' => array(
-      libraries_get_path('ace') . '/src/ace.js' => array(),
-      libraries_get_path('ace') . '/src/ext-language_tools.js' => array(),
-    ),
-  );
-  return $libraries;
-}
-
-/**
- * Implements hook_libraries_info().
- */
-function ace_editor_libraries_info() {
-  $libraries['ace'] = array(
-    'title' => 'Ace Editor',
-    'vendor url' => 'http://ace.c9.io/',
-    'download url' => 'https://github.com/ajaxorg/ace-builds/archive/master.zip',
-    'version arguments' => array(
-      'file' => 'package.json',
-      'pattern' => '/"version": "(\d+\.+\d+.+\d+)"/',
-      'lines' => 3,
-    ),
-    'files' => array(
-      'js' => array(
-        'src/ace.js',
-         // Required for autocompletion.
-        'src/ext-language_tools.js',
-      ),
-    ),
-  );
-  return $libraries;
+//  $assets = variable_get('ace_editor_assets',
+//    array('mode' => array('html' => 'HTML')));
+//  asort($assets['mode']);
+//  $modes = array_merge($assets['mode'], array(
+//      // Translate some most used languages to their common name
+//      'c_cpp' => 'C/C++',
+//      'coffee' => 'CoffeeScript',
+//      'csharp' => 'C#',
+//      'css' => 'CSS',
+//      'html' => 'HTML',
+//      'json' => 'JSON',
+//      'less' => 'LESS',
+//      'php' => 'PHP',
+//      'scss' => 'SCSS',
+//      'xml' => 'XML',
+//      'yaml' => 'YAML',
+//    ));
+//
+//  return $modes;
+  return [];
 }
 
 /**

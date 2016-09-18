@@ -1,0 +1,20 @@
+uuid: f9b405a4-8603-4ddd-be3f-281267ec4711
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.ace_editor
+  module:
+    - ace_editor
+format: ace_editor
+editor: ace_editor
+settings:
+  theme: cobalt
+  default_syntax: html
+  fontsize: 12pt
+  printmargin: 0
+  autowrap: 1
+  linehighlighting: 0
+  codefolding: markbegin
+  tabsize: '2'
+image_upload: {  }
